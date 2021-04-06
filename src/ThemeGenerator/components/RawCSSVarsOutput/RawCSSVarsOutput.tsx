@@ -1,81 +1,49 @@
 import React, { Fragment } from 'react'
 import { useRecoilValue } from 'recoil'
-import {
-  scaleHueAtomFamily,
-  shadeAtomFamily,
-  ColorScaleType,
-  ColorShadeType,
-  luminances,
-  makeColor,
-} from 'internal'
+import { scaleNamesAtom, ScaleNameType, shadeNames, ShadeType } from 'internal'
+import { colorDataSelector } from 'ThemeGenerator/state'
 
-export const RawCSSVarsOutput = ({
-  scales,
-  columnWidth,
-}: {
-  scales: ColorScaleType[]
-  columnWidth?: number
-}) => {
-  return (
+const COLUMN_WIDTH = 20
+
+export const RawCSSVarsOutput = ({ styled = false }: { styled?: boolean }) => {
+  const scaleNames = useRecoilValue(scaleNamesAtom)
+
+  const content = (
     <>
       {':root {\n'}
-      {scales.map((scale, index) => (
-        <Fragment key={scale.id}>
-          <ScaleOutput scale={scale} columnWidth={columnWidth} />
-          {index < scales.length - 1 && '\n'}
+      {scaleNames.map((scaleName, index) => (
+        <Fragment key={scaleName}>
+          {shadeNames.map((shadeName) => {
+            return (
+              <TokenOutput
+                key={shadeName}
+                shade={{ scaleName, shadeName }}
+                styled={styled}
+              />
+            )
+          })}
+          {index < scaleNames.length - 1 && '\n'}
         </Fragment>
       ))}
       {'}\n'}
     </>
   )
+  return styled ? <pre>{content}</pre> : content
 }
 
-const ScaleOutput = ({
-  scale,
-  columnWidth,
-}: {
-  scale: ColorScaleType
-  columnWidth?: number
-}) => {
-  const scaleState = useRecoilValue(
-    scaleHueAtomFamily({ id: scale.id, hue: scale.hue })
-  )
-  return (
-    <>
-      {scale.shades.map((shade, index) => (
-        <ShadeOutput
-          key={shade.id}
-          shade={shade}
-          hue={scaleState.hue}
-          luminance={luminances[index]}
-          columnWidth={columnWidth}
-        />
-      ))}
-    </>
-  )
-}
-
-const ShadeOutput = ({
+const TokenOutput = ({
   shade,
-  hue,
-  luminance,
-  columnWidth,
+  styled,
 }: {
-  shade: ColorShadeType
-  hue: number
-  luminance: number
-  columnWidth?: number
+  shade: ShadeType
+  styled: boolean
 }) => {
-  const shadeState = useRecoilValue(shadeAtomFamily(shade))
-  const color = makeColor(luminance, shadeState.chroma, hue)
+  const { hex, isClipped } = useRecoilValue(colorDataSelector(shade))
+  const color = isClipped ? '-ERROR-' : hex
+  const padding = ' '.repeat(
+    COLUMN_WIDTH - shade.scaleName.length - shade.shadeName.length
+  )
+  const content = `  --${shade.scaleName}-${shade.shadeName}: ${padding}${color};\n`
 
-  const spaces = columnWidth
-    ? ' '.repeat(
-        columnWidth -
-          shade.id.length -
-          (color.hex ? color.hex.length : 'null'.length)
-      )
-    : ''
-
-  return <span>{`  --${shade.id}:${spaces}${color.hex}; \n`}</span>
+  return styled ? <span>{content}</span> : <>{content}</>
 }
