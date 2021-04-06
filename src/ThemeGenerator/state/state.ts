@@ -1,5 +1,5 @@
 import { atom, atomFamily, selectorFamily } from 'recoil'
-import { defaultTheme } from './themes'
+import { defaultTheme } from '../themes'
 import {
   defaultLuminances,
   defaultChromas,
@@ -10,8 +10,8 @@ import {
   ScaleNameType,
 } from 'internal'
 
-export const scaleIdsAtom = atom({
-  key: 'scaleIds',
+export const scaleNamesAtom = atom({
+  key: 'scaleNames',
   default: defaultTheme.map((scale) => scale.id),
 })
 

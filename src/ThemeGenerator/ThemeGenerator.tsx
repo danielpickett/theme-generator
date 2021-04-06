@@ -1,23 +1,34 @@
 import React from 'react'
 import './ThemeGenerator.scss'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Scale, scaleIdsAtom } from 'internal'
+import { Scale, scaleNamesAtom } from 'internal'
+import { RawCSSVarsOutput } from './components/RawCSSVarsOutput'
+import ReactDOM from 'react-dom'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
-    <div className="ThemeGenerator">
-      <ThemeGeneratorScales />
-    </div>
+    <ThemeGeneratorBase />
   </RecoilRoot>
 )
 
-const ThemeGeneratorScales = () => {
-  const scaleNames = useRecoilValue(scaleIdsAtom)
+const ThemeGeneratorBase = () => {
+  const scaleNames = useRecoilValue(scaleNamesAtom)
   return (
-    <div className="ThemeGenerator__scales">
-      {scaleNames.map((scaleName) => (
-        <Scale key={scaleName} scaleName={scaleName} />
-      ))}
+    <div className="ThemeGenerator">
+      <div className="ThemeGenerator__scales">
+        {scaleNames.map((scaleName) => (
+          <Scale key={scaleName} scaleName={scaleName} />
+        ))}
+      </div>
+      <div className="ThemeGenerator__output">
+        <RawCSSVarsOutput styled />
+      </div>
+      {ReactDOM.createPortal(
+        <style className="color-tokens">
+          <RawCSSVarsOutput />
+        </style>,
+        document.head
+      )}
     </div>
   )
 }
