@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { useRecoilValue } from 'recoil'
-import { scaleNamesAtom, ScaleNameType, shadeNames, ShadeType } from 'internal'
+import { scaleNamesAtom, shadeNames, ShadeType } from 'internal'
 import { colorDataSelector } from 'ThemeGenerator/state'
 
 const COLUMN_WIDTH = 20
