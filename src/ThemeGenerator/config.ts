@@ -1,52 +1,43 @@
-import { ColorScaleType } from 'ThemeGenerator/types'
+export const shadeNames = [
+  '000',
+  '050',
+  '100',
+  '200',
+  '300',
+  '400',
+  '500',
+  '600',
+  '700',
+  '800',
+  '900',
+] as const
 
-export const luminances = [
-  99.99, // 000 white
-  97.0, // 050
-  92.0, // 100
-  85.0, // 200
-  74.0, // 300
-  62.0, // 400
-  48.9, // 500
-  39.0, // 600
-  27.0, // 700
-  15.0, // 800
-  5.0, // 900
-]
+export const defaultLuminances = {
+  '000': 99.99, // white
+  '050': 97.0,
+  '100': 92.0,
+  '200': 85.0,
+  '300': 74.0,
+  '400': 62.0,
+  '500': 48.9,
+  '600': 39.0,
+  '700': 27.0,
+  '800': 15.0,
+  '900': 5.0,
+} as const
 
-export const scales: ColorScaleType[] = [
-  {
-    id: 'grey',
-    hue: 230,
-    shades: [
-      { id: 'grey-000', chroma: 0 },
-      { id: 'grey-050', chroma: 1 },
-      { id: 'grey-100', chroma: 2.8203125 },
-      { id: 'grey-200', chroma: 3.6828125 },
-      { id: 'grey-300', chroma: 3.801562500000002 },
-      { id: 'grey-400', chroma: 4.795703125000003 },
-      { id: 'grey-500', chroma: 4.0687500000000005 },
-      { id: 'grey-600', chroma: 4.4150390625 },
-      { id: 'grey-700', chroma: 3.8486328125 },
-      { id: 'grey-800', chroma: 3.982226562500001 },
-      { id: 'grey-900', chroma: 3.1044921875 },
-    ],
-  },
-  {
-    id: 'primary',
-    hue: 230,
-    shades: [
-      { id: 'primary-000', chroma: 0 },
-      { id: 'primary-050', chroma: 5.859375 },
-      { id: 'primary-100', chroma: 15.8203125 },
-      { id: 'primary-200', chroma: 29.8828125 },
-      { id: 'primary-300', chroma: 36.6015625 },
-      { id: 'primary-400', chroma: 33.595703125 },
-      { id: 'primary-500', chroma: 29.46875 },
-      { id: 'primary-600', chroma: 24.4150390625 },
-      { id: 'primary-700', chroma: 18.8486328125 },
-      { id: 'primary-800', chroma: 13.2822265625 },
-      { id: 'primary-900', chroma: 7.104492187 },
-    ],
-  },
-]
+export const defaultChromas = {
+  '000': 0.0,
+  '050': 3.88,
+  '100': 10.84,
+  '200': 21.46,
+  '300': 39.99,
+  '400': 34.35,
+  '500': 29.0,
+  '600': 24.53,
+  '700': 19.18,
+  '800': 13.84,
+  '900': 6.37,
+} as const
+
+export const defaultHue = 240

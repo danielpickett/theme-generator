@@ -1,29 +1,44 @@
 import React from 'react'
 import './Shade.scss'
-import { useRecoilState } from 'recoil'
-import { ChromaSlider } from 'ThemeGenerator/components'
-import { ColorShadeType } from 'ThemeGenerator/types'
-import { shadeAtomFamily } from 'ThemeGenerator/state'
-import chromajs from 'chroma-js'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { colorDataSelector, chromaAtom, ShadeType } from 'internal'
 
-export const Shade = ({
-  shade,
-  luminance,
-  hue,
-}: {
-  shade: ColorShadeType
-  luminance: number
-  hue: number
-}) => {
-  const [shadeState, setShadeState] = useRecoilState(shadeAtomFamily(shade))
-
-  const bgColor = [luminance, shadeState.chroma, hue] as const
-  const style = { backgroundColor: chromajs.lch(...bgColor).hex() }
+export const Shade = ({ shade }: { shade: ShadeType }) => {
+  const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
+  const colorData = useRecoilValue(colorDataSelector(shade))
+  const backgroundColor = colorData.isClipped ? 'black' : colorData.hex
 
   return (
-    <div className="Shade" style={style}>
-      {shade.id}
-      <ChromaSlider shade={shadeState} onChromaChange={setShadeState} />
+    <div
+      className="Shade"
+      style={{
+        backgroundColor,
+        color: 'grey',
+        fontSize: '1rem',
+      }}
+    >
+      <div>{`${shade.scaleName}-${shade.shadeName}`}</div>
+      <div>
+        <pre>
+          {colorData.lch.l}
+          {'\n'}
+          {colorData.lch.c}
+          {'\n'}
+          {colorData.lch.h}
+          {'\n'}
+          {colorData.hex}
+          {'\n'}
+          {chroma}
+          <br />
+          <input
+            type="range"
+            min={0}
+            max={150}
+            value={chroma}
+            onChange={(e) => setChroma(+e.target.value)}
+          />
+        </pre>
+      </div>
     </div>
   )
 }
