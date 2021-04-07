@@ -9,6 +9,7 @@ import {
   ShadeType,
   ScaleNameType,
 } from 'internal'
+import { getMaxChroma } from 'ThemeGenerator/utils'
 
 export const scaleNamesAtom = atom({
   key: 'scaleNames',
@@ -28,6 +29,15 @@ export const chromaAtom = atomFamily<number, ShadeType>({
       .find((scale) => scale.id === shade.scaleName)
       ?.shades.find((_shade) => _shade.id === shade.shadeName)?.chroma ||
     defaultChromas[shade.shadeName],
+})
+
+export const maxChromaSelector = selectorFamily<number, ShadeType>({
+  key: 'maxChroma',
+  get: (shade) => ({ get }) => {
+    const luminance = defaultLuminances[shade.shadeName]
+    const hue = get(hueAtom(shade.scaleName))
+    return getMaxChroma(luminance, hue)
+  },
 })
 
 export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
