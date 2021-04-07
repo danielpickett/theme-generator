@@ -10,11 +10,7 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
   useEffect(() => {
     console.time('Canvas')
     if (mainCanvasRef.current && knockoutCanvasRef.current) {
-      // mainCanvasRef.current.height = 100 * size // px
-      // mainCanvasRef.current.width = 150 * size //px
-
       const mainCtx = mainCanvasRef.current.getContext('2d')
-
       if (mainCtx) {
         const halfSize = size / 2
         for (let L = 100 * halfSize; L >= 0; L--) {
@@ -24,7 +20,6 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
               mainCtx.fillStyle = color.hex
               mainCtx.fillRect(C, 100 * halfSize - L, 1, 1)
             } else {
-              // mainCtx.fillStyle = 'white'
               mainCtx.fillRect(C, 100 * halfSize - L, 150 * halfSize - C, 1)
               break
             }
@@ -35,7 +30,6 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
       }
 
       const knockoutCtx = knockoutCanvasRef.current.getContext('2d')
-
       if (knockoutCtx) {
         knockoutCtx.clearRect(0, 0, 150 * size, 100 * size)
         for (let L = 100 * size; L >= 0; L--) {
@@ -47,13 +41,6 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
             150 * size - maxChroma,
             1
           )
-
-          // if (!color.isClipped) {
-          // } else {
-          //   knockoutCtx.fillStyle = 'white'
-          //   knockoutCtx.fillRect(C, 100 * size - L, 150 * size - C, 1)
-          //   break
-          // }
         }
       }
     }
