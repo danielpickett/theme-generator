@@ -1,3 +1,16 @@
 .Canvas {
   display: block;
+  position: relative;
+  &__main-canvas {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  &__knockout-canvas {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }

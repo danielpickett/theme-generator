@@ -1,32 +1,59 @@
 import { getColorData } from 'internal'
 import React, { useEffect, useRef } from 'react'
+import { getMaxChroma } from 'ThemeGenerator/utils'
 import './Canvas.scss'
 
 export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const mainCanvasRef = useRef<HTMLCanvasElement>(null)
+  const knockoutCanvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     console.time('Canvas')
-    if (canvasRef.current) {
-      canvasRef.current.height = 100 * size // px
-      canvasRef.current.width = 150 * size //px
+    if (mainCanvasRef.current && knockoutCanvasRef.current) {
+      // mainCanvasRef.current.height = 100 * size // px
+      // mainCanvasRef.current.width = 150 * size //px
 
-      const canvasContext = canvasRef.current.getContext('2d')
-      if (canvasContext) {
-        const image = canvasContext.createImageData(1500, 1)
-        for (let L = 100 * size; L >= 0; L--) {
-          for (let C = 0; C < 150 * size; C++) {
-            const color = getColorData(L / size, C / size, hue)
+      const mainCtx = mainCanvasRef.current.getContext('2d')
+
+      if (mainCtx) {
+        const halfSize = size / 2
+        for (let L = 100 * halfSize; L >= 0; L--) {
+          for (let C = 0; C < 150 * halfSize; C++) {
+            const color = getColorData(L / halfSize, C / halfSize, hue)
             if (!color.isClipped) {
-              image.data[C * 4 + 0] = color.rgb[0]
-              image.data[C * 4 + 1] = color.rgb[1]
-              image.data[C * 4 + 2] = color.rgb[2]
-              image.data[C * 4 + 3] = 255
+              mainCtx.fillStyle = color.hex
+              mainCtx.fillRect(C, 100 * halfSize - L, 1, 1)
             } else {
-              image.data[C * 4 + 3] = 0
+              // mainCtx.fillStyle = 'white'
+              mainCtx.fillRect(C, 100 * halfSize - L, 150 * halfSize - C, 1)
+              break
             }
           }
-          canvasContext.putImageData(image, 0, 100 * size - L)
+        }
+        mainCtx.fillStyle = 'white'
+        mainCtx.fillRect(0, 0, size, size)
+      }
+
+      const knockoutCtx = knockoutCanvasRef.current.getContext('2d')
+
+      if (knockoutCtx) {
+        knockoutCtx.clearRect(0, 0, 150 * size, 100 * size)
+        for (let L = 100 * size; L >= 0; L--) {
+          const maxChroma = getMaxChroma(L / size, hue)
+          knockoutCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+          knockoutCtx.fillRect(
+            maxChroma * size,
+            100 * size - L,
+            150 * size - maxChroma,
+            1
+          )
+
+          // if (!color.isClipped) {
+          // } else {
+          //   knockoutCtx.fillStyle = 'white'
+          //   knockoutCtx.fillRect(C, 100 * size - L, 150 * size - C, 1)
+          //   break
+          // }
         }
       }
     }
@@ -38,7 +65,20 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
       className="Canvas"
       style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
     >
-      <canvas className="Canvas__canvas" ref={canvasRef}>
+      <canvas
+        height={100 * (size / 2)}
+        width={150 * (size / 2)}
+        className="Canvas__main-canvas"
+        ref={mainCanvasRef}
+      >
+        Your browser is not supported
+      </canvas>
+      <canvas
+        height={100 * size}
+        width={150 * size}
+        className="Canvas__knockout-canvas"
+        ref={knockoutCanvasRef}
+      >
         Your browser is not supported
       </canvas>
     </div>
