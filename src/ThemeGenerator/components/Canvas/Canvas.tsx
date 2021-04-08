@@ -1,6 +1,6 @@
 import { getColorData } from 'internal'
 import React, { useEffect, useRef } from 'react'
-import { getMaxChroma } from 'ThemeGenerator/utils'
+import { getMaxChroma } from 'internal'
 import './Canvas.scss'
 
 export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
@@ -34,7 +34,7 @@ export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
         knockoutCtx.clearRect(0, 0, 150 * size, 100 * size)
         for (let L = 100 * size; L >= 0; L--) {
           const maxChroma = getMaxChroma(L / size, hue)
-          knockoutCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+          knockoutCtx.fillStyle = 'red'
           knockoutCtx.fillRect(
             maxChroma * size,
             100 * size - L,
