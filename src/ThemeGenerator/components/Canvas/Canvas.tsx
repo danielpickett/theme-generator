@@ -1,73 +1,100 @@
-import { getColorData } from 'internal'
 import React, { useEffect, useRef } from 'react'
-import { getMaxChroma } from 'internal'
 import './Canvas.scss'
 
-export const Canvas = ({ hue, size = 2 }: { hue: number; size?: number }) => {
-  const mainCanvasRef = useRef<HTMLCanvasElement>(null)
-  const knockoutCanvasRef = useRef<HTMLCanvasElement>(null)
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import Worker from 'worker-loader!./worker'
+
+const size = 4
+const halfSize = size / 3
+export const Canvas = ({ hue }: { hue: number }) => {
+  const maskWorkerRef = useRef<Worker | null>(null)
+  const chromaWorkerRef = useRef<Worker | null>(null)
+  const chromaCanvasRef = useRef<HTMLCanvasElement>(null)
+  const maskCanvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    console.time('Canvas')
-    if (mainCanvasRef.current && knockoutCanvasRef.current) {
-      const mainCtx = mainCanvasRef.current.getContext('2d')
-      if (mainCtx) {
-        const halfSize = size / 2
-        for (let L = 100 * halfSize; L >= 0; L--) {
-          for (let C = 0; C < 150 * halfSize; C++) {
-            const color = getColorData(L / halfSize, C / halfSize, hue)
-            if (!color.isClipped) {
-              mainCtx.fillStyle = color.hex
-              mainCtx.fillRect(C, 100 * halfSize - L, 1, 1)
-            } else {
-              mainCtx.fillRect(C, 100 * halfSize - L, 150 * halfSize - C, 1)
-              break
-            }
-          }
+    if (!maskWorkerRef.current) {
+      maskWorkerRef.current = new Worker()
+    }
+    return () => maskWorkerRef.current?.terminate()
+  }, [])
+
+  useEffect(() => {
+    if (!chromaWorkerRef.current) {
+      chromaWorkerRef.current = new Worker()
+    }
+    return () => chromaWorkerRef.current?.terminate()
+  }, [])
+
+  useEffect(() => {
+    if (
+      chromaCanvasRef.current &&
+      maskCanvasRef.current &&
+      maskWorkerRef.current &&
+      chromaWorkerRef.current
+    ) {
+      const maskWorker = maskWorkerRef.current
+      const chromaWorker = chromaWorkerRef.current
+
+      const chromaCtx = chromaCanvasRef.current.getContext('2d')
+      if (chromaCtx) {
+        chromaWorker.postMessage({
+          type: 'chroma',
+          hue,
+          requestTime: +new Date(),
+        })
+        chromaWorker.onmessage = (event) => {
+          console.log(
+            `type: ${event.data.type}\ntime: ${
+              +new Date() - event.data.requestTime
+            }`
+          )
+          chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
+          chromaCtx.drawImage(event.data.bitmap, 0, 0)
         }
-        mainCtx.fillStyle = 'white'
-        mainCtx.fillRect(0, 0, size, size)
       }
 
-      const knockoutCtx = knockoutCanvasRef.current.getContext('2d')
-      if (knockoutCtx) {
-        knockoutCtx.clearRect(0, 0, 150 * size, 100 * size)
-        for (let L = 100 * size; L >= 0; L--) {
-          const maxChroma = getMaxChroma(L / size, hue)
-          knockoutCtx.fillStyle = 'red'
-          knockoutCtx.fillRect(
-            maxChroma * size,
-            100 * size - L,
-            150 * size - maxChroma,
-            1
+      const maskCtx = maskCanvasRef.current.getContext('2d')
+      if (maskCtx) {
+        maskWorker.postMessage({ type: 'mask', hue, requestTime: +new Date() })
+        maskWorker.onmessage = (event) => {
+          console.log(
+            `type: ${event.data.type}\ntime: ${
+              +new Date() - event.data.requestTime
+            }`
           )
+          maskCtx.clearRect(0, 0, 150 * size, 100 * size)
+          maskCtx.drawImage(event.data.bitmap, 0, 0)
         }
       }
     }
-    console.timeEnd('Canvas')
-  }, [hue, size])
+  }, [hue])
 
   return (
-    <div
-      className="Canvas"
-      style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
-    >
-      <canvas
-        height={100 * (size / 2)}
-        width={150 * (size / 2)}
-        className="Canvas__main-canvas"
-        ref={mainCanvasRef}
+    <>
+      <div
+        className="Canvas"
+        style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
       >
-        Your browser is not supported
-      </canvas>
-      <canvas
-        height={100 * size}
-        width={150 * size}
-        className="Canvas__knockout-canvas"
-        ref={knockoutCanvasRef}
-      >
-        Your browser is not supported
-      </canvas>
-    </div>
+        <canvas
+          height={100 * halfSize}
+          width={150 * halfSize}
+          className="Canvas__main-canvas"
+          ref={chromaCanvasRef}
+        >
+          Your browser is not supported
+        </canvas>
+        <canvas
+          height={100 * size}
+          width={150 * size}
+          className="Canvas__mask-canvas"
+          ref={maskCanvasRef}
+        >
+          Your browser is not supported
+        </canvas>
+      </div>
+      <button onClick={() => {}}>Pause</button>
+      <button onClick={() => {}}>Unpause</button>
+    </>
   )
 }
