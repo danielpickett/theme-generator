@@ -19,7 +19,7 @@ declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const size = 1
+const size = 4
 const halfSize = size / 1
 const offscreen = new OffscreenCanvas(150 * size, 100 * size)
 const offscreenCtx = offscreen.getContext('2d')
@@ -31,13 +31,17 @@ const getRowColors = (L: number, hue: number) => {
     const rowColors: string[] = []
     for (let C = 0; C < 150 * halfSize; C++) {
       const color = getColorData(L / halfSize, C / halfSize, hue)
-      if (!color.isClipped) rowColors.push(color.hex)
-      else break
+
+      if (!color.isClipped) {
+        // console.log(`row ${L}, column ${C}`)
+        rowColors.push(color.hex)
+      } else break
     }
-    console.log('paused', isPaused)
-    if (isPaused) reject('paused')
+    // console.log('paused', isPaused)
+    // if (isPaused) reject('paused')
+    // else
     setTimeout(() => {
-      console.log('tick')
+      // console.log('row')
       resolve(rowColors)
     }, 0)
   })
@@ -55,7 +59,7 @@ self.onmessage = (event) => {
         }
         Promise.all(rowColorPromises)
           .then((rows) => {
-            console.log(`rows`, hue)
+            console.log(`done (hue: ${hue})`)
             rows.forEach((row, y) =>
               row.forEach((color, x) => {
                 offscreenCtx.fillStyle = color

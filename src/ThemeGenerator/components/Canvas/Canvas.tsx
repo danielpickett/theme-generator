@@ -4,7 +4,7 @@ import './Canvas.scss'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
-const size = 1
+const size = 4
 const halfSize = size / 1
 export const Canvas = ({ hue }: { hue: number }) => {
   const maskWorkerRef = useRef<Worker | null>(null)
@@ -45,12 +45,12 @@ export const Canvas = ({ hue }: { hue: number }) => {
         })
         chromaWorker.onmessage = (event) => {
           event.data.requestTime &&
-            // console.log(
-            //   `type: ${event.data.type}\ntime: ${
-            //     +new Date() - event.data.requestTime
-            //   }`
-            // )
-            chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
+            console.log(
+              `type: ${event.data.type}\ntime: ${
+                +new Date() - event.data.requestTime
+              }`
+            )
+          chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
           event.data.bitmap && chromaCtx.drawImage(event.data.bitmap, 0, 0)
         }
       }
