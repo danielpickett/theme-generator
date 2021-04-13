@@ -4,7 +4,7 @@ import './Canvas.scss'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
-const size = 4
+const size = 1
 const halfSize = size / 1
 export const Canvas = ({ hue }: { hue: number }) => {
   const maskWorkerRef = useRef<Worker | null>(null)
@@ -102,6 +102,7 @@ export const Canvas = ({ hue }: { hue: number }) => {
           Your browser is not supported
         </canvas>
       </div>
+      <br />
       <button onClick={handlePauseClick}>Pause</button>
       <button onClick={handleUnpauseClick}>Unpause</button>
     </>

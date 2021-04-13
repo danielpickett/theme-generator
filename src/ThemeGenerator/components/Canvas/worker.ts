@@ -19,68 +19,59 @@ declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const size = 4
+const size = 1
 const halfSize = size / 1
 const offscreen = new OffscreenCanvas(150 * size, 100 * size)
 const offscreenCtx = offscreen.getContext('2d')
 
 let isPaused = false
 
-const getRowColors = (L: number, hue: number) =>
-  new Promise((resolve, reject) => {
-    console.log(L)
+const getRowColors = (L: number, hue: number) => {
+  return new Promise<string[]>((resolve, reject) => {
     const rowColors: string[] = []
     for (let C = 0; C < 150 * halfSize; C++) {
-      console.log(isPaused)
       const color = getColorData(L / halfSize, C / halfSize, hue)
-      if (!color.isClipped) return color.hex
+      if (!color.isClipped) rowColors.push(color.hex)
       else break
     }
-    if (isPaused) reject('it was paused')
-    resolve(rowColors)
+    console.log('paused', isPaused)
+    if (isPaused) reject('paused')
+    setTimeout(() => {
+      console.log('tick')
+      resolve(rowColors)
+    }, 0)
   })
-
-// const doChromaWork = (L: number, C: number, hue: number) => {
-//   if (isPaused) {
-//     return { hex: '#000000', isClipped: false }
-//   } else {
-//     return getColorData(L / halfSize, C / halfSize, hue)
-//   }
-// }
+}
 
 self.onmessage = (event) => {
   const { type, hue, requestTime } = event.data
 
   switch (type) {
     case 'chroma':
-      console.log('isPaused: ', isPaused)
-      if (offscreenCtx && hue && !isPaused) {
+      if (offscreenCtx && typeof hue !== 'undefined') {
+        const rowColorPromises: Promise<string[]>[] = []
         for (let L = 100 * halfSize; L >= 0; L--) {
-          for (let C = 0; C < 150 * halfSize; C++) {
-            const color = getColorData(L / halfSize, C / halfSize, hue)
-            offscreenCtx.fillStyle = color.hex
-            if (!color.isClipped) {
-              offscreenCtx.fillRect(C, 100 * halfSize - L, 1, 1)
-            } else {
-              offscreenCtx.fillStyle = 'white'
-              offscreenCtx.fillRect(
-                C,
-                100 * halfSize - L,
-                150 * halfSize - C,
-                1
-              )
-              break
-            }
-          }
+          rowColorPromises.push(getRowColors(L, hue))
         }
+        Promise.all(rowColorPromises)
+          .then((rows) => {
+            console.log(`rows`, hue)
+            rows.forEach((row, y) =>
+              row.forEach((color, x) => {
+                offscreenCtx.fillStyle = color
+                offscreenCtx.fillRect(x, y, 1, 1)
+              })
+            )
+            self.postMessage({
+              hue,
+              bitmap: offscreen.transferToImageBitmap(),
+              requestTime,
+              type,
+            })
+          })
+          .catch((err) => console.log('err', err))
       }
 
-      self.postMessage({
-        hue,
-        bitmap: offscreen.transferToImageBitmap(),
-        requestTime,
-        type,
-      })
       break
 
     case 'mask':
