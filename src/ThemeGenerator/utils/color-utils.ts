@@ -7,7 +7,6 @@ export const getColorData = (l: number, c: number, h: number) => {
 
   return {
     hex: color.hex(),
-    rgb: color.rgb(),
     lch: { l, c, h },
     isClipped: color.clipped(),
   }
@@ -19,8 +18,8 @@ const isClipped = (color: { l: number; c: number; h: number }) =>
 /*
 If increasing the chroma by half of the step makes a non-clipped color,
 then increase the chroma by half of the step.
-Else if that would make a clipped color, then leave the chroma alone,
-then cut the step in half and try again.
+Else, if that would make a clipped color, then leave the chroma alone,
+but cut the step in half and try again.
 Continue this until achieving the specified resolution.
 */
 export const getMaxChroma = (

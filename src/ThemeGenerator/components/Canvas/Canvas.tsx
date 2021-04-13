@@ -5,7 +5,7 @@ import './Canvas.scss'
 import Worker from 'worker-loader!./worker'
 
 const size = 4
-const halfSize = size / 3
+const halfSize = size / 1
 export const Canvas = ({ hue }: { hue: number }) => {
   const maskWorkerRef = useRef<Worker | null>(null)
   const chromaWorkerRef = useRef<Worker | null>(null)
@@ -44,13 +44,14 @@ export const Canvas = ({ hue }: { hue: number }) => {
           requestTime: +new Date(),
         })
         chromaWorker.onmessage = (event) => {
-          console.log(
-            `type: ${event.data.type}\ntime: ${
-              +new Date() - event.data.requestTime
-            }`
-          )
-          chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
-          chromaCtx.drawImage(event.data.bitmap, 0, 0)
+          event.data.requestTime &&
+            // console.log(
+            //   `type: ${event.data.type}\ntime: ${
+            //     +new Date() - event.data.requestTime
+            //   }`
+            // )
+            chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
+          event.data.bitmap && chromaCtx.drawImage(event.data.bitmap, 0, 0)
         }
       }
 
@@ -58,17 +59,25 @@ export const Canvas = ({ hue }: { hue: number }) => {
       if (maskCtx) {
         maskWorker.postMessage({ type: 'mask', hue, requestTime: +new Date() })
         maskWorker.onmessage = (event) => {
-          console.log(
-            `type: ${event.data.type}\ntime: ${
-              +new Date() - event.data.requestTime
-            }`
-          )
-          maskCtx.clearRect(0, 0, 150 * size, 100 * size)
-          maskCtx.drawImage(event.data.bitmap, 0, 0)
+          event.data.requestTime &&
+            // console.log(
+            //   `type: ${event.data.type}\ntime: ${
+            //     +new Date() - event.data.requestTime
+            //   }`
+            // )
+            maskCtx.clearRect(0, 0, 150 * size, 100 * size)
+          event.data.bitmap && maskCtx.drawImage(event.data.bitmap, 0, 0)
         }
       }
     }
   }, [hue])
+
+  const handlePauseClick = () => {
+    chromaWorkerRef.current?.postMessage({ type: 'pause' })
+  }
+  const handleUnpauseClick = () => {
+    chromaWorkerRef.current?.postMessage({ type: 'unpause' })
+  }
 
   return (
     <>
@@ -93,8 +102,8 @@ export const Canvas = ({ hue }: { hue: number }) => {
           Your browser is not supported
         </canvas>
       </div>
-      <button onClick={() => {}}>Pause</button>
-      <button onClick={() => {}}>Unpause</button>
+      <button onClick={handlePauseClick}>Pause</button>
+      <button onClick={handleUnpauseClick}>Unpause</button>
     </>
   )
 }
