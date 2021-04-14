@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from 'react'
-import { size } from './sizeSetting'
+import { size, reducedSize } from './sizeSetting'
 import './Canvas.scss'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
-// const size = 4
-const halfSize = size / 1
 export const Canvas = ({ hue }: { hue: number }) => {
   const maskWorkerRef = useRef<Worker | null>(null)
   const chromaWorkerRef = useRef<Worker | null>(null)
@@ -59,7 +57,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
           if (data.type === 'hueStateUpdate') {
             chromaWorker.postMessage({
               type: 'getChroma',
-
               requestTime: +new Date(),
             })
           }
@@ -101,8 +98,8 @@ export const Canvas = ({ hue }: { hue: number }) => {
         style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
       >
         <canvas
-          height={100 * halfSize}
-          width={150 * halfSize}
+          height={100 * reducedSize}
+          width={150 * reducedSize}
           className="Canvas__main-canvas"
           ref={chromaCanvasRef}
         >

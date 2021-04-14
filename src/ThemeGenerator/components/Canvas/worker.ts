@@ -1,13 +1,12 @@
 import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
 import { RequestMessageType, ResponseMessageType } from './worker-types'
-import { size } from './sizeSetting'
+import { size, reducedSize } from './sizeSetting'
 
 declare const self: {
   postMessage: (message: ResponseMessageType) => void
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const halfSize = size / 1
 const offscreen = new OffscreenCanvas(150 * size, 100 * size)
 const offscreenCtx = offscreen.getContext('2d')
 
@@ -15,11 +14,24 @@ const state = { hue: 0 }
 
 const getRowColors = (L: number, hue: number) => {
   return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
-    console.log(`new row: L = ${L}`)
+    // console.log(`new row: L = ${L}`)
+    // console.log(
+    //   `L: ${L} ${' '.repeat(50)} state ->   ${state.hue} v ${hue}   <- WIP    ${
+    //     state.hue !== hue ? 'stale' : ''
+    //   }`
+    // )
     const rowColors: { hex: string; hue: number }[] = []
-    for (let C = 0; C < 150 * halfSize; C++) {
-      console.log(`${' '.repeat(50)} state ->   ${state.hue} v ${hue}   <- WIP`)
-      const color = getColorData(L / halfSize, C / halfSize, hue)
+    for (let C = 0; C < 150 * reducedSize; C++) {
+      // console.log(
+      //   `${' '.repeat(50)} state ->   ${state.hue} v ${hue}   <- WIP    ${
+      //     state.hue !== hue ? 'stale' : ''
+      //   }`
+      // )
+      if (state.hue !== hue) {
+        console.log('')
+        reject('work became stale')
+      }
+      const color = getColorData(L / reducedSize, C / reducedSize, hue)
       if (!color.isClipped) {
         rowColors.push({ hex: color.hex, hue })
       } else break
@@ -36,7 +48,6 @@ const recursiveChain = (
   data?: { hex: string; hue: number }[][]
 ): Promise<{ hex: string; hue: number }[][]> => {
   const currArgs = argsArr.shift()
-  // console.log(data)
   return currArgs
     ? getRowColors(currArgs.L, currArgs.hue).then((res) =>
         recursiveChain(
@@ -59,13 +70,15 @@ self.onmessage = (event) => {
     case 'getChroma':
       if (offscreenCtx) {
         const arrayOfArguments: { L: number; hue: number }[] = []
-        for (let L = 100 * halfSize; L >= 0; L--) {
+        for (let L = 100 * reducedSize; L >= 0; L--) {
           arrayOfArguments.push({ L, hue: state.hue })
         }
 
-        recursiveChain(arrayOfArguments).then((res: any) =>
-          console.log(' - * - * - DONE - * - * - ')
-        )
+        recursiveChain(arrayOfArguments)
+          .then((res) => {
+            console.log(' - * - * - DONE - * - * - ')
+          })
+          .catch((reason) => console.log(reason))
       }
 
       break
