@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react'
+import { size } from './sizeSetting'
 import './Canvas.scss'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
-const size = 4
+// const size = 4
 const halfSize = size / 1
 export const Canvas = ({ hue }: { hue: number }) => {
   const maskWorkerRef = useRef<Worker | null>(null)
@@ -33,50 +34,64 @@ export const Canvas = ({ hue }: { hue: number }) => {
       maskWorkerRef.current &&
       chromaWorkerRef.current
     ) {
-      const maskWorker = maskWorkerRef.current
+      // const maskWorker = maskWorkerRef.current
       const chromaWorker = chromaWorkerRef.current
 
       const chromaCtx = chromaCanvasRef.current.getContext('2d')
       if (chromaCtx) {
+        chromaWorker.postMessage({ type: 'updateHue', hue })
         chromaWorker.postMessage({
-          type: 'chroma',
-          hue,
+          type: 'getChroma',
           requestTime: +new Date(),
         })
-        chromaWorker.onmessage = (event) => {
-          event.data.requestTime &&
-            console.log(
-              `type: ${event.data.type}\ntime: ${
-                +new Date() - event.data.requestTime
-              }`
-            )
-          chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
-          event.data.bitmap && chromaCtx.drawImage(event.data.bitmap, 0, 0)
+
+        chromaWorker.onmessage = ({ data }) => {
+          if (data.type === 'chromaBitmap' && data.bitmap) {
+            data.requestTime &&
+              console.log(
+                `I received a ${data.type}\ntime: ${
+                  +new Date() - data.requestTime
+                }`
+              )
+            chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
+            data.bitmap && chromaCtx.drawImage(data.bitmap, 0, 0)
+          }
+          if (data.type === 'hueStateUpdate') {
+            chromaWorker.postMessage({
+              type: 'getChroma',
+
+              requestTime: +new Date(),
+            })
+          }
         }
       }
 
-      const maskCtx = maskCanvasRef.current.getContext('2d')
-      if (maskCtx) {
-        maskWorker.postMessage({ type: 'mask', hue, requestTime: +new Date() })
-        maskWorker.onmessage = (event) => {
-          event.data.requestTime &&
-            // console.log(
-            //   `type: ${event.data.type}\ntime: ${
-            //     +new Date() - event.data.requestTime
-            //   }`
-            // )
-            maskCtx.clearRect(0, 0, 150 * size, 100 * size)
-          event.data.bitmap && maskCtx.drawImage(event.data.bitmap, 0, 0)
-        }
-      }
+      // const maskCtx = maskCanvasRef.current.getContext('2d')
+      // if (maskCtx) {
+      //   maskWorker.postMessage({ type: 'mask', hue, requestTime: +new Date() })
+      //   maskWorker.onmessage = (event) => {
+      //     event.data.requestTime &&
+      //       // console.log(
+      //       //   `type: ${event.data.type}\ntime: ${
+      //       //     +new Date() - event.data.requestTime
+      //       //   }`
+      //       // )
+      //       maskCtx.clearRect(0, 0, 150 * size, 100 * size)
+      //     event.data.bitmap && maskCtx.drawImage(event.data.bitmap, 0, 0)
+      //   }
+      // }
     }
   }, [hue])
 
-  const handlePauseClick = () => {
-    chromaWorkerRef.current?.postMessage({ type: 'pause' })
-  }
-  const handleUnpauseClick = () => {
-    chromaWorkerRef.current?.postMessage({ type: 'unpause' })
+  // const handlePauseClick = () => {
+  //   chromaWorkerRef.current?.postMessage({ type: 'pause' })
+  // }
+  // const handleUnpauseClick = () => {
+  //   chromaWorkerRef.current?.postMessage({ type: 'unpause' })
+  // }
+
+  const handleInterruptClick = () => {
+    chromaWorkerRef.current?.postMessage({ type: 'interruption' })
   }
 
   return (
@@ -103,8 +118,9 @@ export const Canvas = ({ hue }: { hue: number }) => {
         </canvas>
       </div>
       <br />
-      <button onClick={handlePauseClick}>Pause</button>
-      <button onClick={handleUnpauseClick}>Unpause</button>
+      {/* <button onClick={handlePauseClick}>Pause</button>
+      <button onClick={handleUnpauseClick}>Unpause</button> */}
+      <button onClick={handleInterruptClick}>Interrupt</button>
     </>
   )
 }

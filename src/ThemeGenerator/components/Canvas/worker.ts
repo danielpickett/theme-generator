@@ -1,87 +1,79 @@
 import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
-
-type ActionType = 'mask' | 'chroma' | 'pause' | 'unpause'
-
-export type RequestMessageType = {
-  type: ActionType
-  hue?: number
-  requestTime?: number
-}
-export type ResponseMessageType = {
-  type: ActionType
-  hue?: number
-  bitmap?: ImageBitmap
-  requestTime?: number
-}
+import { RequestMessageType, ResponseMessageType } from './worker-types'
+import { size } from './sizeSetting'
 
 declare const self: {
   postMessage: (message: ResponseMessageType) => void
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const size = 4
 const halfSize = size / 1
 const offscreen = new OffscreenCanvas(150 * size, 100 * size)
 const offscreenCtx = offscreen.getContext('2d')
 
-let isPaused = false
+const state = { hue: 0 }
 
 const getRowColors = (L: number, hue: number) => {
-  return new Promise<string[]>((resolve, reject) => {
-    const rowColors: string[] = []
+  return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
+    console.log(`new row: L = ${L}`)
+    const rowColors: { hex: string; hue: number }[] = []
     for (let C = 0; C < 150 * halfSize; C++) {
+      console.log(`${' '.repeat(50)} state ->   ${state.hue} v ${hue}   <- WIP`)
       const color = getColorData(L / halfSize, C / halfSize, hue)
-
       if (!color.isClipped) {
-        // console.log(`row ${L}, column ${C}`)
-        rowColors.push(color.hex)
+        rowColors.push({ hex: color.hex, hue })
       } else break
     }
-    // console.log('paused', isPaused)
-    // if (isPaused) reject('paused')
-    // else
+
     setTimeout(() => {
-      // console.log('row')
       resolve(rowColors)
     }, 0)
   })
 }
 
-self.onmessage = (event) => {
-  const { type, hue, requestTime } = event.data
+const recursiveChain = (
+  argsArr: { L: number; hue: number }[],
+  data?: { hex: string; hue: number }[][]
+): Promise<{ hex: string; hue: number }[][]> => {
+  const currArgs = argsArr.shift()
+  // console.log(data)
+  return currArgs
+    ? getRowColors(currArgs.L, currArgs.hue).then((res) =>
+        recursiveChain(
+          argsArr,
+          data ? [...data, res] : [[{ hex: '#ffffff', hue: NaN }]]
+        )
+      )
+    : Promise.resolve(data ? data : [[{ hex: 'error', hue: NaN }]])
+}
 
-  switch (type) {
-    case 'chroma':
-      if (offscreenCtx && typeof hue !== 'undefined') {
-        const rowColorPromises: Promise<string[]>[] = []
+self.onmessage = (event) => {
+  const { data } = event
+
+  switch (data.type) {
+    case 'updateHue':
+      state.hue = data.hue
+      console.log(`state.hue updated --> ${state.hue}`)
+      break
+
+    case 'getChroma':
+      if (offscreenCtx) {
+        const arrayOfArguments: { L: number; hue: number }[] = []
         for (let L = 100 * halfSize; L >= 0; L--) {
-          rowColorPromises.push(getRowColors(L, hue))
+          arrayOfArguments.push({ L, hue: state.hue })
         }
-        Promise.all(rowColorPromises)
-          .then((rows) => {
-            console.log(`done (hue: ${hue})`)
-            rows.forEach((row, y) =>
-              row.forEach((color, x) => {
-                offscreenCtx.fillStyle = color
-                offscreenCtx.fillRect(x, y, 1, 1)
-              })
-            )
-            self.postMessage({
-              hue,
-              bitmap: offscreen.transferToImageBitmap(),
-              requestTime,
-              type,
-            })
-          })
-          .catch((err) => console.log('err', err))
+
+        recursiveChain(arrayOfArguments).then((res: any) =>
+          console.log(' - * - * - DONE - * - * - ')
+        )
       }
 
       break
 
-    case 'mask':
-      if (offscreenCtx && hue) {
+    case 'getMask':
+      if (offscreenCtx) {
         for (let L = 100 * size; L >= 0; L--) {
-          const maxChroma = getMaxChroma(L / size, hue)
+          const maxChroma = getMaxChroma(L / size, state.hue)
           offscreenCtx.fillStyle = 'rgba(255, 255, 255, .1)'
           offscreenCtx.fillRect(
             maxChroma * size,
@@ -92,22 +84,14 @@ self.onmessage = (event) => {
         }
       }
       self.postMessage({
-        hue,
         bitmap: offscreen.transferToImageBitmap(),
-        requestTime,
-        type,
+        requestTime: data.requestTime,
+        type: 'maskBitmap',
       })
       break
 
-    case 'pause':
-      isPaused = true
-      console.log('isPaused: ', isPaused)
-      break
-    case 'unpause':
-      isPaused = false
-      console.log('isPaused: ', isPaused)
-      break
     default:
+      console.log(`uncaught switch case: ${event.data.type}`)
       break
   }
 }

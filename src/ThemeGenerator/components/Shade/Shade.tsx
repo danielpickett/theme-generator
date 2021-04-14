@@ -31,7 +31,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
           {`c: ${colorData.lch.c}\n`}
           {`h: ${colorData.lch.h}\n`}
           {`${colorData.hex}\n`}
-          {`maxChroma: ${maxChroma.toFixed(3)}`}
+          {/* {`maxChroma: ${maxChroma.toFixed(3)}`} */}
           <br />
           <input
             type="range"
