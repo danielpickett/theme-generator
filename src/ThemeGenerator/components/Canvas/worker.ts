@@ -13,18 +13,41 @@ const offscreenCtx = offscreen.getContext('2d')
 const state = { hue: 0 }
 
 const getRowColors = (L: number, hue: number) => {
-  return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
-    if (state.hue !== hue) reject('work became stale')
+  const rowColors: { hex: string; hue: number }[] = []
+  for (let C = 0; C < 150 * reducedSize; C++) {
+    const color = getColorData(L / reducedSize, C / reducedSize, hue)
+    if (!color.isClipped) rowColors.push({ hex: color.hex, hue })
+    else break
+  }
 
+  return rowColors
+}
+
+const getRowColorsAsync = (L: number, hue: number) => {
+  return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
+    if (state.hue !== hue) {
+      console.log(`rejecting - L:${L}`)
+      reject('work became stale')
+    }
     const rowColors: { hex: string; hue: number }[] = []
     for (let C = 0; C < 150 * reducedSize; C++) {
       const color = getColorData(L / reducedSize, C / reducedSize, hue)
-      if (!color.isClipped) rowColors.push({ hex: color.hex, hue })
-      else break
+      if (!color.isClipped) {
+        rowColors.push({ hex: color.hex, hue })
+      } else break
     }
 
-    setTimeout(() => resolve(rowColors), 0)
+    setTimeout(() => {
+      resolve(rowColors)
+    }, 0)
   })
+}
+
+const getRows = (argsArr: { L: number; hue: number }[]) => {
+  return argsArr.reduce((rows: { hex: string; hue: number }[][], currArgs) => {
+    const row = getRowColors(currArgs.L, currArgs.hue)
+    return [...rows, row]
+  }, [])
 }
 
 const recursiveChain = (
@@ -33,7 +56,7 @@ const recursiveChain = (
 ): Promise<{ hex: string; hue: number }[][]> => {
   const currArgs = argsArr.shift()
   return currArgs
-    ? getRowColors(currArgs.L, currArgs.hue).then((res) =>
+    ? getRowColorsAsync(currArgs.L, currArgs.hue).then((res) =>
         recursiveChain(
           argsArr,
           data ? [...data, res] : [[{ hex: '#ffffff', hue: NaN }]]
@@ -65,41 +88,42 @@ self.onmessage = (event) => {
           `${+new Date() - reqTime}ms - hue: ${state.hue} - built arguments`
         )
 
-        const res = recursiveChain(arrayOfArguments)
+        const rows = getRows(arrayOfArguments)
+
+        // const res = recursiveChain(arrayOfArguments)
+        // console.log(
+        //   `${+new Date() - reqTime}ms - hue: ${state.hue} - built promise chain`
+        // )
+
+        // res
+        //   .then((rows) => {
         console.log(
-          `${+new Date() - reqTime}ms - hue: ${state.hue} - built promise chain`
+          `${+new Date() - reqTime}ms - hue: ${rows[1][1].hue} - resolved rows`
+          // } - resolved promise chain`
         )
 
-        res
-          .then((rows) => {
-            console.log(
-              `${+new Date() - reqTime}ms - hue: ${
-                rows[1][1].hue
-              } - resolved promise chain`
-            )
-
-            rows.forEach((row, y) => {
-              row.forEach((color, x) => {
-                offscreenCtx.fillStyle = color.hex
-                offscreenCtx.fillRect(x, y, 1, 1)
-              })
-            })
-
-            console.log(
-              `${+new Date() - reqTime}ms - hue: ${
-                state.hue
-              } - painted offscreen canvas`
-            )
-            self.postMessage({
-              type: 'chromaBitmap',
-              bitmap: offscreen.transferToImageBitmap(),
-              requestTime: data.requestTime,
-            })
-            console.log(
-              `${+new Date() - reqTime}ms - hue: ${state.hue} - posted bitmap`
-            )
+        rows.forEach((row, y) => {
+          row.forEach((color, x) => {
+            offscreenCtx.fillStyle = color.hex
+            offscreenCtx.fillRect(x, y, 1, 1)
           })
-          .catch((reason) => console.log(reason))
+        })
+
+        console.log(
+          `${+new Date() - reqTime}ms - hue: ${
+            state.hue
+          } - painted offscreen canvas`
+        )
+        self.postMessage({
+          type: 'chromaBitmap',
+          bitmap: offscreen.transferToImageBitmap(),
+          requestTime: data.requestTime,
+        })
+        console.log(
+          `${+new Date() - reqTime}ms - hue: ${state.hue} - posted bitmap`
+        )
+        //   })
+        //   .catch((reason) => console.log(reason))
       }
 
       break
