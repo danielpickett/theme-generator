@@ -37,22 +37,22 @@ export const Canvas = ({ hue }: { hue: number }) => {
 
       const chromaCtx = chromaCanvasRef.current.getContext('2d')
       if (chromaCtx) {
-        chromaWorker.postMessage({ type: 'updateHue', hue })
+        chromaWorker.postMessage({
+          type: 'updateHue',
+          hue,
+          requestTime: +new Date(),
+        })
         chromaWorker.postMessage({
           type: 'getChroma',
           requestTime: +new Date(),
         })
 
         chromaWorker.onmessage = ({ data }) => {
-          if (data.type === 'chromaBitmap' && data.bitmap) {
-            data.requestTime &&
-              console.log(
-                `I received a ${data.type}\ntime: ${
-                  +new Date() - data.requestTime
-                }`
-              )
+          const reqTime = data.requestTime
+          if (data.type === 'chromaBitmap') {
             chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
-            data.bitmap && chromaCtx.drawImage(data.bitmap, 0, 0)
+            chromaCtx.drawImage(data.bitmap, 0, 0)
+            console.log(`${+new Date() - reqTime}ms - painted onscreen canvas`)
           }
           if (data.type === 'hueStateUpdate') {
             chromaWorker.postMessage({
@@ -80,17 +80,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
     }
   }, [hue])
 
-  // const handlePauseClick = () => {
-  //   chromaWorkerRef.current?.postMessage({ type: 'pause' })
-  // }
-  // const handleUnpauseClick = () => {
-  //   chromaWorkerRef.current?.postMessage({ type: 'unpause' })
-  // }
-
-  const handleInterruptClick = () => {
-    chromaWorkerRef.current?.postMessage({ type: 'interruption' })
-  }
-
   return (
     <>
       <div
@@ -115,9 +104,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
         </canvas>
       </div>
       <br />
-      {/* <button onClick={handlePauseClick}>Pause</button>
-      <button onClick={handleUnpauseClick}>Unpause</button> */}
-      <button onClick={handleInterruptClick}>Interrupt</button>
     </>
   )
 }
