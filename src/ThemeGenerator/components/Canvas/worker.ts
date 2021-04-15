@@ -23,25 +23,25 @@ const getRowColors = (L: number, hue: number) => {
   return rowColors
 }
 
-const getRowColorsAsync = (L: number, hue: number) => {
-  return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
-    if (state.hue !== hue) {
-      console.log(`rejecting - L:${L}`)
-      reject('work became stale')
-    }
-    const rowColors: { hex: string; hue: number }[] = []
-    for (let C = 0; C < 150 * reducedSize; C++) {
-      const color = getColorData(L / reducedSize, C / reducedSize, hue)
-      if (!color.isClipped) {
-        rowColors.push({ hex: color.hex, hue })
-      } else break
-    }
+// const getRowColorsAsync = (L: number, hue: number) => {
+//   return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
+//     if (state.hue !== hue) {
+//       console.log(`rejecting - L:${L}`)
+//       reject('work became stale')
+//     }
+//     const rowColors: { hex: string; hue: number }[] = []
+//     for (let C = 0; C < 150 * reducedSize; C++) {
+//       const color = getColorData(L / reducedSize, C / reducedSize, hue)
+//       if (!color.isClipped) {
+//         rowColors.push({ hex: color.hex, hue })
+//       } else break
+//     }
 
-    setTimeout(() => {
-      resolve(rowColors)
-    }, 0)
-  })
-}
+//     setTimeout(() => {
+//       resolve(rowColors)
+//     }, 0)
+//   })
+// }
 
 const getRows = (argsArr: { L: number; hue: number }[]) => {
   return argsArr.reduce((rows: { hex: string; hue: number }[][], currArgs) => {
@@ -50,20 +50,20 @@ const getRows = (argsArr: { L: number; hue: number }[]) => {
   }, [])
 }
 
-const recursiveChain = (
-  argsArr: { L: number; hue: number }[],
-  data?: { hex: string; hue: number }[][]
-): Promise<{ hex: string; hue: number }[][]> => {
-  const currArgs = argsArr.shift()
-  return currArgs
-    ? getRowColorsAsync(currArgs.L, currArgs.hue).then((res) =>
-        recursiveChain(
-          argsArr,
-          data ? [...data, res] : [[{ hex: '#ffffff', hue: NaN }]]
-        )
-      )
-    : Promise.resolve(data ? data : [[{ hex: 'error', hue: NaN }]])
-}
+// const recursiveChain = (
+//   argsArr: { L: number; hue: number }[],
+//   data?: { hex: string; hue: number }[][]
+// ): Promise<{ hex: string; hue: number }[][]> => {
+//   const currArgs = argsArr.shift()
+//   return currArgs
+//     ? getRowColorsAsync(currArgs.L, currArgs.hue).then((res) =>
+//         recursiveChain(
+//           argsArr,
+//           data ? [...data, res] : [[{ hex: '#ffffff', hue: NaN }]]
+//         )
+//       )
+//     : Promise.resolve(data ? data : [[{ hex: 'error', hue: NaN }]])
+// }
 
 self.onmessage = (event) => {
   const { data } = event
