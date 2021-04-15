@@ -24,7 +24,3 @@ export type ResponseMessageType =
       bitmap: ImageBitmap
       requestTime: number
     }
-  | {
-      type: 'hueStateUpdate'
-      requestTime: number
-    }

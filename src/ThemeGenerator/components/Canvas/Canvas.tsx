@@ -52,13 +52,11 @@ export const Canvas = ({ hue }: { hue: number }) => {
           if (data.type === 'chromaBitmap') {
             chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
             chromaCtx.drawImage(data.bitmap, 0, 0)
-            console.log(`${+new Date() - reqTime}ms - painted onscreen canvas`)
-          }
-          if (data.type === 'hueStateUpdate') {
-            chromaWorker.postMessage({
-              type: 'getChroma',
-              requestTime: +new Date(),
-            })
+            console.log(
+              `${'*'.repeat(50)}\n${
+                +new Date() - reqTime
+              }ms - painted onscreen canvas\n${'*'.repeat(50)}`
+            )
           }
         }
       }

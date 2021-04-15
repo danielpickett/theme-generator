@@ -14,21 +14,16 @@ const state = { hue: 0 }
 
 const getRowColors = (L: number, hue: number) => {
   return new Promise<{ hex: string; hue: number }[]>((resolve, reject) => {
-    if (state.hue !== hue) {
-      console.log(`rejecting - L:${L}`)
-      reject('work became stale')
-    }
+    if (state.hue !== hue) reject('work became stale')
+
     const rowColors: { hex: string; hue: number }[] = []
     for (let C = 0; C < 150 * reducedSize; C++) {
       const color = getColorData(L / reducedSize, C / reducedSize, hue)
-      if (!color.isClipped) {
-        rowColors.push({ hex: color.hex, hue })
-      } else break
+      if (!color.isClipped) rowColors.push({ hex: color.hex, hue })
+      else break
     }
 
-    setTimeout(() => {
-      resolve(rowColors)
-    }, 0)
+    setTimeout(() => resolve(rowColors), 0)
   })
 }
 
