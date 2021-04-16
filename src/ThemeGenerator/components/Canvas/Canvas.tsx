@@ -5,18 +5,15 @@ import './Canvas.scss'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
+const logTime = (time: number) => {
+  const stars = `${'*'.repeat(50)}\n`
+  const msg = 'painted onscreen canvas'
+  console.log(`${stars}${+new Date() - time}ms - ${msg}\n${stars}`)
+}
+
 export const Canvas = ({ hue }: { hue: number }) => {
-  const maskWorkerRef = useRef<Worker | null>(null)
   const chromaWorkerRef = useRef<Worker | null>(null)
   const chromaCanvasRef = useRef<HTMLCanvasElement>(null)
-  const maskCanvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    if (!maskWorkerRef.current) {
-      maskWorkerRef.current = new Worker()
-    }
-    return () => maskWorkerRef.current?.terminate()
-  }, [])
 
   useEffect(() => {
     if (!chromaWorkerRef.current) {
@@ -26,13 +23,7 @@ export const Canvas = ({ hue }: { hue: number }) => {
   }, [])
 
   useEffect(() => {
-    if (
-      chromaCanvasRef.current &&
-      maskCanvasRef.current &&
-      maskWorkerRef.current &&
-      chromaWorkerRef.current
-    ) {
-      // const maskWorker = maskWorkerRef.current
+    if (chromaCanvasRef.current && chromaWorkerRef.current) {
       const chromaWorker = chromaWorkerRef.current
 
       const chromaCtx = chromaCanvasRef.current.getContext('2d')
@@ -52,29 +43,10 @@ export const Canvas = ({ hue }: { hue: number }) => {
           if (data.type === 'chromaBitmap') {
             chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
             chromaCtx.drawImage(data.bitmap, 0, 0)
-            console.log(
-              `${'*'.repeat(50)}\n${
-                +new Date() - reqTime
-              }ms - painted onscreen canvas\n${'*'.repeat(50)}`
-            )
+            logTime(reqTime)
           }
         }
       }
-
-      // const maskCtx = maskCanvasRef.current.getContext('2d')
-      // if (maskCtx) {
-      //   maskWorker.postMessage({ type: 'mask', hue, requestTime: +new Date() })
-      //   maskWorker.onmessage = (event) => {
-      //     event.data.requestTime &&
-      //       // console.log(
-      //       //   `type: ${event.data.type}\ntime: ${
-      //       //     +new Date() - event.data.requestTime
-      //       //   }`
-      //       // )
-      //       maskCtx.clearRect(0, 0, 150 * size, 100 * size)
-      //     event.data.bitmap && maskCtx.drawImage(event.data.bitmap, 0, 0)
-      //   }
-      // }
     }
   }, [hue])
 
@@ -89,14 +61,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
           width={150 * reducedSize}
           className="Canvas__main-canvas"
           ref={chromaCanvasRef}
-        >
-          Your browser is not supported
-        </canvas>
-        <canvas
-          height={100 * size}
-          width={150 * size}
-          className="Canvas__mask-canvas"
-          ref={maskCanvasRef}
         >
           Your browser is not supported
         </canvas>
