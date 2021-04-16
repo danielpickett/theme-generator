@@ -52,7 +52,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
 
   return (
     <>
-      synchronous
       <div
         className="Canvas"
         style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
