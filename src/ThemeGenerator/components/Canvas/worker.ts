@@ -51,14 +51,14 @@ const getRowsRecursively = (
   }
 }
 
-const paint = (reqTime: number) => {
-  const arrayOfArguments: { L: number; hue: number }[] = []
-  for (let L = 100 * reducedSize; L >= 0; L--) {
-    arrayOfArguments.push({ L, hue: state.hue })
-  }
-  logTime(reqTime, 'built arguments')
-  getRowsRecursively(arrayOfArguments, [], reqTime)
-}
+// const paint = (reqTime: number) => {
+//   const arrayOfArguments: { L: number; hue: number }[] = []
+//   for (let L = 100 * reducedSize; L >= 0; L--) {
+//     arrayOfArguments.push({ L, hue: state.hue })
+//   }
+//   logTime(reqTime, 'built arguments')
+//   getRowsRecursively(arrayOfArguments, [], reqTime)
+// }
 
 self.onmessage = (event) => {
   const { data } = event
@@ -73,25 +73,20 @@ self.onmessage = (event) => {
       const reqTime = data.requestTime
       logTime(reqTime, 'received request')
       if (offscreenCtx) {
-        paint(reqTime)
-
+        // paint(reqTime)
         // const arrayOfArguments: { L: number; hue: number }[] = []
         // for (let L = 100 * reducedSize; L >= 0; L--) {
         //   arrayOfArguments.push({ L, hue: state.hue })
         // }
         // logTime(reqTime, 'built arguments')
-
         // const rows = getRows(arrayOfArguments)
-
         // logTime(reqTime, 'processed rows')
-
         // rows.forEach((row, y) => {
         //   row.forEach((color, x) => {
         //     offscreenCtx.fillStyle = color.hex
         //     offscreenCtx.fillRect(x, y, 1, 1)
         //   })
         // })
-
         // logTime(reqTime, 'painted offscreen canvas')
         // self.postMessage({
         //   type: 'chromaBitmap',
@@ -100,6 +95,37 @@ self.onmessage = (event) => {
         // })
         // logTime(reqTime, 'posted bitmap')
       }
+
+      if (offscreenCtx) {
+        for (let L = 100 * reducedSize; L >= 0; L--) {
+          for (let C = 0; C < 150 * reducedSize; C++) {
+            const color = getColorData(
+              L / reducedSize,
+              C / reducedSize,
+              state.hue
+            )
+            offscreenCtx.fillStyle = color.hex
+            if (!color.isClipped) {
+              offscreenCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
+            } else {
+              offscreenCtx.fillStyle = 'white'
+              offscreenCtx.fillRect(
+                C,
+                100 * reducedSize - L,
+                150 * reducedSize - C,
+                1
+              )
+              break
+            }
+          }
+        }
+      }
+      logTime(reqTime, 'finished processing and painting')
+      self.postMessage({
+        bitmap: offscreen.transferToImageBitmap(),
+        requestTime: reqTime,
+        type: 'chromaBitmap',
+      })
 
       break
 
