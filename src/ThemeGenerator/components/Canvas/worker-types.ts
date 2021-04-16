@@ -1,26 +1,25 @@
 export type RequestMessageType =
   | {
-      type: 'getMask'
-      requestTime: number
-    }
-  | {
       type: 'getChroma'
+      hue: number
       requestTime: number
     }
   | {
-      type: 'updateHue'
+      type: 'getMask'
       hue: number
       requestTime: number
     }
 
 export type ResponseMessageType =
   | {
-      type: 'maskBitmap'
+      type: 'chromaBitmap'
       bitmap: ImageBitmap
+      hue: number
       requestTime: number
     }
   | {
-      type: 'chromaBitmap'
+      type: 'maskBitmap'
       bitmap: ImageBitmap
+      hue: number
       requestTime: number
     }

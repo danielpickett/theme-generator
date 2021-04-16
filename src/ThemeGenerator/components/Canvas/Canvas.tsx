@@ -1,54 +1,91 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { size, reducedSize } from './sizeSetting'
 import './Canvas.scss'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import Worker from 'worker-loader!./worker'
 
-const logTime = (time: number) => {
-  const stars = `${'*'.repeat(50)}\n`
-  const msg = 'painted onscreen canvas - synchronous'
-  console.log(`${stars}${+new Date() - time}ms - ${msg}\n${stars}`)
-}
-
 export const Canvas = ({ hue }: { hue: number }) => {
+  // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
+  const chromaWorkerIdle = useRef<boolean>(true)
   const chromaCanvasRef = useRef<HTMLCanvasElement>(null)
+  const [chromaBitmapHue, setChromaBitmapHue] = useState<number>()
 
+  // CHROMA
+  const maskCanvasRef = useRef<HTMLCanvasElement>(null)
+  const [maskBitmapHue, setMaskBitmapHue] = useState<number>()
+  const maskWorkerRef = useRef<Worker | null>(null)
+  const maskWorkerIdle = useRef<boolean>(true)
+
+  useEffect(() => () => chromaWorkerRef.current?.terminate(), [])
   useEffect(() => {
     if (!chromaWorkerRef.current) {
       chromaWorkerRef.current = new Worker()
-    }
-    return () => chromaWorkerRef.current?.terminate()
-  }, [])
+      chromaWorkerRef.current.onmessage = ({ data }) => {
+        // CHROMA
+        if (data.type === 'chromaBitmap') {
+          requestAnimationFrame(() => {
+            chromaWorkerIdle.current = true
+            setChromaBitmapHue(data.hue)
 
-  useEffect(() => {
-    if (chromaCanvasRef.current && chromaWorkerRef.current) {
-      const chromaWorker = chromaWorkerRef.current
+            chromaCanvasRef.current
+              ?.getContext('2d')
+              ?.clearRect(0, 0, 150 * reducedSize, 100 * reducedSize)
+            chromaCanvasRef.current
+              ?.getContext('2d')
+              ?.drawImage(data.bitmap, 0, 0)
 
-      const chromaCtx = chromaCanvasRef.current.getContext('2d')
-      if (chromaCtx) {
-        chromaWorker.postMessage({
-          type: 'updateHue',
-          hue,
-          requestTime: +new Date(),
-        })
-        chromaWorker.postMessage({
-          type: 'getChroma',
-          requestTime: +new Date(),
-        })
-
-        chromaWorker.onmessage = ({ data }) => {
-          const reqTime = data.requestTime
-          if (data.type === 'chromaBitmap') {
-            chromaCtx.clearRect(0, 0, 150 * size, 100 * size)
-            chromaCtx.drawImage(data.bitmap, 0, 0)
-            logTime(reqTime)
-          }
+            const msg = `painted onscreen chroma canvas with hue ${data.hue}`
+            console.log(`${+new Date() - data.requestTime}ms - ${msg}\n\n`)
+          })
         }
       }
     }
-  }, [hue])
+
+    if (!maskWorkerRef.current) {
+      maskWorkerRef.current = new Worker()
+      maskWorkerRef.current.onmessage = ({ data }) => {
+        // MASK
+        if (data.type === 'maskBitmap') {
+          requestAnimationFrame(() => {
+            maskWorkerIdle.current = true
+            setMaskBitmapHue(data.hue)
+
+            maskCanvasRef.current
+              ?.getContext('2d')
+              ?.clearRect(0, 0, 150 * size, 100 * size)
+            maskCanvasRef.current
+              ?.getContext('2d')
+              ?.drawImage(data.bitmap, 0, 0)
+
+            const msg = `painted onscreen mask canvas with hue ${data.hue}`
+            console.log(`${+new Date() - data.requestTime}ms - ${msg}\n\n`)
+          })
+        }
+      }
+    }
+
+    // CHROMA
+    if (chromaWorkerIdle.current && hue !== chromaBitmapHue) {
+      chromaWorkerIdle.current = false
+      chromaWorkerRef.current.postMessage({
+        type: 'getChroma',
+        hue,
+        requestTime: +new Date(),
+      })
+    }
+
+    // MASK
+    if (maskWorkerIdle.current && hue !== maskBitmapHue) {
+      maskWorkerIdle.current = false
+      maskWorkerRef.current.postMessage({
+        type: 'getMask',
+        hue,
+        requestTime: +new Date(),
+      })
+    }
+  }, [hue, chromaBitmapHue, maskBitmapHue])
 
   return (
     <>
@@ -61,6 +98,14 @@ export const Canvas = ({ hue }: { hue: number }) => {
           width={150 * reducedSize}
           className="Canvas__main-canvas"
           ref={chromaCanvasRef}
+        >
+          Your browser is not supported
+        </canvas>
+        <canvas
+          height={100 * size}
+          width={150 * size}
+          className="Canvas__main-canvas"
+          ref={maskCanvasRef}
         >
           Your browser is not supported
         </canvas>

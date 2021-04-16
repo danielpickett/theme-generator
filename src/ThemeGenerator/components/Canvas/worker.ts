@@ -1,4 +1,4 @@
-import { getColorData } from 'ThemeGenerator/utils/color-utils'
+import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
 import { RequestMessageType, ResponseMessageType } from './worker-types'
 import { size, reducedSize } from './sizeSetting'
 
@@ -7,126 +7,73 @@ declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const offscreen = new OffscreenCanvas(150 * size, 100 * size)
-const offscreenCtx = offscreen.getContext('2d')
+const maskCanvas = new OffscreenCanvas(150 * size, 100 * size)
+const maskCtx = maskCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D
 
-const state = { hue: 0 }
+const chromaCanvas = new OffscreenCanvas(150 * reducedSize, 100 * reducedSize)
+const chromaCtx = chromaCanvas.getContext(
+  '2d'
+) as OffscreenCanvasRenderingContext2D
 
-const logTime = (time: number, message: string) => {
-  console.log(`${+new Date() - time}ms - ${message}`)
-}
-
-const getRowColors = (L: number, hue: number) => {
-  const rowColors: { hex: string; hue: number }[] = []
-  for (let C = 0; C < 150 * reducedSize; C++) {
-    if (L === 100 * reducedSize) {
-    }
-    const color =
-      L === 100 * reducedSize && C === 0
-        ? { hex: '#ffffff', isClipped: false }
-        : getColorData(L / reducedSize, C / reducedSize, hue)
-
-    if (!color.isClipped) rowColors.push({ hex: color.hex, hue })
-    else break
-  }
-
-  return rowColors
-}
-
-const getRowsRecursively = (
-  argsArr: { L: number; hue: number }[],
-  data: { hex: string; hue: number }[][],
-  requestTimestamp: number
-) => {
-  const currArgs = argsArr.shift()
-  if (currArgs) {
-    const rowColors = getRowColors(currArgs.L, currArgs.hue)
-    const newData = [...data, rowColors]
-    // getRowsRecursively(argsArr, newData, requestTimestamp)
-    setTimeout(() => getRowsRecursively(argsArr, newData, requestTimestamp))
-  } else {
-    // logTime(requestTimestamp, 'finished processing colors synchronously')
-    logTime(requestTimestamp, 'finished processing colors with setTimeout')
-    console.log(data)
-  }
-}
-
-// const paint = (reqTime: number) => {
-//   const arrayOfArguments: { L: number; hue: number }[] = []
-//   for (let L = 100 * reducedSize; L >= 0; L--) {
-//     arrayOfArguments.push({ L, hue: state.hue })
-//   }
-//   logTime(reqTime, 'built arguments')
-//   getRowsRecursively(arrayOfArguments, [], reqTime)
+// const logTime = (time: number, message: string) => {
+//   console.log(`${+new Date() - time}ms - ${message}`)
 // }
 
 self.onmessage = (event) => {
   const { data } = event
 
   switch (data.type) {
-    case 'updateHue':
-      state.hue = data.hue
-      console.log(`hue --> ${state.hue}°`)
-      break
-
     case 'getChroma':
-      const reqTime = data.requestTime
-      logTime(reqTime, 'received request')
-      if (offscreenCtx) {
-        // paint(reqTime)
-        // const arrayOfArguments: { L: number; hue: number }[] = []
-        // for (let L = 100 * reducedSize; L >= 0; L--) {
-        //   arrayOfArguments.push({ L, hue: state.hue })
-        // }
-        // logTime(reqTime, 'built arguments')
-        // const rows = getRows(arrayOfArguments)
-        // logTime(reqTime, 'processed rows')
-        // rows.forEach((row, y) => {
-        //   row.forEach((color, x) => {
-        //     offscreenCtx.fillStyle = color.hex
-        //     offscreenCtx.fillRect(x, y, 1, 1)
-        //   })
-        // })
-        // logTime(reqTime, 'painted offscreen canvas')
-        // self.postMessage({
-        //   type: 'chromaBitmap',
-        //   bitmap: offscreen.transferToImageBitmap(),
-        //   requestTime: data.requestTime,
-        // })
-        // logTime(reqTime, 'posted bitmap')
-      }
+      // const { requestTime, hue } = data
+      // logTime(data.requestTime, 'received request')
 
-      if (offscreenCtx) {
-        for (let L = 100 * reducedSize; L >= 0; L--) {
-          for (let C = 0; C < 150 * reducedSize; C++) {
-            const color = getColorData(
-              L / reducedSize,
-              C / reducedSize,
-              state.hue
+      for (let L = 100 * reducedSize; L >= 0; L--) {
+        for (let C = 0; C < 150 * reducedSize; C++) {
+          const color = getColorData(L / reducedSize, C / reducedSize, data.hue)
+          chromaCtx.fillStyle = color.hex
+          if (!color.isClipped) {
+            chromaCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
+          } else {
+            // chromaCtx.fillStyle = 'white'
+            chromaCtx.fillRect(
+              C,
+              100 * reducedSize - L,
+              150 * reducedSize - C,
+              1
             )
-            offscreenCtx.fillStyle = color.hex
-            if (!color.isClipped) {
-              offscreenCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
-            } else {
-              offscreenCtx.fillStyle = 'white'
-              offscreenCtx.fillRect(
-                C,
-                100 * reducedSize - L,
-                150 * reducedSize - C,
-                1
-              )
-              break
-            }
+            break
           }
         }
       }
-      logTime(reqTime, 'finished processing and painting')
+      // logTime(data.requestTime, 'finished processing and painting')
+
       self.postMessage({
-        bitmap: offscreen.transferToImageBitmap(),
-        requestTime: reqTime,
+        bitmap: chromaCanvas.transferToImageBitmap(),
+        requestTime: data.requestTime,
+        hue: data.hue,
         type: 'chromaBitmap',
       })
 
+      break
+
+    case 'getMask':
+      for (let L = 100 * size; L >= 0; L--) {
+        const maxChroma = getMaxChroma(L / size, data.hue)
+        maskCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+        maskCtx.fillRect(
+          maxChroma * size,
+          100 * size - L,
+          150 * size - maxChroma,
+          1
+        )
+      }
+
+      self.postMessage({
+        hue: data.hue,
+        bitmap: maskCanvas.transferToImageBitmap(),
+        requestTime: data.requestTime,
+        type: 'maskBitmap',
+      })
       break
 
     default:
