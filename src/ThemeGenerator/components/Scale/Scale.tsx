@@ -25,7 +25,6 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
         {shadeNames.map((shadeName) => (
           <Shade key={shadeName} shade={{ scaleName, shadeName }} />
         ))}
-        <br />
       </div>
     </div>
   )
