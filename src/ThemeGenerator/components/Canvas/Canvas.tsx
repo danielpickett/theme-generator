@@ -7,7 +7,7 @@ import Worker from 'worker-loader!./worker'
 
 const logTime = (time: number) => {
   const stars = `${'*'.repeat(50)}\n`
-  const msg = 'painted onscreen canvas'
+  const msg = 'painted onscreen canvas - synchronous'
   console.log(`${stars}${+new Date() - time}ms - ${msg}\n${stars}`)
 }
 
