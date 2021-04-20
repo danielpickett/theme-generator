@@ -8,7 +8,10 @@ declare const self: {
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
-const state: { hue: number; busy: boolean } = { hue: 0, busy: false }
+const state: { hue: number; hasRenderPending: boolean } = {
+  hue: 0,
+  hasRenderPending: false,
+}
 
 const renderChroma = () => {
   if (canvasCtx) {
@@ -28,12 +31,12 @@ const renderChroma = () => {
     }
     console.timeEnd('chroma')
   }
-  state.busy = false
+  state.hasRenderPending = false
 }
 
 const renderMask = () => {
   if (canvasCtx) {
-    console.time('mask')
+    console.time('  mask')
     canvasCtx.clearRect(0, 0, 150 * size, 100 * size)
     for (let L = 100 * size; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
@@ -46,9 +49,9 @@ const renderMask = () => {
       )
     }
 
-    console.timeEnd('mask')
+    console.timeEnd('  mask')
   }
-  state.busy = false
+  state.hasRenderPending = false
 }
 
 self.onmessage = (event) => {
@@ -61,16 +64,16 @@ self.onmessage = (event) => {
       break
     case 'paintChroma':
       state.hue = request.hue
-      if (!state.busy) {
-        state.busy = true
+      if (!state.hasRenderPending) {
+        state.hasRenderPending = true
         requestAnimationFrame(renderChroma)
       }
       break
 
     case 'paintMask':
       state.hue = request.hue
-      if (!state.busy) {
-        state.busy = true
+      if (!state.hasRenderPending) {
+        state.hasRenderPending = true
         requestAnimationFrame(renderMask)
       }
       break
