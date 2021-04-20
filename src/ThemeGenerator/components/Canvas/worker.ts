@@ -1,40 +1,42 @@
-import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
+import { getColorData } from 'ThemeGenerator/utils/color-utils'
 import { RequestMessageType, ResponseMessageType } from './worker-types'
-import { size, reducedSize } from './sizeSetting'
+import {
+  // size,
+  reducedSize,
+} from './sizeSetting'
 
 declare const self: {
   postMessage: (message: ResponseMessageType) => void
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const maskCanvas = new OffscreenCanvas(150 * size, 100 * size)
-const maskCtx = maskCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D
+const sp = (n: number) => ' '.repeat(n)
 
-const chromaCanvas = new OffscreenCanvas(150 * reducedSize, 100 * reducedSize)
-const chromaCtx = chromaCanvas.getContext(
-  '2d'
-) as OffscreenCanvasRenderingContext2D
+let chromaCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
-// const logTime = (time: number, message: string) => {
-//   console.log(`${+new Date() - time}ms - ${message}`)
+const state: { hue?: number; busy: boolean } = { busy: false }
+
+// const postRenderCheck = (hue: number | undefined) => {
+//   if (hue !== state.hue) {
+//     console.log('cleanup')
+//     requestAnimationFrame(render)
+//   } else {
+//     state.busy = false
+//   }
 // }
 
-self.onmessage = (event) => {
-  const { data } = event
-
-  switch (data.type) {
-    case 'getChroma':
-      // const { requestTime, hue } = data
-      // logTime(data.requestTime, 'received request')
-
-      for (let L = 100 * reducedSize; L >= 0; L--) {
-        for (let C = 0; C < 150 * reducedSize; C++) {
-          const color = getColorData(L / reducedSize, C / reducedSize, data.hue)
+const render = (hue: number) => {
+  if (hue === state.hue) {
+    console.time('time')
+    for (let L = 100 * reducedSize; L >= 0; L--) {
+      for (let C = 0; C < 150 * reducedSize; C++) {
+        const color = getColorData(L / reducedSize, C / reducedSize, hue)
+        if (chromaCtx) {
           chromaCtx.fillStyle = color.hex
           if (!color.isClipped) {
             chromaCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
           } else {
-            // chromaCtx.fillStyle = 'white'
+            chromaCtx.fillStyle = 'white'
             chromaCtx.fillRect(
               C,
               100 * reducedSize - L,
@@ -45,37 +47,39 @@ self.onmessage = (event) => {
           }
         }
       }
-      // logTime(data.requestTime, 'finished processing and painting')
+    }
+    console.timeEnd('time')
+    console.log(`${sp(30)}renderer - matched, ${hue} painted`)
+  } else {
+    console.log(
+      `${sp(30)}renderer - mismatch ${hue}: ${state.hue}, (rescheduling ${
+        state.hue
+      })`
+    )
+    render(state.hue || 0)
+  }
+}
 
-      self.postMessage({
-        bitmap: chromaCanvas.transferToImageBitmap(),
-        requestTime: data.requestTime,
-        hue: data.hue,
-        type: 'chromaBitmap',
-      })
+self.onmessage = (event) => {
+  const request = event.data
 
+  switch (request.type) {
+    case 'initOffscreenChromaCanvas':
+      chromaCtx = request.canvas?.getContext('2d')
+      console.log('initOffscreenChromaCanvas')
       break
+    case 'paintChroma':
+      state.hue = request.hue
+      if (!state.busy) {
+        console.log('switch - idle, schedule', request.hue)
+        state.busy = true
 
-    case 'getMask':
-      for (let L = 100 * size; L >= 0; L--) {
-        const maxChroma = getMaxChroma(L / size, data.hue)
-        maskCtx.fillStyle = 'rgba(255, 255, 255, 1)'
-        maskCtx.fillRect(
-          maxChroma * size,
-          100 * size - L,
-          150 * size - maxChroma,
-          1
-        )
-      }
-
-      self.postMessage({
-        hue: data.hue,
-        bitmap: maskCanvas.transferToImageBitmap(),
-        requestTime: data.requestTime,
-        type: 'maskBitmap',
-      })
+        requestAnimationFrame(() => {
+          render(request.hue)
+          state.busy = false
+        })
+      } else console.log('switch - busy, skip', request.hue)
       break
-
     default:
       console.log(`uncaught switch case: ${event.data.type}`)
       break

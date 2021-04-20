@@ -1,14 +1,19 @@
 export type RequestMessageType =
   | {
-      type: 'getChroma'
-      hue: number
-      requestTime: number
+      type: 'initOffscreenChromaCanvas'
+      canvas?: OffscreenCanvas
+      // hue: number
     }
   | {
-      type: 'getMask'
+      type: 'paintChroma'
       hue: number
       requestTime: number
     }
+// | {
+//     type: 'getMask'
+//     hue: number
+//     requestTime: number
+//   }
 
 export type ResponseMessageType =
   | {
