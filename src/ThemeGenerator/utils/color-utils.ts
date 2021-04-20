@@ -38,3 +38,18 @@ export const getMaxChroma = (
 
   return chroma
 }
+
+export const getMaxChromaSlow = (
+  luminance: number,
+  hue: number,
+  resolution: number = 0.05
+) => {
+  let maxChroma = 0
+  for (let chroma = 0; chroma <= 150; chroma = chroma + resolution) {
+    if (!isClipped({ l: luminance, c: chroma, h: hue })) {
+      maxChroma = chroma
+    }
+  }
+
+  return maxChroma
+}

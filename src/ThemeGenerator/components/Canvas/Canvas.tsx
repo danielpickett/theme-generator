@@ -1,91 +1,60 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { size, reducedSize } from './sizeSetting'
 import './Canvas.scss'
-
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import Worker from 'worker-loader!./worker'
+import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
 export const Canvas = ({ hue }: { hue: number }) => {
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
-  const chromaWorkerIdle = useRef<boolean>(true)
-  const chromaCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [chromaBitmapHue, setChromaBitmapHue] = useState<number>()
-
-  // CHROMA
-  const maskCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [maskBitmapHue, setMaskBitmapHue] = useState<number>()
-  const maskWorkerRef = useRef<Worker | null>(null)
-  const maskWorkerIdle = useRef<boolean>(true)
-
-  useEffect(() => () => chromaWorkerRef.current?.terminate(), [])
-  useEffect(() => {
+  const initChromaWorker = useCallback((canvas: HTMLCanvasElement) => {
     if (!chromaWorkerRef.current) {
+      const offscreen = canvas.transferControlToOffscreen()
       chromaWorkerRef.current = new Worker()
-      chromaWorkerRef.current.onmessage = ({ data }) => {
-        // CHROMA
-        if (data.type === 'chromaBitmap') {
-          requestAnimationFrame(() => {
-            chromaWorkerIdle.current = true
-            setChromaBitmapHue(data.hue)
-
-            chromaCanvasRef.current
-              ?.getContext('2d')
-              ?.clearRect(0, 0, 150 * reducedSize, 100 * reducedSize)
-            chromaCanvasRef.current
-              ?.getContext('2d')
-              ?.drawImage(data.bitmap, 0, 0)
-
-            const msg = `painted onscreen chroma canvas with hue ${data.hue}`
-            console.log(`${+new Date() - data.requestTime}ms - ${msg}\n\n`)
-          })
-        }
-      }
+      chromaWorkerRef.current.postMessage(
+        {
+          type: 'initCanvas',
+          canvas: offscreen,
+        },
+        [offscreen]
+      )
     }
+  }, [])
 
+  // MASK
+  const maskWorkerRef = useRef<Worker | null>(null)
+  const initMaskWorker = useCallback((canvas: HTMLCanvasElement) => {
     if (!maskWorkerRef.current) {
+      const offscreen = canvas.transferControlToOffscreen()
       maskWorkerRef.current = new Worker()
-      maskWorkerRef.current.onmessage = ({ data }) => {
-        // MASK
-        if (data.type === 'maskBitmap') {
-          requestAnimationFrame(() => {
-            maskWorkerIdle.current = true
-            setMaskBitmapHue(data.hue)
-
-            maskCanvasRef.current
-              ?.getContext('2d')
-              ?.clearRect(0, 0, 150 * size, 100 * size)
-            maskCanvasRef.current
-              ?.getContext('2d')
-              ?.drawImage(data.bitmap, 0, 0)
-
-            const msg = `painted onscreen mask canvas with hue ${data.hue}`
-            console.log(`${+new Date() - data.requestTime}ms - ${msg}\n\n`)
-          })
-        }
-      }
+      maskWorkerRef.current.postMessage(
+        {
+          type: 'initCanvas',
+          canvas: offscreen,
+        },
+        [offscreen]
+      )
     }
+  }, [])
 
-    // CHROMA
-    if (chromaWorkerIdle.current && hue !== chromaBitmapHue) {
-      chromaWorkerIdle.current = false
-      chromaWorkerRef.current.postMessage({
-        type: 'getChroma',
-        hue,
-        requestTime: +new Date(),
-      })
-    }
+  // Terminate workers
+  useEffect(
+    () => () => {
+      chromaWorkerRef.current?.terminate()
+      maskWorkerRef.current?.terminate()
+    },
+    []
+  )
 
-    // MASK
-    if (maskWorkerIdle.current && hue !== maskBitmapHue) {
-      maskWorkerIdle.current = false
-      maskWorkerRef.current.postMessage({
-        type: 'getMask',
-        hue,
-        requestTime: +new Date(),
-      })
-    }
-  }, [hue, chromaBitmapHue, maskBitmapHue])
+  useEffect(() => {
+    chromaWorkerRef.current?.postMessage({
+      type: 'paintChroma',
+      hue,
+    })
+    maskWorkerRef.current?.postMessage({
+      type: 'paintMask',
+      hue,
+    })
+  }, [hue])
 
   return (
     <>
@@ -97,7 +66,7 @@ export const Canvas = ({ hue }: { hue: number }) => {
           height={100 * reducedSize}
           width={150 * reducedSize}
           className="Canvas__main-canvas"
-          ref={chromaCanvasRef}
+          ref={initChromaWorker}
         >
           Your browser is not supported
         </canvas>
@@ -105,7 +74,7 @@ export const Canvas = ({ hue }: { hue: number }) => {
           height={100 * size}
           width={150 * size}
           className="Canvas__main-canvas"
-          ref={maskCanvasRef}
+          ref={initMaskWorker}
         >
           Your browser is not supported
         </canvas>

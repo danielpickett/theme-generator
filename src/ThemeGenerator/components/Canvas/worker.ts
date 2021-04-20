@@ -1,81 +1,82 @@
 import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
-import { RequestMessageType, ResponseMessageType } from './worker-types'
+import { RequestMessageType } from './worker-types'
 import { size, reducedSize } from './sizeSetting'
 
 declare const self: {
-  postMessage: (message: ResponseMessageType) => void
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const maskCanvas = new OffscreenCanvas(150 * size, 100 * size)
-const maskCtx = maskCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D
+let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
-const chromaCanvas = new OffscreenCanvas(150 * reducedSize, 100 * reducedSize)
-const chromaCtx = chromaCanvas.getContext(
-  '2d'
-) as OffscreenCanvasRenderingContext2D
+const state: { hue: number; hasRenderPending: boolean } = {
+  hue: 0,
+  hasRenderPending: false,
+}
 
-// const logTime = (time: number, message: string) => {
-//   console.log(`${+new Date() - time}ms - ${message}`)
-// }
-
-self.onmessage = (event) => {
-  const { data } = event
-
-  switch (data.type) {
-    case 'getChroma':
-      // const { requestTime, hue } = data
-      // logTime(data.requestTime, 'received request')
-
-      for (let L = 100 * reducedSize; L >= 0; L--) {
-        for (let C = 0; C < 150 * reducedSize; C++) {
-          const color = getColorData(L / reducedSize, C / reducedSize, data.hue)
-          chromaCtx.fillStyle = color.hex
-          if (!color.isClipped) {
-            chromaCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
-          } else {
-            // chromaCtx.fillStyle = 'white'
-            chromaCtx.fillRect(
-              C,
-              100 * reducedSize - L,
-              150 * reducedSize - C,
-              1
-            )
-            break
-          }
+const renderChroma = () => {
+  if (canvasCtx) {
+    console.time('chroma')
+    for (let L = 100 * reducedSize; L >= 0; L--) {
+      for (let C = 0; C < 150 * reducedSize; C++) {
+        const color = getColorData(L / reducedSize, C / reducedSize, state.hue)
+        canvasCtx.fillStyle = color.hex
+        if (!color.isClipped) {
+          canvasCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
+        } else {
+          // canvasCtx.fillStyle = 'white'
+          canvasCtx.fillRect(C, 100 * reducedSize - L, 150 * reducedSize - C, 1)
+          break
         }
       }
-      // logTime(data.requestTime, 'finished processing and painting')
+    }
+    console.timeEnd('chroma')
+  }
+  state.hasRenderPending = false
+}
 
-      self.postMessage({
-        bitmap: chromaCanvas.transferToImageBitmap(),
-        requestTime: data.requestTime,
-        hue: data.hue,
-        type: 'chromaBitmap',
-      })
+const renderMask = () => {
+  if (canvasCtx) {
+    console.time('  mask')
+    canvasCtx.clearRect(0, 0, 150 * size, 100 * size)
+    for (let L = 100 * size; L >= 0; L--) {
+      const maxChroma = getMaxChroma(L / size, state.hue)
+      canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+      canvasCtx.fillRect(
+        maxChroma * size,
+        100 * size - L,
+        150 * size - maxChroma,
+        1
+      )
+    }
 
+    console.timeEnd('  mask')
+  }
+  state.hasRenderPending = false
+}
+
+self.onmessage = (event) => {
+  const request = event.data
+
+  switch (request.type) {
+    case 'initCanvas':
+      canvasCtx = request.canvas?.getContext('2d')
+      console.log('initCanvas')
       break
-
-    case 'getMask':
-      for (let L = 100 * size; L >= 0; L--) {
-        const maxChroma = getMaxChroma(L / size, data.hue)
-        maskCtx.fillStyle = 'rgba(255, 255, 255, 1)'
-        maskCtx.fillRect(
-          maxChroma * size,
-          100 * size - L,
-          150 * size - maxChroma,
-          1
-        )
+    case 'paintChroma':
+      state.hue = request.hue
+      if (!state.hasRenderPending) {
+        state.hasRenderPending = true
+        requestAnimationFrame(renderChroma)
       }
-
-      self.postMessage({
-        hue: data.hue,
-        bitmap: maskCanvas.transferToImageBitmap(),
-        requestTime: data.requestTime,
-        type: 'maskBitmap',
-      })
       break
 
+    case 'paintMask':
+      state.hue = request.hue
+      if (!state.hasRenderPending) {
+        state.hasRenderPending = true
+        requestAnimationFrame(renderMask)
+      }
+      break
     default:
       console.log(`uncaught switch case: ${event.data.type}`)
       break

@@ -1,25 +1,13 @@
 export type RequestMessageType =
   | {
-      type: 'getChroma'
-      hue: number
-      requestTime: number
+      type: 'initCanvas'
+      canvas?: OffscreenCanvas
     }
   | {
-      type: 'getMask'
+      type: 'paintChroma'
       hue: number
-      requestTime: number
-    }
-
-export type ResponseMessageType =
-  | {
-      type: 'chromaBitmap'
-      bitmap: ImageBitmap
-      hue: number
-      requestTime: number
     }
   | {
-      type: 'maskBitmap'
-      bitmap: ImageBitmap
+      type: 'paintMask'
       hue: number
-      requestTime: number
     }
