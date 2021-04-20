@@ -7,8 +7,5 @@ declare module 'worker-loader!./worker' {
       message: import('./worker-types').RequestMessageType,
       transfers?: [OffscreenCanvas | undefined]
     ) => void
-    onmessage: (
-      event: MessageEvent<import('./worker-types').ResponseMessageType>
-    ) => void
   }
 }

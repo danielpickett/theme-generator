@@ -1,36 +1,58 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { size, reducedSize } from './sizeSetting'
 import './Canvas.scss'
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import Worker from 'worker-loader!./worker'
+import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
 export const Canvas = ({ hue }: { hue: number }) => {
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = useCallback((canvas: HTMLCanvasElement) => {
     if (!chromaWorkerRef.current) {
-      const offscreenChroma = canvas.transferControlToOffscreen()
+      const offscreen = canvas.transferControlToOffscreen()
       chromaWorkerRef.current = new Worker()
       chromaWorkerRef.current.postMessage(
         {
-          type: 'initOffscreenChromaCanvas',
-          canvas: offscreenChroma,
+          type: 'initCanvas',
+          canvas: offscreen,
         },
-        [offscreenChroma]
+        [offscreen]
       )
     }
   }, [])
-  useEffect(() => () => chromaWorkerRef.current?.terminate(), [])
 
   // MASK
-  // const maskCWorkerRef = useRef<Worker>(null)
+  const maskWorkerRef = useRef<Worker | null>(null)
+  const initMaskWorker = useCallback((canvas: HTMLCanvasElement) => {
+    if (!maskWorkerRef.current) {
+      const offscreen = canvas.transferControlToOffscreen()
+      maskWorkerRef.current = new Worker()
+      maskWorkerRef.current.postMessage(
+        {
+          type: 'initCanvas',
+          canvas: offscreen,
+        },
+        [offscreen]
+      )
+    }
+  }, [])
+
+  // Terminate workers
+  useEffect(
+    () => () => {
+      chromaWorkerRef.current?.terminate()
+      maskWorkerRef.current?.terminate()
+    },
+    []
+  )
 
   useEffect(() => {
-    // console.log('requesting paint')
     chromaWorkerRef.current?.postMessage({
       type: 'paintChroma',
       hue,
-      requestTime: +new Date(),
+    })
+    maskWorkerRef.current?.postMessage({
+      type: 'paintMask',
+      hue,
     })
   }, [hue])
 
@@ -48,14 +70,14 @@ export const Canvas = ({ hue }: { hue: number }) => {
         >
           Your browser is not supported
         </canvas>
-        {/* <canvas
+        <canvas
           height={100 * size}
           width={150 * size}
           className="Canvas__main-canvas"
-          ref={maskCanvasRef}
+          ref={initMaskWorker}
         >
           Your browser is not supported
-        </canvas> */}
+        </canvas>
       </div>
       <br />
     </>
