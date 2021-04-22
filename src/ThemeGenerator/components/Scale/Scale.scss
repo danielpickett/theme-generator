@@ -4,4 +4,13 @@
     display: grid;
     grid-template-columns: repeat(11, 1fr);
   }
+  &__canvas {
+    position: relative;
+  }
+  &__canvas-points-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
 }

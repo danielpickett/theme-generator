@@ -4,11 +4,12 @@ import {
   defaultLuminances,
   defaultChromas,
   defaultHue,
-  getColorDataWithRGB,
+  getColorData,
+  getColorDataPlus,
   ColorDataType,
   ShadeType,
   ScaleNameType,
-  ColorDataWithRGBType,
+  ColorDataPlusType,
 } from 'internal'
 import { getMaxChroma } from 'ThemeGenerator/utils'
 
@@ -41,8 +42,19 @@ export const maxChromaSelector = selectorFamily<number, ShadeType>({
   },
 })
 
-export const colorDataSelector = selectorFamily<
-  ColorDataWithRGBType,
+export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
+  key: 'hexColor',
+  get: (shade) => ({ get }) => {
+    const luminance = defaultLuminances[shade.shadeName]
+    const chroma = get(chromaAtom(shade))
+    const hue = get(hueAtom(shade.scaleName))
+
+    return getColorData(luminance, chroma, hue)
+  },
+})
+
+export const colorDataPlusSelector = selectorFamily<
+  ColorDataPlusType,
   ShadeType
 >({
   key: 'hexColor',
@@ -51,6 +63,6 @@ export const colorDataSelector = selectorFamily<
     const chroma = get(chromaAtom(shade))
     const hue = get(hueAtom(shade.scaleName))
 
-    return getColorDataWithRGB(luminance, chroma, hue)
+    return getColorDataPlus(luminance, chroma, hue)
   },
 })

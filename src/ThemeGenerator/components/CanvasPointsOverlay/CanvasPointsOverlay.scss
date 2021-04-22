@@ -1,0 +1,9 @@
+.CanvasPointsOverlay {
+  position: relative;
+  &__point {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    // transform: translate(-1px, 1px);
+  }
+}

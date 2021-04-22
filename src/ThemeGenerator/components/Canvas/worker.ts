@@ -1,5 +1,5 @@
 import {
-  getColorDataWithRGB,
+  getColorDataPlus,
   getMaxChroma,
 } from 'ThemeGenerator/utils/color-utils'
 import { RequestMessageType } from './worker-types'
@@ -14,6 +14,7 @@ const height = 100 * size
 
 const smallWidth = 150 * smallSize
 const smallHeight = 100 * smallSize
+console.log('smallSize', smallSize)
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
@@ -24,25 +25,43 @@ const state: { hue: number; hasRenderPending: boolean } = {
 
 const renderChroma = () => {
   const H = state.hue
-  let prevColorHex = '#ffffff'
+  let prevColor = {
+    hex: '#ffffff',
+    lch: {
+      l: 100,
+      c: 0,
+      h: 0,
+    },
+    rgb: [255, 255, 255],
+    isClipped: false,
+  }
+
+  let hasSkips = false
 
   if (canvasCtx) {
-    console.time('chroma')
+    // console.time('chroma')
     for (let L = smallHeight; L >= 0; L--) {
       for (let C = 0; C < smallWidth; C++) {
-        const color = getColorDataWithRGB(L / smallSize, C / smallSize, H)
+        const color = getColorDataPlus(L / smallSize, C / smallSize, H)
 
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {
           canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           canvasCtx.fillStyle = color.hex
-          // if (color.hex !== prevColorHex) {
-          //   canvasCtx.fillStyle = 'red'
-          //   canvasCtx.fillRect(C, smallHeight - L, 1, 1)
-          // }
+
+          if (
+            Math.abs(color.rgb[0] - prevColor.rgb[0]) > 1 ||
+            Math.abs(color.rgb[1] - prevColor.rgb[1]) > 1 ||
+            Math.abs(color.rgb[2] - prevColor.rgb[2]) > 1
+          ) {
+            // console.log('skipped')
+            if (C > 0) hasSkips = true
+            canvasCtx.fillStyle = L / smallSize > 40 ? 'black' : 'white'
+            canvasCtx.fillRect(C, smallHeight - L, 1, 1)
+          }
         } else {
           // exceptions for light yellow
-          canvasCtx.fillStyle = 'black'
+          canvasCtx.fillStyle = 'white'
           if (
             H > 98.1 &&
             H < 106.6 &&
@@ -50,9 +69,9 @@ const renderChroma = () => {
             L < 98.3 * smallSize &&
             C < 97.1 * smallSize
           ) {
-            // if (C < 20 * smallSize) canvasCtx.fillStyle = 'red'
-            // else canvasCtx.fillStyle = 'black'
-            // canvasCtx.fillStyle = 'black'
+            if (C < 50 * smallSize) canvasCtx.fillStyle = 'red'
+            else canvasCtx.fillStyle = 'black'
+            canvasCtx.fillStyle = 'black'
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {
             // canvasCtx.fillStyle = 'grey'
@@ -60,17 +79,18 @@ const renderChroma = () => {
             break
           }
         }
-        prevColorHex = color.hex
+        prevColor = color
       }
     }
-    console.timeEnd('chroma')
+    // console.timeEnd('chroma')
   }
+  if (hasSkips) console.log('HAS SKIPS!!! hue: ', state.hue)
   state.hasRenderPending = false
 }
 
 const renderMask = () => {
   if (canvasCtx) {
-    console.time('  mask')
+    // console.time('  mask')
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
@@ -84,7 +104,7 @@ const renderMask = () => {
       )
     }
 
-    console.timeEnd('  mask')
+    // console.timeEnd('  mask')
   }
   state.hasRenderPending = false
 }
@@ -103,6 +123,15 @@ self.onmessage = (event) => {
         state.hasRenderPending = true
         requestAnimationFrame(renderChroma)
       }
+
+      // const res = 1
+
+      // for (let hue = 0; hue < 360; hue = hue + res) {
+      //   state.hue = hue
+      //   console.log(hue)
+      //   renderChroma()
+      // }
+
       break
 
     case 'paintMask':

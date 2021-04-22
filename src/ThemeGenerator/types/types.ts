@@ -1,4 +1,4 @@
-import { getColorData, getColorDataWithRGB } from 'internal'
+import { getColorData, getColorDataPlus } from 'internal'
 
 export type ShadeNameType =
   | '000'
@@ -30,7 +30,7 @@ export type ColorScaleType = {
 }
 
 export type ColorDataType = ReturnType<typeof getColorData>
-export type ColorDataWithRGBType = ReturnType<typeof getColorDataWithRGB>
+export type ColorDataPlusType = ReturnType<typeof getColorDataPlus>
 
 export type ShadeType = {
   scaleName: string

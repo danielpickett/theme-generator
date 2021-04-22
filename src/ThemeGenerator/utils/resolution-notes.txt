@@ -1,0 +1,5 @@
+these hue ranges have no colors skipped at a resolution of .1
+21-84
+133-136
+300-331
+

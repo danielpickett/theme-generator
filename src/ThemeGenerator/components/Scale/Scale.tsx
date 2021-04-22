@@ -2,6 +2,7 @@ import React from 'react'
 import { Canvas, hueAtom, Shade, shadeNames } from 'internal'
 import './Scale.scss'
 import { useRecoilState } from 'recoil'
+import { CanvasPointsOverlay } from '../CanvasPointsOverlay'
 
 export const Scale = ({ scaleName }: { scaleName: string }) => {
   const [hue, setHue] = useRecoilState(hueAtom(scaleName))
@@ -12,6 +13,7 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
         <div>
           <input
             type="range"
+            step={10}
             min={0}
             max={360}
             value={hue}
@@ -29,7 +31,13 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
             {scaleName} - hue: {hue}
           </div>
         </div>
-        <Canvas hue={hue} />
+
+        <div className="Scale__canvas">
+          <Canvas hue={hue} />
+          <div className="Scale__canvas-points-overlay">
+            <CanvasPointsOverlay scaleName={scaleName} />
+          </div>
+        </div>
       </div>
       <div className="Scale__shades">
         {shadeNames.map((shadeName) => (
