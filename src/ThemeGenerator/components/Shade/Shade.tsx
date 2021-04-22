@@ -31,6 +31,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
           {`c: ${colorData.lch.c}\n`}
           {`h: ${colorData.lch.h}\n`}
           {`${colorData.hex}\n`}
+          {`${colorData.rgb.join()}`}
           {/* {`maxChroma: ${maxChroma.toFixed(3)}`} */}
           <br />
           <input

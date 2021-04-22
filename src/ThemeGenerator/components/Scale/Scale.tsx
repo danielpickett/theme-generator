@@ -9,15 +9,25 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
   return (
     <div className="Scale">
       <div className="Scale__controls">
-        <input
-          type="range"
-          min={0}
-          max={360}
-          value={hue}
-          onChange={(e) => setHue(+e.target.value)}
-        />
         <div>
-          {scaleName} - hue: {hue}
+          <input
+            type="range"
+            min={0}
+            max={360}
+            value={hue}
+            onChange={(e) => setHue(+e.target.value)}
+          />
+          <input
+            type="number"
+            step={0.1}
+            min={0}
+            max={360}
+            value={hue}
+            onChange={(e) => setHue(+e.target.value)}
+          />
+          <div>
+            {scaleName} - hue: {hue}
+          </div>
         </div>
         <Canvas hue={hue} />
       </div>

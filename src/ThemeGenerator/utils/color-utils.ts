@@ -12,6 +12,17 @@ export const getColorData = (l: number, c: number, h: number) => {
   }
 }
 
+export const getColorDataWithRGB = (l: number, c: number, h: number) => {
+  const color = chromajs.lch(l, c, h) as AugmentedColor
+
+  return {
+    hex: color.hex(),
+    lch: { l, c, h },
+    rgb: color.rgb(),
+    isClipped: color.clipped(),
+  }
+}
+
 const isClipped = (color: { l: number; c: number; h: number }) =>
   (chromajs.lch(color.l, color.c, color.h) as AugmentedColor).clipped()
 
@@ -25,12 +36,13 @@ Continue this until achieving the specified resolution.
 export const getMaxChroma = (
   luminance: number,
   hue: number,
-  resolution: number = 0.005
+  resolution: number = 0.001
 ) => {
   let chroma = 0
-  let step = 150
+  let step = 50
 
   while (step >= resolution) {
+    // console.log(chroma + step / 2)
     if (!isClipped({ l: luminance, h: hue, c: chroma + step / 2 }))
       chroma = chroma + step / 2
     else step = step / 2
@@ -53,3 +65,9 @@ export const getMaxChromaSlow = (
 
   return maxChroma
 }
+
+// const getYellowMaxChroma = (
+//   luminance: number,
+//   hue: number,
+//   resolution: number = 0.05
+// ) => {}

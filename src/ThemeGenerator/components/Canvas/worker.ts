@@ -1,10 +1,19 @@
-import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
+import {
+  getColorDataWithRGB,
+  getMaxChroma,
+} from 'ThemeGenerator/utils/color-utils'
 import { RequestMessageType } from './worker-types'
-import { size, reducedSize } from './sizeSetting'
+import { size, smallSize } from './sizes'
 
 declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
+
+const width = 150 * size
+const height = 100 * size
+
+const smallWidth = 150 * smallSize
+const smallHeight = 100 * smallSize
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
@@ -14,19 +23,44 @@ const state: { hue: number; hasRenderPending: boolean } = {
 }
 
 const renderChroma = () => {
+  const H = state.hue
+  let prevColorHex = '#ffffff'
+
   if (canvasCtx) {
     console.time('chroma')
-    for (let L = 100 * reducedSize; L >= 0; L--) {
-      for (let C = 0; C < 150 * reducedSize; C++) {
-        const color = getColorData(L / reducedSize, C / reducedSize, state.hue)
+    for (let L = smallHeight; L >= 0; L--) {
+      for (let C = 0; C < smallWidth; C++) {
+        const color = getColorDataWithRGB(L / smallSize, C / smallSize, H)
+
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {
-          canvasCtx.fillRect(C, 100 * reducedSize - L, 1, 1)
+          canvasCtx.fillRect(C, smallHeight - L, 1, 1)
+          canvasCtx.fillStyle = color.hex
+          // if (color.hex !== prevColorHex) {
+          //   canvasCtx.fillStyle = 'red'
+          //   canvasCtx.fillRect(C, smallHeight - L, 1, 1)
+          // }
         } else {
-          // canvasCtx.fillStyle = 'white'
-          canvasCtx.fillRect(C, 100 * reducedSize - L, 150 * reducedSize - C, 1)
-          break
+          // exceptions for light yellow
+          canvasCtx.fillStyle = 'black'
+          if (
+            H > 98.1 &&
+            H < 106.6 &&
+            L > 92.5 * smallSize &&
+            L < 98.3 * smallSize &&
+            C < 97.1 * smallSize
+          ) {
+            // if (C < 20 * smallSize) canvasCtx.fillStyle = 'red'
+            // else canvasCtx.fillStyle = 'black'
+            // canvasCtx.fillStyle = 'black'
+            canvasCtx.fillRect(C, smallHeight - L, 1, 1)
+          } else {
+            // canvasCtx.fillStyle = 'grey'
+            canvasCtx.fillRect(C, smallHeight - L, smallWidth - C, 1)
+            break
+          }
         }
+        prevColorHex = color.hex
       }
     }
     console.timeEnd('chroma')
@@ -37,10 +71,11 @@ const renderChroma = () => {
 const renderMask = () => {
   if (canvasCtx) {
     console.time('  mask')
-    canvasCtx.clearRect(0, 0, 150 * size, 100 * size)
-    for (let L = 100 * size; L >= 0; L--) {
+    canvasCtx.clearRect(0, 0, width, height)
+    for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
       canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+      canvasCtx.fillStyle = 'rgba(0, 0, 0, 1)'
       canvasCtx.fillRect(
         maxChroma * size,
         100 * size - L,

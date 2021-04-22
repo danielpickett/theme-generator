@@ -1,24 +1,7 @@
 [
   {
-    "id": "grey",
-    "hue": 230,
-    "shades": [
-      { "id": "000", "chroma": 0 },
-      { "id": "050", "chroma": 1 },
-      { "id": "100", "chroma": 2.82 },
-      { "id": "200", "chroma": 3.68 },
-      { "id": "300", "chroma": 3.8 },
-      { "id": "400", "chroma": 4.79 },
-      { "id": "500", "chroma": 4.06 },
-      { "id": "600", "chroma": 4.41 },
-      { "id": "700", "chroma": 3.84 },
-      { "id": "800", "chroma": 3.98 },
-      { "id": "900", "chroma": 3.1 }
-    ]
-  },
-  {
     "id": "primary",
-    "hue": 30,
+    "hue": 102.9,
     "shades": [
       { "id": "000", "chroma": 0.0 },
       { "id": "050", "chroma": 3.88 },
