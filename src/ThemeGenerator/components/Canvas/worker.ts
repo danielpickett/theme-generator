@@ -41,6 +41,8 @@ const renderChroma = () => {
   if (canvasCtx) {
     // console.time('chroma')
     for (let L = smallHeight; L >= 0; L--) {
+      console.log('L', L)
+      // if (L < 1820) break
       for (let C = 0; C < smallWidth; C++) {
         const color = getColorDataPlus(L / smallSize, C / smallSize, H)
 
@@ -67,11 +69,12 @@ const renderChroma = () => {
             H < 106.6 &&
             L > 92.5 * smallSize &&
             L < 98.3 * smallSize &&
-            C < 97.1 * smallSize
+            C < 97.2 * smallSize
           ) {
-            if (C < 50 * smallSize) canvasCtx.fillStyle = 'red'
-            else canvasCtx.fillStyle = 'black'
-            canvasCtx.fillStyle = 'black'
+            if (C < 50 * smallSize) {
+              canvasCtx.fillStyle = 'red'
+            } else canvasCtx.fillStyle = 'black'
+            // canvasCtx.fillStyle = 'black'
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {
             // canvasCtx.fillStyle = 'grey'

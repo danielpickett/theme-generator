@@ -26,12 +26,15 @@ const Point = ({ shade }: { shade: ShadeType }) => {
   // const H = useRecoilValue(hueAtom(shade.scaleName))
   return (
     <div
-      className="CanvasPointsOverlay__point"
+      className="CanvasPointsOverlay__crosshairs"
       style={{
-        backgroundColor: L > 50 ? 'black' : 'white',
         left: C * size,
         top: 100 * size - L * size,
       }}
-    ></div>
+    >
+      <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical" />
+      <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--horizontal" />
+      <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical-mask" />
+    </div>
   )
 }
