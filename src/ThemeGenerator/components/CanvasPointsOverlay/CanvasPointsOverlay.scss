@@ -1,6 +1,7 @@
 .CanvasPointsOverlay {
   position: relative;
   box-sizing: border-box;
+  cursor: crosshair;
 
   *,
   *::after,
@@ -40,5 +41,20 @@
       top: -2px;
       left: 1px;
     }
+  }
+
+  &__tooltip {
+    font-family: monospace;
+    font-size: 0.8rem;
+    background-color: white;
+    padding: 0.25rem;
+    position: absolute;
+    transform: translate(20px, 20px);
+  }
+
+  &__coord {
+    width: 8rem;
+    display: flex;
+    justify-content: space-between;
   }
 }

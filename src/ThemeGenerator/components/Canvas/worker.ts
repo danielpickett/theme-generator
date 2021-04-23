@@ -14,7 +14,7 @@ const height = 100 * size
 
 const smallWidth = 150 * smallSize
 const smallHeight = 100 * smallSize
-console.log('smallSize', smallSize)
+console.log('number of rows:', smallHeight)
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
@@ -41,7 +41,7 @@ const renderChroma = () => {
   if (canvasCtx) {
     // console.time('chroma')
     for (let L = smallHeight; L >= 0; L--) {
-      console.log('L', L)
+      // console.log('L', L)
       // if (L < 1820) break
       for (let C = 0; C < smallWidth; C++) {
         const color = getColorDataPlus(L / smallSize, C / smallSize, H)
@@ -71,10 +71,10 @@ const renderChroma = () => {
             L < 98.3 * smallSize &&
             C < 97.2 * smallSize
           ) {
-            if (C < 50 * smallSize) {
-              canvasCtx.fillStyle = 'red'
-            } else canvasCtx.fillStyle = 'black'
-            // canvasCtx.fillStyle = 'black'
+            // if (C < 50 * smallSize) {
+            //   canvasCtx.fillStyle = 'red'
+            // } else canvasCtx.fillStyle = 'black'
+            canvasCtx.fillStyle = 'red'
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {
             // canvasCtx.fillStyle = 'grey'
@@ -97,8 +97,8 @@ const renderMask = () => {
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
-      canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
-      canvasCtx.fillStyle = 'rgba(0, 0, 0, 1)'
+      // canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
+      canvasCtx.fillStyle = 'rgba(0, 0, 124, .5)'
       canvasCtx.fillRect(
         maxChroma * size,
         100 * size - L,
@@ -118,23 +118,15 @@ self.onmessage = (event) => {
   switch (request.type) {
     case 'initCanvas':
       canvasCtx = request.canvas?.getContext('2d')
-      console.log('initCanvas')
+      // console.log('initCanvas')
       break
+
     case 'paintChroma':
       state.hue = request.hue
       if (!state.hasRenderPending) {
         state.hasRenderPending = true
         requestAnimationFrame(renderChroma)
       }
-
-      // const res = 1
-
-      // for (let hue = 0; hue < 360; hue = hue + res) {
-      //   state.hue = hue
-      //   console.log(hue)
-      //   renderChroma()
-      // }
-
       break
 
     case 'paintMask':
@@ -144,6 +136,7 @@ self.onmessage = (event) => {
         requestAnimationFrame(renderMask)
       }
       break
+
     default:
       console.log(`uncaught switch case: ${event.data.type}`)
       break

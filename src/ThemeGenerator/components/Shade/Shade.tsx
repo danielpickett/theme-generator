@@ -2,12 +2,12 @@ import React from 'react'
 import './Shade.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { colorDataPlusSelector, chromaAtom, ShadeType } from 'internal'
-import { maxChromaSelector } from 'ThemeGenerator/state'
+// import { maxChromaSelector } from 'ThemeGenerator/state'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
   const colorData = useRecoilValue(colorDataPlusSelector(shade))
-  const maxChroma = useRecoilValue(maxChromaSelector(shade))
+  // const maxChroma = useRecoilValue(maxChromaSelector(shade))
   // const backgroundColor = colorData.isClipped ? 'black' : colorData.hex
   const backgroundColor = colorData.hex
 
