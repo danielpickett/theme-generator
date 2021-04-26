@@ -13,7 +13,7 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
         <div>
           <input
             type="range"
-            step={10}
+            step={1}
             min={0}
             max={360}
             value={hue}

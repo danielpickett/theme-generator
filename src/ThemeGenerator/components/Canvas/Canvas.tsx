@@ -98,6 +98,16 @@ export const Canvas = ({ hue }: { hue: number }) => {
           Your browser is not supported
         </canvas>
       </div>
+      <button
+        onClick={() =>
+          maskWorkerRef.current?.postMessage({
+            type: 'paintMask',
+            hue,
+          })
+        }
+      >
+        paint mask
+      </button>
     </>
   )
 }

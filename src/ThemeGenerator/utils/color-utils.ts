@@ -34,22 +34,48 @@ Else, if that would make a clipped color, then leave the chroma alone,
 but cut the step in half and try again.
 Continue this until achieving the specified resolution.
 */
-export const getMaxChroma = (
-  luminance: number,
-  hue: number,
-  resolution: number = 0.001
-) => {
+export const getMaxChroma = (luminance: number, hue: number) => {
+  const resolution = 0.001
+
   let chroma = 0
   let step = 50
 
   while (step >= resolution) {
-    // console.log(chroma + step / 2)
     if (!isClipped({ l: luminance, h: hue, c: chroma + step / 2 }))
       chroma = chroma + step / 2
     else step = step / 2
   }
 
   return chroma
+}
+
+export const getMaxChroma2 = (luminance: number, hue: number) => {
+  const resolution = 0.001
+  if (hue > 98.1 && hue < 106.6 && luminance > 92.5 && luminance < 98.3) {
+    return getYellowMaxChroma(luminance, hue)
+  }
+
+  let chroma = 0
+  let step = 50
+
+  while (step >= resolution) {
+    if (!isClipped({ l: luminance, h: hue, c: chroma + step / 2 }))
+      chroma = chroma + step / 2
+    else step = step / 2
+  }
+  return chroma
+}
+
+const getYellowMaxChroma = (luminance: number, hue: number) => {
+  // C < 97.2
+
+  const resolution = 0.01
+
+  for (let chroma = 97.2; chroma > 0; chroma = chroma - resolution) {
+    if (!isClipped({ l: luminance, h: hue, c: chroma })) return chroma
+  }
+
+  return 0
 }
 
 export const getMaxChromaSlow = (

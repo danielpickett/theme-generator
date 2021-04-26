@@ -5,23 +5,19 @@ import { size } from '../Canvas/sizes'
 import './CanvasPointsOverlay.scss'
 
 export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
-  const [showTooltip, setShowTooltip] = useState(true)
+  const [showTooltip, setShowTooltip] = useState(false)
   const [hoverCoords, setHoverCoords] = useState<[number, number]>()
   const ref = useRef<HTMLDivElement>(null)
 
-  const logMousePosition = (
-    node: HTMLDivElement,
+  const handleMouseMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    let rect = node.getBoundingClientRect()
-
-    let x = event.clientX - rect.left
-    let y = event.clientY - rect.top
-    setHoverCoords([x, y])
-    // console.log(
-    //   'C: ' + (x / size).toFixed(1),
-    //   'L: ' + (100 - y / size).toFixed(1)
-    // )
+    if (ref.current) {
+      let rect = ref.current.getBoundingClientRect()
+      let x = event.clientX - rect.left
+      let y = event.clientY - rect.top
+      setHoverCoords([x, y])
+    }
   }
 
   return (
@@ -32,7 +28,9 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
         height: `${100 * size}px`,
         width: `${150 * size}px`,
       }}
-      onMouseMove={(e) => ref.current && logMousePosition(ref.current, e)}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
     >
       {shadeNames.slice(1).map((shadeName) => (
         <Point key={shadeName} shade={{ scaleName, shadeName }} />
@@ -62,15 +60,18 @@ const Point = ({ shade }: { shade: ShadeType }) => {
 
 const Tooltip = ({ coords }: { coords: [number, number] }) => {
   const [x, y] = coords
+  const C = ((x + 1) / size).toFixed(2)
+  const L = ((100 * size - (y + 1)) / size).toFixed(2)
+
   return (
     <div className="CanvasPointsOverlay__tooltip" style={{ left: x, top: y }}>
       <div className="CanvasPointsOverlay__coord">
-        <span>{`C: ${(x / size).toFixed(2)}`}</span>
-        <span>{`x: ${x}`}</span>{' '}
+        <span>{`C: ${C}`}</span>
+        {/* <span>{`x: ${x}`}</span>{' '} */}
       </div>
       <div className="CanvasPointsOverlay__coord">
-        <span>{`L: ${(y / size).toFixed(2)}`}</span>
-        <span>{`y: ${y}`}</span>{' '}
+        <span>{`L: ${L}`}</span>
+        {/* <span>{`y: ${y}`}</span>{' '} */}
       </div>
     </div>
   )

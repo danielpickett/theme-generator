@@ -48,13 +48,15 @@
     font-size: 0.8rem;
     background-color: white;
     padding: 0.25rem;
+    padding-right: 0.5rem;
     position: absolute;
     transform: translate(20px, 20px);
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
   }
 
   &__coord {
-    width: 8rem;
     display: flex;
-    justify-content: space-between;
+    white-space: nowrap;
   }
 }
