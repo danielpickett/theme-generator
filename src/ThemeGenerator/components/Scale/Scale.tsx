@@ -21,7 +21,7 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
           />
           <input
             type="number"
-            step={0.1}
+            step={0.05}
             min={0}
             max={360}
             value={hue}

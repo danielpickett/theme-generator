@@ -1,9 +1,9 @@
 import {
-  getColorDataPlus,
+  getColorData,
   // getMaxChroma,
   getMaxChroma2,
-  isProblemYellow,
 } from 'ThemeGenerator/utils/color-utils'
+import { isProblemYellow } from 'ThemeGenerator/utils/yellow-exception-utils'
 import { RequestMessageType } from './worker-types'
 import { size, smallSize } from './sizes'
 
@@ -26,54 +26,39 @@ const state: { hue: number; hasRenderPending: boolean } = {
 
 const renderChroma = () => {
   const H = state.hue
-  let prevColor = {
-    hex: '#ffffff',
-    lch: {
-      l: 100,
-      c: 0,
-      h: 0,
-    },
-    rgb: [255, 255, 255],
-    isClipped: false,
-  }
-
-  let hasSkips = false
-
   if (canvasCtx) {
     for (let L = smallHeight; L >= 0; L--) {
       if (L < 92 * smallSize) break
+      const yellowException = isProblemYellow(L / smallSize, state.hue)
       for (let C = 0; C < smallWidth; C++) {
-        const color = getColorDataPlus(L / smallSize, C / smallSize, H)
+        const color = getColorData(L / smallSize, C / smallSize, H)
 
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {
+          if (
+            typeof yellowException === 'number' &&
+            C < yellowException * smallSize
+          )
+            canvasCtx.fillStyle = 'black'
           canvasCtx.fillRect(C, smallHeight - L, 1, 1)
-          canvasCtx.fillStyle = color.hex
+        } else {
+          canvasCtx.fillStyle = 'black'
 
           if (
-            Math.abs(color.rgb[0] - prevColor.rgb[0]) > 1 ||
-            Math.abs(color.rgb[1] - prevColor.rgb[1]) > 1 ||
-            Math.abs(color.rgb[2] - prevColor.rgb[2]) > 1
+            typeof yellowException === 'number' &&
+            C < yellowException * smallSize
           ) {
-            if (C > 0) hasSkips = true
-            canvasCtx.fillStyle = L / smallSize > 40 ? 'black' : 'white'
-            canvasCtx.fillRect(C, smallHeight - L, 1, 1)
-          }
-        } else {
-          canvasCtx.fillStyle = 'white'
-          if (isProblemYellow(L, state.hue) && C < 97.2 * smallSize) {
-            canvasCtx.fillStyle = 'red'
+            canvasCtx.fillStyle = 'white'
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {
             canvasCtx.fillRect(C, smallHeight - L, smallWidth - C, 1)
             break
           }
         }
-        prevColor = color
       }
     }
   }
-  if (hasSkips && false) console.log('HAS SKIPS!!! hue: ', state.hue)
+
   state.hasRenderPending = false
 }
 
@@ -87,7 +72,7 @@ const renderMask = () => {
       const maxChroma = getMaxChroma2(L / size, state.hue)
       // shouldLogTime && console.timeEnd(`L ${L}`)
 
-      canvasCtx.fillStyle = 'rgba(0, 0, 124, .5)'
+      canvasCtx.fillStyle = 'rgba(0, 0, 255, .5)'
       canvasCtx.fillRect(
         maxChroma * size,
         100 * size - L,

@@ -1,5 +1,4 @@
 import chromajs, { Color } from 'chroma-js'
-import { smallSize } from 'ThemeGenerator/components/Canvas/sizes'
 
 type AugmentedColor = Color & { clipped: () => boolean }
 
@@ -50,12 +49,6 @@ export const getMaxChroma = (luminance: number, hue: number) => {
   return chroma
 }
 
-export const isProblemYellow = (L: number, H: number) => {
-  if (H > 98.1 && H < 106.6 && L > 92.5 * smallSize && L < 98.3 * smallSize)
-    return true
-  return false
-}
-
 export const getMaxChroma2 = (luminance: number, hue: number) => {
   const resolution = 0.001
   if (hue > 98.1 && hue < 106.6 && luminance > 92.5 && luminance < 98.3) {
@@ -76,7 +69,7 @@ export const getMaxChroma2 = (luminance: number, hue: number) => {
 const getYellowMaxChroma = (luminance: number, hue: number) => {
   // C < 97.2
 
-  const resolution = 0.01
+  const resolution = 0.05
 
   for (let chroma = 97.2; chroma > 0; chroma = chroma - resolution) {
     if (!isClipped({ l: luminance, h: hue, c: chroma })) return chroma
@@ -84,24 +77,3 @@ const getYellowMaxChroma = (luminance: number, hue: number) => {
 
   return 0
 }
-
-export const getMaxChromaSlow = (
-  luminance: number,
-  hue: number,
-  resolution: number = 0.05
-) => {
-  let maxChroma = 0
-  for (let chroma = 0; chroma <= 150; chroma = chroma + resolution) {
-    if (!isClipped({ l: luminance, c: chroma, h: hue })) {
-      maxChroma = chroma
-    }
-  }
-
-  return maxChroma
-}
-
-// const getYellowMaxChroma = (
-//   luminance: number,
-//   hue: number,
-//   resolution: number = 0.05
-// ) => {}

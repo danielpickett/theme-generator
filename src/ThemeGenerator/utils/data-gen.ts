@@ -1,12 +1,12 @@
 import { getColorDataPlus } from 'internal'
 
-const resolution = 1 / 13
+const resolution = 0.05
 const size = 1 / resolution
 const height = size * 100
 const width = size * 150
 
 export const checkHueRangeForSKips = () => {
-  for (let hue = 98; hue <= 107; hue = hue + 1) {
+  for (let hue = 98; hue <= 107; hue = hue + 0.1) {
     checkHueForSkips(hue)
   }
   console.log('done')

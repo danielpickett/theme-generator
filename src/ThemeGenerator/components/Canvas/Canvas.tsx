@@ -52,10 +52,10 @@ export const Canvas = ({ hue }: { hue: number }) => {
       type: 'paintChroma',
       hue,
     })
-    maskWorkerRef.current?.postMessage({
-      type: 'paintMask',
-      hue,
-    })
+    // maskWorkerRef.current?.postMessage({
+    //   type: 'paintMask',
+    //   hue,
+    // })
   }, [hue])
 
   const logMousePosition = (
