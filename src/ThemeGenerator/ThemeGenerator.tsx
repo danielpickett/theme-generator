@@ -5,6 +5,7 @@ import { Scale, scaleNamesAtom } from 'internal'
 import { RawCSSVarsOutput } from './components/RawCSSVarsOutput'
 import ReactDOM from 'react-dom'
 import { getMaxChroma } from './utils'
+import { checkHueRangeForSKips } from './utils/data-gen'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
@@ -62,6 +63,8 @@ const ThemeGeneratorBase = () => {
         />
       </label>
       <button onClick={handleClick}>getMaxChroma</button>
+      <button onClick={() => checkHueRangeForSKips()}>check for skips</button>
+
       <br />
       <br />
       <br />

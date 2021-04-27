@@ -1,4 +1,5 @@
 import chromajs, { Color } from 'chroma-js'
+import { smallSize } from 'ThemeGenerator/components/Canvas/sizes'
 
 type AugmentedColor = Color & { clipped: () => boolean }
 
@@ -47,6 +48,12 @@ export const getMaxChroma = (luminance: number, hue: number) => {
   }
 
   return chroma
+}
+
+export const isProblemYellow = (L: number, H: number) => {
+  if (H > 98.1 && H < 106.6 && L > 92.5 * smallSize && L < 98.3 * smallSize)
+    return true
+  return false
 }
 
 export const getMaxChroma2 = (luminance: number, hue: number) => {
