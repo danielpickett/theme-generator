@@ -27,7 +27,6 @@ const checkHueForSkips = (hue: number) => {
   let hasSkips = false
 
   for (let L = height; L >= 0; L--) {
-    // if (L % 100 === 0) console.log(hue, L)
     for (let C = 0; C < width; C++) {
       const color = getColorDataPlus(L / size, C / size, hue)
 

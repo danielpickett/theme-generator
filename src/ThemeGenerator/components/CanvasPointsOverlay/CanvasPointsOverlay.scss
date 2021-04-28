@@ -43,24 +43,6 @@
     }
   }
 
-  &__horizontal-guide {
-    position: absolute;
-    background-color: black;
-    top: -20px;
-    right: 92px;
-    height: 1px;
-    width: 2000px;
-  }
-
-  &__vertical-guide {
-    position: absolute;
-    background-color: black;
-    left: -20px;
-    top: -20px;
-    width: 1px;
-    height: 2000px;
-  }
-
   &__tooltip {
     font-family: monospace;
     font-size: 0.8rem;

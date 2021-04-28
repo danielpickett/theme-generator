@@ -1,9 +1,5 @@
-import {
-  getColorData,
-  // getMaxChroma,
-  getMaxChroma2,
-} from 'ThemeGenerator/utils/color-utils'
-import { isProblemYellow } from 'ThemeGenerator/utils/yellow-exception-utils'
+import { getColorData, getMaxChroma } from 'ThemeGenerator/utils/color-utils'
+import { parseYellowProblem } from 'ThemeGenerator/utils/yellow-exception-utils'
 import { RequestMessageType } from './worker-types'
 import { size, smallSize } from './sizes'
 
@@ -25,30 +21,19 @@ const state: { hue: number; hasRenderPending: boolean } = {
 }
 
 const renderChroma = () => {
-  const H = state.hue
   if (canvasCtx) {
+    const H = state.hue
+    // console.time(`chroma ${H}`)
     for (let L = smallHeight; L >= 0; L--) {
-      if (L < 92 * smallSize) break
-      const yellowException = isProblemYellow(L / smallSize, state.hue)
+      const yellowException = parseYellowProblem(L / smallSize, H)
       for (let C = 0; C < smallWidth; C++) {
         const color = getColorData(L / smallSize, C / smallSize, H)
 
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {
-          if (
-            typeof yellowException === 'number' &&
-            C < yellowException * smallSize
-          )
-            canvasCtx.fillStyle = 'black'
           canvasCtx.fillRect(C, smallHeight - L, 1, 1)
         } else {
-          canvasCtx.fillStyle = 'black'
-
-          if (
-            typeof yellowException === 'number' &&
-            C < yellowException * smallSize
-          ) {
-            canvasCtx.fillStyle = 'white'
+          if (yellowException !== null && C < yellowException * smallSize) {
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {
             canvasCtx.fillRect(C, smallHeight - L, smallWidth - C, 1)
@@ -57,6 +42,7 @@ const renderChroma = () => {
         }
       }
     }
+    // console.timeEnd(`chroma ${H}`)
   }
 
   state.hasRenderPending = false
@@ -64,15 +50,12 @@ const renderChroma = () => {
 
 const renderMask = () => {
   if (canvasCtx) {
+    // console.time(`  mask ${state.hue}`)
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
-      // const shouldLogTime = L === 998 || isProblemYellow(L, state.hue)
+      const maxChroma = getMaxChroma(L / size, state.hue)
 
-      // shouldLogTime && console.time(`L ${L}`)
-      const maxChroma = getMaxChroma2(L / size, state.hue)
-      // shouldLogTime && console.timeEnd(`L ${L}`)
-
-      canvasCtx.fillStyle = 'rgba(0, 0, 255, .5)'
+      canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
       canvasCtx.fillRect(
         maxChroma * size,
         100 * size - L,
@@ -81,7 +64,7 @@ const renderMask = () => {
       )
     }
 
-    // console.timeEnd('  mask')
+    // console.timeEnd(`  mask ${state.hue}`)
   }
   state.hasRenderPending = false
 }

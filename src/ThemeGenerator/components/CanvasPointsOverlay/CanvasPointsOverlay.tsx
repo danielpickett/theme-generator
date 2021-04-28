@@ -1,12 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import {
-  chromaAtom,
-  ShadeType,
-  defaultLuminances,
-  shadeNames,
-  hueAtom,
-} from 'internal'
+import { chromaAtom, ShadeType, defaultLuminances, shadeNames } from 'internal'
 import { size } from '../Canvas/sizes'
 import './CanvasPointsOverlay.scss'
 
@@ -14,9 +8,6 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const [hoverCoords, setHoverCoords] = useState<[number, number]>()
   const ref = useRef<HTMLDivElement>(null)
-  const H = useRecoilValue(hueAtom(scaleName))
-
-  const [lowerL, setLowerL] = useState<string>()
 
   const handleMouseMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -29,26 +20,6 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
     }
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (hoverCoords) {
-      const [x, y] = hoverCoords
-      const C = ((x + 1) / size).toFixed(2)
-      const L = ((100 * size - (y + 1)) / size).toFixed(2)
-
-      if (e.altKey) {
-        navigator.clipboard.writeText(L)
-        setLowerL(L)
-      } else {
-        const text = `if (H <= ${H}) {
-  if (L > ${L} || L < ${lowerL || 92}) return false
-  else return ${C}
-  }`
-
-        navigator.clipboard.writeText(text)
-      }
-    }
-  }
-
   return (
     <div
       ref={ref}
@@ -58,13 +29,12 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
         width: `${150 * size}px`,
       }}
       onMouseMove={handleMouseMove}
-      onClick={handleClick}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
       {shadeNames.slice(1).map((shadeName) => (
         <Point key={shadeName} shade={{ scaleName, shadeName }} />
-      ))}{' '}
+      ))}
       {showTooltip && hoverCoords && <Tooltip coords={hoverCoords} />}
     </div>
   )
@@ -95,8 +65,6 @@ const Tooltip = ({ coords }: { coords: [number, number] }) => {
 
   return (
     <div className="CanvasPointsOverlay__tooltip" style={{ left: x, top: y }}>
-      <div className="CanvasPointsOverlay__horizontal-guide" />
-      <div className="CanvasPointsOverlay__vertical-guide" />
       <div className="CanvasPointsOverlay__coord">
         <span>{`C: ${C}`}</span>
       </div>

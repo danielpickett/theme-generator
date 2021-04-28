@@ -4,8 +4,6 @@ import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Scale, scaleNamesAtom } from 'internal'
 import { RawCSSVarsOutput } from './components/RawCSSVarsOutput'
 import ReactDOM from 'react-dom'
-import { getMaxChroma } from './utils'
-import { checkHueRangeForSKips } from './utils/data-gen'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
@@ -17,18 +15,6 @@ const ThemeGeneratorBase = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
   const [testHue, setTestHue] = useState(102)
   const [testLightness, setTestLightness] = useState(95)
-
-  const handleClick = () => {
-    console.time('getMaxChroma x   1')
-    const maxChroma = getMaxChroma(testLightness, testHue)
-    console.timeEnd('getMaxChroma x   1')
-    console.time('getMaxChroma x 500')
-    for (let i = 0; i < 500; i++) {
-      getMaxChroma(testLightness, testHue)
-    }
-    console.timeEnd('getMaxChroma x 500')
-    console.log(maxChroma)
-  }
 
   return (
     <div className="ThemeGenerator">
@@ -62,8 +48,6 @@ const ThemeGeneratorBase = () => {
           onChange={({ target: { value } }) => setTestLightness(+value)}
         />
       </label>
-      <button onClick={handleClick}>getMaxChroma</button>
-      <button onClick={() => checkHueRangeForSKips()}>check for skips</button>
 
       <br />
       <br />

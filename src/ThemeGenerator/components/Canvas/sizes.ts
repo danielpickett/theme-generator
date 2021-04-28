@@ -1,2 +1,2 @@
-export const size = 20
-export const smallSize = size / 1
+export const size = 2
+export const smallSize = size / 2
