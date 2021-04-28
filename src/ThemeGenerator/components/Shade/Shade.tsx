@@ -1,18 +1,20 @@
 import React from 'react'
 import './Shade.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { colorDataSelector, chromaAtom, ShadeType } from 'internal'
-import { maxChromaSelector } from 'ThemeGenerator/state'
+import { colorDataPlusSelector, chromaAtom, ShadeType } from 'internal'
+// import { maxChromaSelector } from 'ThemeGenerator/state'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
-  const colorData = useRecoilValue(colorDataSelector(shade))
-  const maxChroma = useRecoilValue(maxChromaSelector(shade))
-  const backgroundColor = colorData.isClipped ? 'black' : colorData.hex
+  const colorData = useRecoilValue(colorDataPlusSelector(shade))
+  // const maxChroma = useRecoilValue(maxChromaSelector(shade))
+  // const backgroundColor = colorData.isClipped ? 'black' : colorData.hex
+  const backgroundColor = colorData.hex
 
   const handleChromaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = +e.target.value
-    setChroma(value < maxChroma ? value : maxChroma)
+    // setChroma(value < maxChroma ? value : maxChroma)
+    setChroma(value)
   }
 
   return (
@@ -20,7 +22,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       className="Shade"
       style={{
         backgroundColor,
-        color: 'grey',
+        color: colorData.lch.l > 65 ? 'black' : 'white',
         fontSize: '1rem',
       }}
     >
@@ -31,6 +33,9 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
           {`c: ${colorData.lch.c}\n`}
           {`h: ${colorData.lch.h}\n`}
           {`${colorData.hex}\n`}
+          {`${colorData.rgb.join()}\n`}
+          {`${colorData.contrastOnWhite}`}
+
           {/* {`maxChroma: ${maxChroma.toFixed(3)}`} */}
           <br />
           <input

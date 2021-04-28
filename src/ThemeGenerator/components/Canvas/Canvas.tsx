@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react'
-import { size, reducedSize } from './sizeSetting'
+import { size, smallSize } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -63,9 +63,9 @@ export const Canvas = ({ hue }: { hue: number }) => {
         style={{ height: `${100 * size}px`, width: `${150 * size}px` }}
       >
         <canvas
-          height={100 * reducedSize}
-          width={150 * reducedSize}
-          className="Canvas__main-canvas"
+          height={100 * smallSize}
+          width={150 * smallSize}
+          className="Canvas__canvas"
           ref={initChromaWorker}
         >
           Your browser is not supported
@@ -73,13 +73,12 @@ export const Canvas = ({ hue }: { hue: number }) => {
         <canvas
           height={100 * size}
           width={150 * size}
-          className="Canvas__main-canvas"
+          className="Canvas__canvas"
           ref={initMaskWorker}
         >
           Your browser is not supported
         </canvas>
       </div>
-      <br />
     </>
   )
 }

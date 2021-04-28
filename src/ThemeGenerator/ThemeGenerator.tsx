@@ -13,6 +13,7 @@ export const ThemeGenerator = () => (
 
 const ThemeGeneratorBase = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
+
   return (
     <div className="ThemeGenerator">
       <div className="ThemeGenerator__scales">
