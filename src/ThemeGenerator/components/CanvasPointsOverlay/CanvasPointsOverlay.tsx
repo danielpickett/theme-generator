@@ -47,8 +47,8 @@ const Point = ({ shade }: { shade: ShadeType }) => {
     <div
       className="CanvasPointsOverlay__crosshairs"
       style={{
-        left: C * size,
-        top: 100 * size - L * size,
+        left: C * size - 1,
+        top: 100 * size - L * size - 1,
       }}
     >
       <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical" />
