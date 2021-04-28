@@ -42,7 +42,7 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
         const text = `if (H <= ${H}) {
   if (L > ${L} || L < ${lowerL || 92}) return false
   else return ${C}
-  }`
+}`
 
         navigator.clipboard.writeText(text)
       }
