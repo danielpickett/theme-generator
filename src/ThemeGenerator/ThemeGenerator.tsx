@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './ThemeGenerator.scss'
 import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Scale, scaleNamesAtom } from 'internal'
@@ -13,8 +13,6 @@ export const ThemeGenerator = () => (
 
 const ThemeGeneratorBase = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
-  const [testHue, setTestHue] = useState(102)
-  const [testLightness, setTestLightness] = useState(95)
 
   return (
     <div className="ThemeGenerator">
@@ -32,27 +30,6 @@ const ThemeGeneratorBase = () => {
         </style>,
         document.head
       )}
-      <label>
-        {'H: '}
-        <input
-          type="text"
-          value={testHue}
-          onChange={({ target: { value } }) => setTestHue(+value)}
-        />
-      </label>
-      <label>
-        {'L: '}
-        <input
-          type="text"
-          value={testLightness}
-          onChange={({ target: { value } }) => setTestLightness(+value)}
-        />
-      </label>
-
-      <br />
-      <br />
-      <br />
-      <br />
     </div>
   )
 }
