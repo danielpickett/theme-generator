@@ -8,13 +8,12 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
   const colorData = useRecoilValue(colorDataPlusSelector(shade))
   const maxChroma = useRecoilValue(maxChromaSelector(shade))
-  // const backgroundColor = colorData.isClipped ? 'black' : colorData.hex
-  const backgroundColor = colorData.hex
+  const backgroundColor = chroma > maxChroma ? 'black' : colorData.hex
+  // const backgroundColor = colorData.hex
 
   const handleChromaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = +e.target.value
     setChroma(value < maxChroma ? value : maxChroma)
-    // setChroma(value)
   }
 
   return (
@@ -29,12 +28,13 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       <div>{`${shade.scaleName}-${shade.shadeName}`}</div>
       <div>
         <pre>
-          {`l: ${colorData.lch.l.toFixed(3)}\n`}
-          {`c: ${colorData.lch.c.toFixed(3)}\n`}
-          {`h: ${colorData.lch.h.toFixed(3)}\n`}
+          {`l: ${colorData.lch.l.toFixed(2)}\n`}
+          {`c: ${colorData.lch.c.toFixed(2)}\n`}
+          {`h: ${colorData.lch.h.toFixed(2)}\n`}
           {`${colorData.hex}\n`}
           {`${colorData.rgb.join()}\n`}
-          {`${colorData.contrastOnWhite.toFixed(3)}\n`}
+          {`${colorData.contrastOnWhite.toFixed(2)}\n`}
+          {`${colorData.clipped_lch.map((n) => n.toFixed(2)).join()}\n`}
 
           {`maxChroma: ${maxChroma.toFixed(3)}`}
           <br />
@@ -42,10 +42,13 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
             type="range"
             min={0}
             max={150}
-            step={0.1}
+            step={0.05}
             value={chroma}
             onChange={handleChromaChange}
           />
+          <div style={{ height: '3rem', backgroundColor: colorData.hex }}>
+            {colorData.rgb.join(' ')}
+          </div>
         </pre>
       </div>
     </div>

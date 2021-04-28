@@ -37,6 +37,9 @@ const renderChroma = () => {
         if (!color.isClipped) {
           canvasCtx.fillRect(C, smallHeight - L, 1, 1)
         } else {
+          // uncomment to see the yellow dip
+          // canvasCtx.fillStyle = 'black'
+          // canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           if (yellowException !== null && C < yellowException * smallSize) {
             canvasCtx.fillRect(C, smallHeight - L, 1, 1)
           } else {

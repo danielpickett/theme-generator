@@ -1,6 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { chromaAtom, ShadeType, defaultLuminances, shadeNames } from 'internal'
+import {
+  chromaAtom,
+  ShadeType,
+  defaultLuminances,
+  shadeNames,
+  // colorDataPlusSelector,
+  // hueAtom,
+} from 'internal'
 import { size } from '../Canvas/sizes'
 import './CanvasPointsOverlay.scss'
 
@@ -33,16 +40,20 @@ export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
       onMouseLeave={() => setShowTooltip(false)}
     >
       {shadeNames.slice(1).map((shadeName) => (
-        <Point key={shadeName} shade={{ scaleName, shadeName }} />
+        <React.Fragment key={shadeName}>
+          {/* <OutputPoint shade={{ scaleName, shadeName }} /> */}
+          <InputPoint shade={{ scaleName, shadeName }} />
+        </React.Fragment>
       ))}
       {showTooltip && hoverCoords && <Tooltip coords={hoverCoords} />}
     </div>
   )
 }
 
-const Point = ({ shade }: { shade: ShadeType }) => {
+const InputPoint = ({ shade }: { shade: ShadeType }) => {
   const L = defaultLuminances[shade.shadeName]
   const C = useRecoilValue(chromaAtom(shade))
+  // const H = useRecoilValue(hueAtom(shade.scaleName))
   return (
     <div
       className="CanvasPointsOverlay__crosshairs"
@@ -51,12 +62,55 @@ const Point = ({ shade }: { shade: ShadeType }) => {
         top: 100 * size - L * size - 1,
       }}
     >
+      {/* <div style={{ top: '-45px' }} className="CanvasPointsOverlay__output">
+        {`L: ${L.toFixed(3)}, C: ${C.toFixed(3)}, H: ${H.toFixed(3)}`}
+      </div> */}
       <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical" />
       <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--horizontal" />
       <div className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical-mask" />
     </div>
   )
 }
+
+// const OutputPoint = ({ shade }: { shade: ShadeType }) => {
+//   const dataDataPlus = useRecoilValue(colorDataPlusSelector(shade))
+//   const L = dataDataPlus.clipped_lch[0]
+//   const C = dataDataPlus.clipped_lch[1]
+//   const H = dataDataPlus.clipped_lch[2]
+
+//   const style = {
+//     backgroundColor: 'red',
+//   } as const
+
+//   return (
+//     <div
+//       className="CanvasPointsOverlay__crosshairs"
+//       style={{
+//         left: C * size - 1,
+//         top: 100 * size - L * size - 1,
+//       }}
+//     >
+//       <div
+//         style={{ color: 'red', top: '-24px' }}
+//         className="CanvasPointsOverlay__output"
+//       >
+//         {`L: ${L.toFixed(3)}, C: ${C.toFixed(3)}, H: ${H.toFixed(3)}`}
+//       </div>
+//       <div
+//         style={style}
+//         className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical"
+//       />
+//       <div
+//         style={style}
+//         className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--horizontal"
+//       />
+//       <div
+//         style={style}
+//         className="CanvasPointsOverlay__crosshair CanvasPointsOverlay__crosshair--vertical-mask"
+//       />
+//     </div>
+//   )
+// }
 
 const Tooltip = ({ coords }: { coords: [number, number] }) => {
   const [x, y] = coords

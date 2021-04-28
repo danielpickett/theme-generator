@@ -19,6 +19,7 @@ export const getColorDataPlus = (l: number, c: number, h: number) => {
     hex: color.hex(),
     lch: { l, c, h },
     rgb: color.rgb(),
+    clipped_lch: chromajs(color.css()).lch(),
     contrastOnWhite: chromajs.contrast(color, 'white'),
     isClipped: color.clipped(),
   }
