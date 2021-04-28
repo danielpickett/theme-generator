@@ -29,11 +29,12 @@ const isClipped = (color: { l: number; c: number; h: number }) =>
 
 export const getMaxChroma = (luminance: number, hue: number) => {
   const chromaLimit = parseYellowProblem(luminance, hue)
-  if (chromaLimit !== null)
-    // We have a yellow problem. Go to linear search
+  if (chromaLimit !== null) {
+    // We have a yellow problem. Go to LINEAR SEARCH
     return getYellowMaxChroma(luminance, hue, chromaLimit)
+  }
 
-  // 0.01 confirmed to be accurate through all hues
+  // 0.01 confirmed to be accurate across all hues
   const resolution = 0.01
   let chroma = 0
   let step = 150
