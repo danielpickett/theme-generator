@@ -106,5 +106,3 @@ const isBetween = (val: number, num1: number, num2: number) => {
   if (val < max && val > min) return true
   return false
 }
-
-//95.10
