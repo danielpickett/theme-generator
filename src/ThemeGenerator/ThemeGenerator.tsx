@@ -1,5 +1,6 @@
 import React from 'react'
 import './ThemeGenerator.scss'
+import '../theme.css'
 import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Scale, scaleNamesAtom, RawCSSVarsOutput } from './'
 import ReactDOM from 'react-dom'
@@ -14,7 +15,7 @@ const ThemeGeneratorBase = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
 
   return (
-    <div className="ThemeGenerator">
+    <div className="ThemeGenerator dark-blue-theme">
       <div className="ThemeGenerator__scales">
         {scaleNames.map((scaleName) => (
           <Scale key={scaleName} scaleName={scaleName} />

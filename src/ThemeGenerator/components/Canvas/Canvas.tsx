@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useRef } from 'react'
+import { useRecoilValue } from 'recoil'
+import { hueAtom } from 'ThemeGenerator'
 import { size, smallSize } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
-export const Canvas = ({ hue }: { hue: number }) => {
+export const Canvas = ({ scaleName }: { scaleName: string }) => {
+  const hue = useRecoilValue(hueAtom(scaleName))
+
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = useCallback((canvas: HTMLCanvasElement) => {

@@ -27,7 +27,7 @@ const state: { hue: number; hasRenderPending: boolean } = {
 const renderChroma = () => {
   if (canvasCtx) {
     const H = state.hue
-    console.time(`chroma ${H}`)
+
     for (let L = smallHeight; L >= 0; L--) {
       const yellowException = parseYellowProblem(L / smallSize, H)
       for (let C = 0; C < smallWidth; C++) {
@@ -49,7 +49,6 @@ const renderChroma = () => {
         }
       }
     }
-    console.timeEnd(`chroma ${H}`)
   }
 
   state.hasRenderPending = false
@@ -57,7 +56,6 @@ const renderChroma = () => {
 
 const renderMask = () => {
   if (canvasCtx) {
-    // console.time(`  mask ${state.hue}`)
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
@@ -70,8 +68,6 @@ const renderMask = () => {
         1
       )
     }
-
-    // console.timeEnd(`  mask ${state.hue}`)
   }
   state.hasRenderPending = false
 }
@@ -82,7 +78,6 @@ self.onmessage = (event) => {
   switch (request.type) {
     case 'initCanvas':
       canvasCtx = request.canvas?.getContext('2d')
-      // console.log('initCanvas')
       break
 
     case 'paintChroma':
@@ -102,7 +97,6 @@ self.onmessage = (event) => {
       break
 
     default:
-      console.log(`uncaught switch case: ${event.data.type}`)
       break
   }
 }
