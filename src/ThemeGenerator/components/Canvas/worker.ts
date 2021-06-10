@@ -57,7 +57,7 @@ const renderChroma = () => {
 
 const renderMask = () => {
   if (canvasCtx) {
-    console.time(`  mask ${state.hue}`)
+    // console.time(`  mask ${state.hue}`)
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
@@ -71,7 +71,7 @@ const renderMask = () => {
       )
     }
 
-    console.timeEnd(`  mask ${state.hue}`)
+    // console.timeEnd(`  mask ${state.hue}`)
   }
   state.hasRenderPending = false
 }
