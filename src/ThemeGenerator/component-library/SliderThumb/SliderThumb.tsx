@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Expand } from '@eltoro-ui/types'
-import { useHasKeyboardFocus } from '@eltoro-ui/hooks'
+import { Expand } from 'ThemeGenerator/types'
+import { useHasKeyboardFocus } from 'ThemeGenerator/hooks'
 import classNames from 'classnames'
 import './SliderThumb.scss'
 
@@ -54,13 +54,14 @@ export const SliderThumb = ({
   const clickOffsetRef = useRef(0)
   const range = max - min
 
-  const clamp = useCallback((n: number) => Math.max(Math.min(n, max), min), [
-    min,
-    max,
-  ])
-  const roundToStep = useCallback((n: number) => Math.round(n / step) * step, [
-    step,
-  ])
+  const clamp = useCallback(
+    (n: number) => Math.max(Math.min(n, max), min),
+    [min, max]
+  )
+  const roundToStep = useCallback(
+    (n: number) => Math.round(n / step) * step,
+    [step]
+  )
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsDragging(true)
@@ -73,7 +74,7 @@ export const SliderThumb = ({
     if (thumbRef.current) {
       const thumb = thumbRef.current.getBoundingClientRect()
       clickOffsetRef.current = Math.round(
-        thumb.left + thumb.width / 2 - e.clientX,
+        thumb.left + thumb.width / 2 - e.clientX
       )
     }
 
@@ -123,7 +124,7 @@ export const SliderThumb = ({
       roundToStep,
       clamp,
       onChange,
-    ], // everything but the value
+    ] // everything but the value
   )
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
