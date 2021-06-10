@@ -1,5 +1,5 @@
 import React from 'react'
-import { Canvas, hueAtom, Shade, shadeNames } from 'internal'
+import { Canvas, hueAtom, Shade, shadeNames } from 'ThemeGenerator'
 import './Scale.scss'
 import { useRecoilState } from 'recoil'
 import { CanvasPointsOverlay } from '../CanvasPointsOverlay'

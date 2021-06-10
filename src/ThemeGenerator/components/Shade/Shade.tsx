@@ -1,7 +1,7 @@
 import React from 'react'
 import './Shade.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { colorDataPlusSelector, chromaAtom, ShadeType } from 'internal'
+import { colorDataPlusSelector, chromaAtom, ShadeType } from 'ThemeGenerator'
 import { maxChromaSelector } from 'ThemeGenerator/state'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {

@@ -7,7 +7,7 @@ import {
   shadeNames,
   // colorDataPlusSelector,
   // hueAtom,
-} from 'internal'
+} from 'ThemeGenerator'
 import { size } from '../Canvas/sizes'
 import './CanvasPointsOverlay.scss'
 

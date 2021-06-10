@@ -10,7 +10,7 @@ import {
   ShadeType,
   ScaleNameType,
   ColorDataPlusType,
-} from 'internal'
+} from 'ThemeGenerator'
 import { getMaxChroma } from 'ThemeGenerator/utils'
 
 export const scaleNamesAtom = atom({
@@ -35,22 +35,26 @@ export const chromaAtom = atomFamily<number, ShadeType>({
 
 export const maxChromaSelector = selectorFamily<number, ShadeType>({
   key: 'maxChroma',
-  get: (shade) => ({ get }) => {
-    const luminance = defaultLuminances[shade.shadeName]
-    const hue = get(hueAtom(shade.scaleName))
-    return getMaxChroma(luminance, hue)
-  },
+  get:
+    (shade) =>
+    ({ get }) => {
+      const luminance = defaultLuminances[shade.shadeName]
+      const hue = get(hueAtom(shade.scaleName))
+      return getMaxChroma(luminance, hue)
+    },
 })
 
 export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
   key: 'hexColor',
-  get: (shade) => ({ get }) => {
-    const luminance = defaultLuminances[shade.shadeName]
-    const chroma = get(chromaAtom(shade))
-    const hue = get(hueAtom(shade.scaleName))
+  get:
+    (shade) =>
+    ({ get }) => {
+      const luminance = defaultLuminances[shade.shadeName]
+      const chroma = get(chromaAtom(shade))
+      const hue = get(hueAtom(shade.scaleName))
 
-    return getColorData(luminance, chroma, hue)
-  },
+      return getColorData(luminance, chroma, hue)
+    },
 })
 
 export const colorDataPlusSelector = selectorFamily<
@@ -58,11 +62,13 @@ export const colorDataPlusSelector = selectorFamily<
   ShadeType
 >({
   key: 'hexColor',
-  get: (shade) => ({ get }) => {
-    const luminance = defaultLuminances[shade.shadeName]
-    const chroma = get(chromaAtom(shade))
-    const hue = get(hueAtom(shade.scaleName))
+  get:
+    (shade) =>
+    ({ get }) => {
+      const luminance = defaultLuminances[shade.shadeName]
+      const chroma = get(chromaAtom(shade))
+      const hue = get(hueAtom(shade.scaleName))
 
-    return getColorDataPlus(luminance, chroma, hue)
-  },
+      return getColorDataPlus(luminance, chroma, hue)
+    },
 })

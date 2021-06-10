@@ -1,5 +1,0 @@
-export * from 'ThemeGenerator/components'
-export * from 'ThemeGenerator/config'
-export * from 'ThemeGenerator/state'
-export * from 'ThemeGenerator/types'
-export * from 'ThemeGenerator/utils'

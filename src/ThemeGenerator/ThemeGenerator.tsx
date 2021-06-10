@@ -1,8 +1,7 @@
 import React from 'react'
 import './ThemeGenerator.scss'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Scale, scaleNamesAtom } from 'internal'
-import { RawCSSVarsOutput } from './components/RawCSSVarsOutput'
+import { Scale, scaleNamesAtom, RawCSSVarsOutput } from './'
 import ReactDOM from 'react-dom'
 
 export const ThemeGenerator = () => (
