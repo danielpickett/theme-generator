@@ -1,0 +1,8 @@
+@import 'src/tokens';
+
+.SliderBar {
+  position: relative;
+  overflow: hidden;
+  background-color: $color-grey-200;
+  border-radius: 100rem;
+}
