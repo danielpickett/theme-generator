@@ -1,4 +1,4 @@
-import { getColorDataPlus } from 'internal'
+import { getColorDataPlus } from 'ThemeGenerator'
 
 const resolution = 0.05
 const size = 1 / resolution

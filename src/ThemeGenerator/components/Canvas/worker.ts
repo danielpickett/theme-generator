@@ -57,7 +57,6 @@ const renderChroma = () => {
 
 const renderMask = () => {
   if (canvasCtx) {
-    console.time(`  mask ${state.hue}`)
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const maxChroma = getMaxChroma(L / size, state.hue)
@@ -70,8 +69,6 @@ const renderMask = () => {
         1
       )
     }
-
-    console.timeEnd(`  mask ${state.hue}`)
   }
   state.hasRenderPending = false
 }
@@ -82,7 +79,6 @@ self.onmessage = (event) => {
   switch (request.type) {
     case 'initCanvas':
       canvasCtx = request.canvas?.getContext('2d')
-      // console.log('initCanvas')
       break
 
     case 'paintChroma':

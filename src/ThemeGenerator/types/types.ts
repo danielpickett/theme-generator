@@ -1,4 +1,4 @@
-import { getColorData, getColorDataPlus } from 'internal'
+import { getColorData, getColorDataPlus } from 'ThemeGenerator'
 
 export type ShadeNameType =
   | '000'
