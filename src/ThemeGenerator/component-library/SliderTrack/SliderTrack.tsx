@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from 'react'
-import { Expand } from '@eltoro-ui/types'
+import { Expand } from 'ThemeGenerator/types'
 import { SliderBar } from '../SliderBar'
 import './SliderTrack.scss'
 
