@@ -37,24 +37,23 @@ export const maxChromaSelector = selectorFamily<number, ShadeType>({
   key: 'maxChroma',
   get:
     (shade) =>
-    ({ get }) => {
-      const luminance = defaultLuminances[shade.shadeName]
-      const hue = get(hueAtom(shade.scaleName))
-      return getMaxChroma(luminance, hue)
-    },
+    ({ get }) =>
+      getMaxChroma(
+        defaultLuminances[shade.shadeName],
+        get(hueAtom(shade.scaleName))
+      ),
 })
 
 export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
   key: 'hexColor',
   get:
     (shade) =>
-    ({ get }) => {
-      const luminance = defaultLuminances[shade.shadeName]
-      const chroma = get(chromaAtom(shade))
-      const hue = get(hueAtom(shade.scaleName))
-
-      return getColorData(luminance, chroma, hue)
-    },
+    ({ get }) =>
+      getColorData(
+        defaultLuminances[shade.shadeName],
+        get(chromaAtom(shade)),
+        get(hueAtom(shade.scaleName))
+      ),
 })
 
 export const colorDataPlusSelector = selectorFamily<
@@ -64,11 +63,10 @@ export const colorDataPlusSelector = selectorFamily<
   key: 'hexColor',
   get:
     (shade) =>
-    ({ get }) => {
-      const luminance = defaultLuminances[shade.shadeName]
-      const chroma = get(chromaAtom(shade))
-      const hue = get(hueAtom(shade.scaleName))
-
-      return getColorDataPlus(luminance, chroma, hue)
-    },
+    ({ get }) =>
+      getColorDataPlus(
+        defaultLuminances[shade.shadeName],
+        get(chromaAtom(shade)),
+        get(hueAtom(shade.scaleName))
+      ),
 })

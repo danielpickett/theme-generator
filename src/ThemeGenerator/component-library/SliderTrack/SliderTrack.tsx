@@ -1,5 +1,5 @@
 import React, { ReactElement, useRef } from 'react'
-import { Expand } from 'ThemeGenerator/types'
+import { Expand } from 'ThemeGenerator'
 import { SliderBar } from '../SliderBar'
 import './SliderTrack.scss'
 
