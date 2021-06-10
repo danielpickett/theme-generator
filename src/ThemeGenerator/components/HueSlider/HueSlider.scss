@@ -26,7 +26,8 @@
   }
 }
 .HueSlider:hover,
-.HueSlider--has-keyboard-focus-within {
+.HueSlider--has-keyboard-focus-within,
+.HueSlider--is-dragging-within {
   .HueSlider {
     &__track {
       height: 0.7rem;

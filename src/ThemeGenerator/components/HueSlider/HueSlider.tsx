@@ -8,12 +8,14 @@ import classNames from 'classnames'
 export const HueSlider = ({ scaleName }: { scaleName: string }) => {
   const sliderTrackRef = useRef<HTMLDivElement>(null)
   const [hasKeyboardFocusWithin, setHasKeyboardFocusWithin] = useState(false)
+  const [isDraggingWithin, setIsDraggingWithin] = useState(false)
   const [hue, setHue] = useRecoilState(hueAtom(scaleName))
 
   return (
     <div
       className={classNames('HueSlider', {
         'HueSlider--has-keyboard-focus-within': hasKeyboardFocusWithin,
+        'HueSlider--is-dragging-within': isDraggingWithin,
       })}
     >
       <div
@@ -33,11 +35,18 @@ export const HueSlider = ({ scaleName }: { scaleName: string }) => {
           onChange={(newValue) => setHue(newValue)}
         >
           {({ hasKeyboardFocus, isDragging }) => {
-            if (hasKeyboardFocus !== hasKeyboardFocusWithin) {
+            if (hasKeyboardFocus !== hasKeyboardFocusWithin)
+              // terrible idea, but I'm doing it
               setTimeout(() => {
                 setHasKeyboardFocusWithin(hasKeyboardFocus)
               })
-            }
+
+            if (isDragging !== isDraggingWithin)
+              // terrible idea, but I'm doing it
+              setTimeout(() => {
+                setIsDraggingWithin(isDragging)
+              })
+
             return (
               <div
                 className={classNames('HueSlider__thumb', {
