@@ -1,0 +1,27 @@
+@import 'src/tokens';
+@import 'src/mixins';
+
+.SliderThumb {
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 50%;
+  outline: none;
+  &__thumb {
+    // opacity: 0.5;
+    background-color: $color-primary;
+    border-radius: 100rem;
+    height: 1rem;
+    width: 1rem;
+    outline: none;
+    transform: translate(-50%, -50%);
+    border: 3px solid transparent;
+    &--has-keyboard-focus {
+      box-shadow: $focus-ring;
+    }
+    &--is-dragging {
+      box-shadow: $box-shadow-200-dark;
+    }
+  }
+}

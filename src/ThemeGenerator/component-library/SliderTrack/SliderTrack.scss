@@ -1,0 +1,10 @@
+@import 'src/tokens';
+
+.SliderTrack {
+  position: relative;
+  &__track {
+    height: 0.5rem;
+    background-color: $color-grey-200;
+    border-radius: 100rem;
+  }
+}
