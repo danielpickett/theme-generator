@@ -1,4 +1,5 @@
 export * from './ThemeGenerator'
+export * from './component-library'
 export * from './components'
 export * from './config'
 export * from './state'

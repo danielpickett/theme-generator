@@ -27,7 +27,7 @@ const state: { hue: number; hasRenderPending: boolean } = {
 const renderChroma = () => {
   if (canvasCtx) {
     const H = state.hue
-    console.time(`chroma ${H}`)
+
     for (let L = smallHeight; L >= 0; L--) {
       const yellowException = parseYellowProblem(L / smallSize, H)
       for (let C = 0; C < smallWidth; C++) {
@@ -49,7 +49,6 @@ const renderChroma = () => {
         }
       }
     }
-    console.timeEnd(`chroma ${H}`)
   }
 
   state.hasRenderPending = false
@@ -98,7 +97,6 @@ self.onmessage = (event) => {
       break
 
     default:
-      console.log(`uncaught switch case: ${event.data.type}`)
       break
   }
 }
