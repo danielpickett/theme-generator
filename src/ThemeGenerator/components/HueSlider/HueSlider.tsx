@@ -33,20 +33,12 @@ export const HueSlider = ({ scaleName }: { scaleName: string }) => {
           sliderTrackRef={sliderTrackRef}
           aria-label="my slider"
           onChange={(newValue) => setHue(newValue)}
+          onKeyboardFocus={() => setHasKeyboardFocusWithin(true)}
+          onKeyboardBlur={() => setHasKeyboardFocusWithin(false)}
+          onDragStart={() => setIsDraggingWithin(true)}
+          onDragEnd={() => setIsDraggingWithin(false)}
         >
-          {({ hasKeyboardFocus, isDragging }) => {
-            if (hasKeyboardFocus !== hasKeyboardFocusWithin)
-              // terrible idea, but I'm doing it
-              setTimeout(() => {
-                setHasKeyboardFocusWithin(hasKeyboardFocus)
-              })
-
-            if (isDragging !== isDraggingWithin)
-              // terrible idea, but I'm doing it
-              setTimeout(() => {
-                setIsDraggingWithin(isDragging)
-              })
-
+          {({ hasKeyboardFocus }) => {
             return (
               <div
                 className={classNames('HueSlider__thumb', {

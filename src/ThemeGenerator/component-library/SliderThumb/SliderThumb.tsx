@@ -28,7 +28,11 @@ export const SliderThumb = ({
   'aria-label': ariaLabel,
   onChange,
   onFocus,
+  onKeyboardFocus,
   onBlur,
+  onKeyboardBlur,
+  onDragStart,
+  onDragEnd,
 }: {
   value: number
   min?: number
@@ -44,13 +48,20 @@ export const SliderThumb = ({
   'aria-label': string
   onChange?: OnChangeType
   onFocus?: OnFocusChangeType
+  onKeyboardFocus?: () => void
   onBlur?: OnFocusChangeType
+  onKeyboardBlur?: () => void
+  onDragStart?: () => void
+  onDragEnd?: () => void
 }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [hasFocus, setHasFocus] = useState(false)
   const thumbRef = useRef<HTMLDivElement>(null)
   const originalUserSelectSetting = useRef<string>('')
-  const hasKeyboardFocus = useHasKeyboardFocus(thumbRef)
+  const hasKeyboardFocus = useHasKeyboardFocus(thumbRef, {
+    onKeyboardFocus,
+    onKeyboardBlur,
+  })
   const clickOffsetRef = useRef(0)
   const range = max - min
 
@@ -65,6 +76,7 @@ export const SliderThumb = ({
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setIsDragging(true)
+    if (onDragStart) onDragStart()
 
     // Get the distance between the point on the thumb that was click, and
     // the center of the thumb. Save this in a ref to avoid extra renders.
@@ -88,6 +100,7 @@ export const SliderThumb = ({
     () => {
       const handleMouseUp = () => {
         setIsDragging(false)
+        if (onDragEnd) onDragEnd()
         document.body.style.userSelect = originalUserSelectSetting.current
       }
 

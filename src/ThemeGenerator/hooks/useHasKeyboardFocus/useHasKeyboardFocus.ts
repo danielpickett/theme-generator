@@ -2,8 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 
-export const useHasKeyboardFocus = <RefT extends Element>(
-  ref: React.RefObject<RefT>,
+export const useHasKeyboardFocus = <T extends Element>(
+  ref: React.RefObject<T>,
+  handlers?: { onKeyboardFocus?: () => void; onKeyboardBlur?: () => void }
 ) => {
   const modalityRef = useRef<'pointer' | 'keyboard'>('keyboard')
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)
@@ -21,8 +22,14 @@ export const useHasKeyboardFocus = <RefT extends Element>(
     }
 
     const keyboardFocus = {
-      on: () => setHasKeyboardFocus(true),
-      off: () => setHasKeyboardFocus(false),
+      on: () => {
+        setHasKeyboardFocus(true)
+        if (handlers?.onKeyboardFocus) handlers.onKeyboardFocus()
+      },
+      off: () => {
+        setHasKeyboardFocus(false)
+        if (handlers?.onKeyboardBlur) handlers.onKeyboardBlur()
+      },
     }
 
     const handleElementFocus = () => {
@@ -53,6 +60,6 @@ export const useHasKeyboardFocus = <RefT extends Element>(
       document.removeEventListener('pointerdown', modality.pointer, true)
       document.removeEventListener('touchstart', modality.pointer, true)
     }
-  }, [ref])
+  }, [ref, handlers])
   return hasKeyboardFocus
 }
