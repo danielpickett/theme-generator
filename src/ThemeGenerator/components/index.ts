@@ -1,5 +1,6 @@
 export * from './Canvas'
 export * from './CanvasPointsOverlay'
+export * from './ChromaSlider'
 export * from './HueSlider'
 export * from './RawCSSVarsOutput'
 export * from './Scale'

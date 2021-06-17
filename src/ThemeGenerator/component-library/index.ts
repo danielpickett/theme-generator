@@ -1,5 +1,1 @@
 export * from './Slider'
-export * from './SliderBarFill'
-export * from './SliderBarFill'
-export * from './SliderThumb'
-export * from './SliderTrack'

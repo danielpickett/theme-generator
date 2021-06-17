@@ -22,7 +22,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       style={{
         backgroundColor,
         color: colorData.lch.l > 65 ? 'black' : 'white',
-        fontSize: '1rem',
+        fontSize: '.75rem',
       }}
     >
       <div>{`${shade.scaleName}-${shade.shadeName}`}</div>

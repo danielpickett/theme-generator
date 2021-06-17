@@ -1,26 +1,35 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
-import { Slider } from 'ThemeGenerator'
-import './HueSlider.scss'
-import sliderBackground from './lch-hue-picker-background.png'
-import { useRecoilState } from 'recoil'
-import { hueAtom } from 'ThemeGenerator/state'
+import {
+  Slider,
+  chromaAtom,
+  maxChromaSelector,
+  ShadeType,
+} from 'ThemeGenerator'
+import './ChromaSlider.scss'
+import { useRecoilState, useRecoilValue } from 'recoil'
 
-export const HueSlider = ({ scaleName }: { scaleName: string }) => {
-  const [hue, setHue] = useRecoilState(hueAtom(scaleName))
+export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
+  const maxChroma = useRecoilValue(maxChromaSelector(shade))
+  const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)
+
+  const handleChange = (newValue: number) => {
+    if (newValue < maxChroma) setChroma(newValue)
+    else setChroma(maxChroma)
+  }
   return (
     <div
-      className="HueSlider"
+      className="ChromaSlider"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Slider
-        value={hue}
-        onChange={setHue}
-        max={360}
+        value={chroma}
+        onChange={handleChange}
+        max={150}
         microStep={0.1}
         macroStep={5}
         onDragStart={() => setIsDragging(true)}
@@ -29,19 +38,17 @@ export const HueSlider = ({ scaleName }: { scaleName: string }) => {
         onKeyboardBlur={() => setHasKeyboardFocus(false)}
         track={
           <div
-            className={classNames('HueSlider__track', {
-              'HueSlider__track--tall':
+            className={classNames('ChromaSlider__track', {
+              'ChromaSlider__track--dark':
                 hasKeyboardFocus || isDragging || isHovered,
             })}
-            style={{ backgroundImage: `url(${sliderBackground})` }}
           />
         }
       >
         <div
-          className={classNames('HueSlider__thumb', {
-            'HueSlider__thumb--tall':
+          className={classNames('ChromaSlider__thumb', {
+            'ChromaSlider__thumb--tall':
               hasKeyboardFocus || isDragging || isHovered,
-            'HueSlider__thumb--has-keyboard-focus': hasKeyboardFocus,
           })}
         />
       </Slider>

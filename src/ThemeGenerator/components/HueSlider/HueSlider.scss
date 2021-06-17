@@ -1,18 +1,20 @@
 @import 'tokens';
 
 .HueSlider {
-  padding: 0.25rem 0.5rem;
-  height: 1.25rem;
   display: flex;
-  align-items: center;
-
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: 1.25rem;
   &__track {
-    flex-grow: 1;
-    display: block;
     position: relative;
     border-radius: 100rem;
     height: $pixels-2;
     transition: height 150ms ease-out;
+    background-size: contain;
+    &--tall {
+      height: 0.75rem;
+    }
   }
   &__thumb {
     background-color: $color-white;
@@ -23,24 +25,11 @@
     border: $pixels-1 solid $color-grey-300;
     transform: translate(-50%, -50%);
     cursor: ew-resize;
-  }
-}
-.HueSlider:hover,
-.HueSlider--has-keyboard-focus-within,
-.HueSlider--is-dragging-within {
-  .HueSlider {
-    &__track {
-      height: 0.7rem;
-      transition: height 50ms ease-in;
-    }
-    &__thumb {
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.33);
+    &--tall {
       height: 1.125rem;
-      transition: height 50ms ease-in;
-      &--has-keyboard-focus {
-        transition: height 50ms ease-in;
-        box-shadow: $focus-ring;
-      }
+    }
+    &--has-keyboard-focus {
+      box-shadow: $focus-ring;
     }
   }
 }
