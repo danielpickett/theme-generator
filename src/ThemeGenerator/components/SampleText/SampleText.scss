@@ -1,0 +1,7 @@
+@import 'tokens';
+
+.SampleText {
+  font-size: $text-size-xs;
+  display: flex;
+  justify-content: space-between;
+}

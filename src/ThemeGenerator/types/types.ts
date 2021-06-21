@@ -1,4 +1,4 @@
-import { getColorData, getColorDataPlus } from 'ThemeGenerator'
+import { getColorDataPlus } from 'ThemeGenerator'
 
 export type ShadeNameType =
   | '000'
@@ -29,7 +29,6 @@ export type ColorScaleType = {
   shades: ColorShadeType[]
 }
 
-export type ColorDataType = ReturnType<typeof getColorData>
 export type ColorDataPlusType = ReturnType<typeof getColorDataPlus>
 
 export type ShadeType = {

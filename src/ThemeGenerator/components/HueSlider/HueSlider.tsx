@@ -3,23 +3,22 @@ import classNames from 'classnames'
 import { Slider } from 'ThemeGenerator'
 import './HueSlider.scss'
 import sliderBackground from './lch-hue-picker-background.png'
-import { useRecoilState } from 'recoil'
-import { hueAtom } from 'ThemeGenerator/state'
 
-export const HueSlider = ({ scaleName }: { scaleName: string }) => {
-  const [hue, setHue] = useRecoilState(hueAtom(scaleName))
+export const HueSlider = ({
+  hue,
+  onHueChange,
+}: {
+  hue: number
+  onHueChange: (newHue: number) => void
+}) => {
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)
   return (
-    <div
-      className="HueSlider"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="HueSlider">
       <Slider
         value={hue}
-        onChange={setHue}
+        onChange={onHueChange}
         max={360}
         microStep={0.1}
         macroStep={5}
@@ -29,12 +28,18 @@ export const HueSlider = ({ scaleName }: { scaleName: string }) => {
         onKeyboardBlur={() => setHasKeyboardFocus(false)}
         track={
           <div
-            className={classNames('HueSlider__track', {
-              'HueSlider__track--tall':
-                hasKeyboardFocus || isDragging || isHovered,
-            })}
-            style={{ backgroundImage: `url(${sliderBackground})` }}
-          />
+            className="HueSlider__track"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div
+              className={classNames('HueSlider__background', {
+                'HueSlider__background--tall':
+                  hasKeyboardFocus || isDragging || isHovered,
+              })}
+              style={{ backgroundImage: `url(${sliderBackground})` }}
+            />
+          </div>
         }
       >
         <div
@@ -43,6 +48,8 @@ export const HueSlider = ({ scaleName }: { scaleName: string }) => {
               hasKeyboardFocus || isDragging || isHovered,
             'HueSlider__thumb--has-keyboard-focus': hasKeyboardFocus,
           })}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         />
       </Slider>
     </div>

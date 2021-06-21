@@ -7,9 +7,16 @@
   justify-content: center;
   height: 1.25rem;
   &__track {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    height: 0.75rem;
+  }
+  &__background {
     position: relative;
     border-radius: 100rem;
-    height: $pixels-2;
+    height: 1px;
     transition: height 150ms ease-out;
     background-size: contain;
     &--tall {
@@ -18,8 +25,8 @@
   }
   &__thumb {
     background-color: $color-white;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: calc(0.5rem + 1px);
+    height: calc(0.5rem + 1px);
     transition: height 150ms ease-out;
     border-radius: 100rem;
     border: $pixels-1 solid $color-grey-300;

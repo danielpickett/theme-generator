@@ -2,6 +2,7 @@
   display: flex;
   padding-left: 1rem;
   &__shades {
+    flex-grow: 1;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
   }
