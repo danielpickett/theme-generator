@@ -41,3 +41,72 @@ export const defaultChromas = {
 } as const
 
 export const defaultHue = 240
+
+export const isExpectedToBeSafe = {
+  '000': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '050': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '100': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '200': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '300': {
+    regular: true,
+    subdued: false,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '400': {
+    regular: true,
+    subdued: false,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '500': {
+    regular: true,
+    subdued: false,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '600': {
+    regular: true,
+    subdued: false,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '700': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '800': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+  '900': {
+    regular: true,
+    subdued: true,
+    vivid: true,
+    'vivid-subdued': false,
+  },
+}

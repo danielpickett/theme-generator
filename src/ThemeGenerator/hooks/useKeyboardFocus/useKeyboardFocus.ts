@@ -2,9 +2,12 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 
-export const useHasKeyboardFocus = <T extends Element>(
+export const useKeyboardFocus = <T extends Element>(
   ref: React.RefObject<T>,
-  handlers?: { onKeyboardFocus?: () => void; onKeyboardBlur?: () => void }
+  handlers?: {
+    onKeyboardFocus?: () => void
+    onKeyboardBlur?: () => void
+  }
 ) => {
   const modalityRef = useRef<'pointer' | 'keyboard'>('keyboard')
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)

@@ -1,54 +1,57 @@
-import React, { useRef, useState } from 'react'
-import './HueSlider.scss'
-import { useRecoilState } from 'recoil'
-import { hueAtom, SliderThumb } from 'ThemeGenerator'
-import sliderBackground from './lch-hue-picker-background.png'
+import React, { useState } from 'react'
 import classNames from 'classnames'
+import { Slider } from 'ThemeGenerator'
+import './HueSlider.scss'
+import sliderBackground from './lch-hue-picker-background.png'
 
-export const HueSlider = ({ scaleName }: { scaleName: string }) => {
-  const sliderTrackRef = useRef<HTMLDivElement>(null)
-  const [hasKeyboardFocusWithin, setHasKeyboardFocusWithin] = useState(false)
-  const [isDraggingWithin, setIsDraggingWithin] = useState(false)
-  const [hue, setHue] = useRecoilState(hueAtom(scaleName))
-
+export const HueSlider = ({
+  hue,
+  onHueChange,
+}: {
+  hue: number
+  onHueChange: (newHue: number) => void
+}) => {
+  const [isHovered, setIsHovered] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)
   return (
-    <div
-      className={classNames('HueSlider', {
-        'HueSlider--has-keyboard-focus-within': hasKeyboardFocusWithin,
-        'HueSlider--is-dragging-within': isDraggingWithin,
-      })}
-    >
-      <div
-        className="HueSlider__track"
-        ref={sliderTrackRef}
-        style={{ backgroundImage: `url(${sliderBackground})` }}
+    <div className="HueSlider">
+      <Slider
+        value={hue}
+        onChange={onHueChange}
+        max={360}
+        microStep={0.1}
+        macroStep={5}
+        onDragStart={() => setIsDragging(true)}
+        onDragEnd={() => setIsDragging(false)}
+        onKeyboardFocus={() => setHasKeyboardFocus(true)}
+        onKeyboardBlur={() => setHasKeyboardFocus(false)}
+        track={
+          <div
+            className="HueSlider__track"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div
+              className={classNames('HueSlider__background', {
+                'HueSlider__background--tall':
+                  hasKeyboardFocus || isDragging || isHovered,
+              })}
+              style={{ backgroundImage: `url(${sliderBackground})` }}
+            />
+          </div>
+        }
       >
-        <SliderThumb
-          value={hue}
-          min={0}
-          max={360}
-          step={1}
-          microStepMultiplier={0.1}
-          macroStepMultiplier={10}
-          sliderTrackRef={sliderTrackRef}
-          aria-label="my slider"
-          onChange={(newValue) => setHue(newValue)}
-          onKeyboardFocus={() => setHasKeyboardFocusWithin(true)}
-          onKeyboardBlur={() => setHasKeyboardFocusWithin(false)}
-          onDragStart={() => setIsDraggingWithin(true)}
-          onDragEnd={() => setIsDraggingWithin(false)}
-        >
-          {({ hasKeyboardFocus }) => {
-            return (
-              <div
-                className={classNames('HueSlider__thumb', {
-                  'HueSlider__thumb--has-keyboard-focus': hasKeyboardFocus,
-                })}
-              />
-            )
-          }}
-        </SliderThumb>
-      </div>
+        <div
+          className={classNames('HueSlider__thumb', {
+            'HueSlider__thumb--tall':
+              hasKeyboardFocus || isDragging || isHovered,
+            'HueSlider__thumb--has-keyboard-focus': hasKeyboardFocus,
+          })}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        />
+      </Slider>
     </div>
   )
 }

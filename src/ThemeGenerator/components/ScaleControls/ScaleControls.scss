@@ -1,4 +1,7 @@
+@import 'tokens';
+
 .ScaleControls {
+  padding-bottom: 0.5rem;
   &__canvas {
     position: relative;
   }
@@ -6,5 +9,14 @@
     position: absolute;
     top: 0;
     left: 0;
+  }
+  &__hue-slider {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $text-on-white--subdued;
+    display: grid;
+    grid-template-columns: 3.5rem auto;
+    align-items: center;
+    // gap: 0.5rem;
   }
 }
