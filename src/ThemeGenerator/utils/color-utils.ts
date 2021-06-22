@@ -1,4 +1,5 @@
 import chromajs, { Color } from 'chroma-js'
+import { canvasBaseWidth } from 'ThemeGenerator/components/Canvas/sizes'
 
 type AugmentedColor = Color & { clipped: () => boolean }
 
@@ -64,7 +65,7 @@ export const getMaxChroma = (luminance: number, hue: number) => {
   // 0.01 confirmed to be accurate across all hues
   const resolution = 0.01
   let chroma = 0
-  let step = 150
+  let step = canvasBaseWidth // 150
 
   /**
    * BINARY SEARCH

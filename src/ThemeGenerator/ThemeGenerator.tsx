@@ -16,21 +16,25 @@ const ThemeGeneratorBase = () => {
 
   return (
     <div className="ThemeGenerator dark-blue-theme">
-      <Header />
-      <div className="ThemeGenerator__scales">
-        {scaleNames.map((scaleName) => (
-          <Scale key={scaleName} scaleName={scaleName} />
-        ))}
+      <div className="ThemeGenerator__header">
+        <Header />
       </div>
-      <div className="ThemeGenerator__output">
-        <RawCSSVarsOutput styled />
+      <div className="ThemeGenerator__body">
+        <div className="ThemeGenerator__scales">
+          {scaleNames.map((scaleName) => (
+            <Scale key={scaleName} scaleName={scaleName} />
+          ))}
+        </div>
+        <div className="ThemeGenerator__output">
+          <RawCSSVarsOutput styled />
+        </div>
+        {ReactDOM.createPortal(
+          <style className="color-tokens">
+            <RawCSSVarsOutput />
+          </style>,
+          document.head
+        )}
       </div>
-      {ReactDOM.createPortal(
-        <style className="color-tokens">
-          <RawCSSVarsOutput />
-        </style>,
-        document.head
-      )}
     </div>
   )
 }

@@ -1,10 +1,8 @@
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 .ThemeGenerator {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100vh;
   font-size: 12px;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
@@ -13,9 +11,19 @@ code {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+
+  &__body {
+    overflow-y: auto;
+  }
+
   *,
   *::before,
   *::after {
     box-sizing: inherit;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
   }
 }

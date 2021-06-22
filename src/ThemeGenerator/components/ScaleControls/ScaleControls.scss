@@ -1,9 +1,10 @@
 @import 'tokens';
 
 .ScaleControls {
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 0;
   &__canvas {
     position: relative;
+    margin-right: -10%;
   }
   &__canvas-points-overlay {
     position: absolute;

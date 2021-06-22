@@ -5,17 +5,17 @@ import {
 } from 'ThemeGenerator/utils/color-utils'
 
 import { RequestMessageType } from './worker-types'
-import { size, smallSize } from './sizes'
+import { size, smallSize, canvasBaseHeight, canvasBaseWidth } from './sizes'
 
 declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-const width = 150 * size
-const height = 100 * size
+const width = canvasBaseWidth * size
+const height = canvasBaseHeight * size
 
-const smallWidth = 150 * smallSize
-const smallHeight = 100 * smallSize
+const smallWidth = canvasBaseWidth * smallSize
+const smallHeight = canvasBaseHeight * smallSize
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 
@@ -63,8 +63,8 @@ const renderMask = () => {
       canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
       canvasCtx.fillRect(
         maxChroma * size,
-        100 * size - L,
-        150 * size - maxChroma,
+        canvasBaseHeight * size - L,
+        canvasBaseWidth * size - maxChroma,
         1
       )
     }
