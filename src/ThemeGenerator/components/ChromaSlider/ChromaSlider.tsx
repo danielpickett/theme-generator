@@ -45,12 +45,9 @@ export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
           />
         }
       >
-        <div
-          className={classNames('ChromaSlider__thumb', {
-            'ChromaSlider__thumb--tall':
-              hasKeyboardFocus || isDragging || isHovered,
-          })}
-        />
+        <div className="ChromaSlider__thumb">
+          <div className="ChromaSlider__tooltip">{chroma.toFixed(2)}</div>
+        </div>
       </Slider>
     </div>
   )

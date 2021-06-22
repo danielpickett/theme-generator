@@ -3,7 +3,13 @@ import { size, smallSize } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
-export const Canvas = ({ hue }: { hue: number }) => {
+export const Canvas = ({
+  hue,
+  sizeProp,
+}: {
+  hue: number
+  sizeProp: number
+}) => {
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = useCallback((canvas: HTMLCanvasElement) => {
