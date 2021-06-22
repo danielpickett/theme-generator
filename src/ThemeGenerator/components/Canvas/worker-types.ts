@@ -2,6 +2,7 @@ export type RequestMessageType =
   | {
       type: 'initCanvas'
       canvas?: OffscreenCanvas
+      size: number
     }
   | {
       type: 'paintChroma'

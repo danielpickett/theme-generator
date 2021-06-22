@@ -1,12 +1,21 @@
 import React, { useCallback, useEffect, useRef } from 'react'
-import { size, smallSize } from './sizes'
+// import { size, smallSize } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
-export const Canvas = ({ hue }: { hue: number }) => {
+export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
+  console.log('render')
+  const smallSize = size / 2
+
+  const terminateWorkers = () => {
+    chromaWorkerRef.current?.terminate()
+    maskWorkerRef.current?.terminate()
+  }
+
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
-  const initChromaWorker = useCallback((canvas: HTMLCanvasElement) => {
+  const initChromaWorker = (canvas: HTMLCanvasElement) => {
+    // console.log('initChromaWorker')
     if (!chromaWorkerRef.current) {
       const offscreen = canvas.transferControlToOffscreen()
       chromaWorkerRef.current = new Worker()
@@ -14,34 +23,38 @@ export const Canvas = ({ hue }: { hue: number }) => {
         {
           type: 'initCanvas',
           canvas: offscreen,
+          size,
         },
         [offscreen]
       )
     }
-  }, [])
+  }
 
   // MASK
   const maskWorkerRef = useRef<Worker | null>(null)
-  const initMaskWorker = useCallback((canvas: HTMLCanvasElement) => {
-    if (!maskWorkerRef.current) {
-      const offscreen = canvas.transferControlToOffscreen()
-      maskWorkerRef.current = new Worker()
-      maskWorkerRef.current.postMessage(
-        {
-          type: 'initCanvas',
-          canvas: offscreen,
-        },
-        [offscreen]
-      )
-    }
-  }, [])
+  const initMaskWorker = useCallback(
+    (canvas: HTMLCanvasElement) => {
+      // console.log('initMaskWorker')
+      if (!maskWorkerRef.current) {
+        const offscreen = canvas.transferControlToOffscreen()
+        maskWorkerRef.current = new Worker()
+        maskWorkerRef.current.postMessage(
+          {
+            type: 'initCanvas',
+            canvas: offscreen,
+            size: size / 2,
+          },
+          [offscreen]
+        )
+      }
+    },
+    [size]
+  )
 
+  // cleanup only
   useEffect(() => {
-    return () => {
-      chromaWorkerRef.current?.terminate()
-      maskWorkerRef.current?.terminate()
-    }
-  }, [])
+    return terminateWorkers
+  })
 
   useEffect(() => {
     chromaWorkerRef.current?.postMessage({
@@ -52,7 +65,7 @@ export const Canvas = ({ hue }: { hue: number }) => {
       type: 'paintMask',
       hue,
     })
-  }, [hue])
+  })
 
   return (
     <>

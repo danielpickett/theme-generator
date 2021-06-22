@@ -24,7 +24,8 @@ const state: { hue: number; hasRenderPending: boolean } = {
   hasRenderPending: false,
 }
 
-const renderChroma = () => {
+const renderChroma = (size: number) => {
+  console.log('renderChroma')
   if (canvasCtx) {
     const H = state.hue
 
