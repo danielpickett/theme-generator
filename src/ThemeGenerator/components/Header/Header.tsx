@@ -11,7 +11,7 @@ export const Header = () => {
     <div className="Header">
       <input
         min={1}
-        max={4}
+        // max={10}
         step={0.5}
         type="number"
         value={canvasSize.toPrecision(2)}

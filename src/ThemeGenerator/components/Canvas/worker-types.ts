@@ -7,8 +7,10 @@ export type RequestMessageType =
   | {
       type: 'paintChroma'
       hue: number
+      size: number
     }
   | {
       type: 'paintMask'
       hue: number
+      size: number
     }
