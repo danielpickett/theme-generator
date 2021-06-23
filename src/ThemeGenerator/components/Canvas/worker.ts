@@ -1,8 +1,4 @@
-import {
-  getColorData,
-  getMaxChroma,
-  parseYellowProblem,
-} from 'ThemeGenerator/utils/color-utils'
+import { getColorData, getMaxChroma, parseYellowProblem } from 'ThemeGenerator'
 
 import { RequestMessageType } from './worker-types'
 import { canvasBaseHeight, canvasBaseWidth } from './sizes'

@@ -8,9 +8,12 @@ import {
   isExpectedToBeSafe,
   SampleText,
   Spacer,
+  TextColorPlots,
+  showTextColorPlotsAtom,
 } from 'ThemeGenerator'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
+  const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const swatchColor = useRecoilValue(colorDataSelector(shade))
   const textColors = useRecoilValue(textColorsSelector(shade))
   const backgroundColor = swatchColor.isClipped ? 'black' : swatchColor.hex
@@ -20,7 +23,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       className="Shade"
       style={{
         backgroundColor,
-        color: swatchColor.lch.l > 65 ? 'black' : 'white',
+        color: swatchColor.lch.l > 60 ? 'black' : 'white',
       }}
     >
       <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
@@ -41,6 +44,15 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         textColor={textColors.vivid.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
+      <SampleText
+        swatchColor={swatchColor.hex}
+        textColor={textColors['vivid-subdued'].hex}
+        isExpectedToBeSafe={
+          isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+        }
+      />
+      <Spacer />
+      {showTextColorPlots && <TextColorPlots shade={shade} />}
     </div>
   )
 }
