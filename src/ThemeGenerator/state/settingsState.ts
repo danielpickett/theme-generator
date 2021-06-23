@@ -2,7 +2,7 @@ import { atom } from 'recoil'
 
 export const canvasSizeAtom = atom({
   key: 'canvasSize',
-  default: 1,
+  default: 2,
 })
 
 export const showCanvasesAtom = atom({
