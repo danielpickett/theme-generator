@@ -9,11 +9,13 @@ import {
   SampleText,
   Spacer,
   TextColorPlots,
+  showTextColorPlotsAtom,
 } from 'ThemeGenerator'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const swatchColor = useRecoilValue(colorDataSelector(shade))
   const textColors = useRecoilValue(textColorsSelector(shade))
+  const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const backgroundColor = swatchColor.isClipped ? 'black' : swatchColor.hex
 
   return (
@@ -21,7 +23,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       className="Shade"
       style={{
         backgroundColor,
-        color: swatchColor.lch.l > 65 ? 'black' : 'white',
+        color: swatchColor.lch.l > 60 ? 'black' : 'white',
       }}
     >
       <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
@@ -42,7 +44,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         textColor={textColors.vivid.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
-      <TextColorPlots shade={shade} />
+      {showTextColorPlots && <TextColorPlots shade={shade} />}
     </div>
   )
 }
