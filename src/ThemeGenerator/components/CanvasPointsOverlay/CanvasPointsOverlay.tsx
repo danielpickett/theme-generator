@@ -1,11 +1,11 @@
 import React, { useRef } from 'react'
 import {
-  shadeNames,
-  ChromaSlider,
-  defaultLuminances,
   canvasBaseHeight,
   canvasBaseWidth,
-} from 'ThemeGenerator'
+  shadeNames,
+  defaultLuminances,
+} from 'ThemeGenerator/config'
+import { ChromaSlider } from 'ThemeGenerator/components'
 
 import './CanvasPointsOverlay.scss'
 

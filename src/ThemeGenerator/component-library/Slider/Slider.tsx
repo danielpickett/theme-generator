@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './Slider.scss'
-import { useKeyboardFocus } from 'ThemeGenerator'
+import { useKeyboardFocus } from 'ThemeGenerator/hooks'
 import classNames from 'classnames'
 
 type OnChangeType = (value: number) => void

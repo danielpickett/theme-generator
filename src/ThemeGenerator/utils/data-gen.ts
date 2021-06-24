@@ -1,8 +1,5 @@
-import {
-  getColorDataPlus,
-  canvasBaseHeight,
-  canvasBaseWidth,
-} from 'ThemeGenerator'
+import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
+import { getColorDataPlus } from 'ThemeGenerator/utils'
 
 const resolution = 0.05
 const size = 1 / resolution

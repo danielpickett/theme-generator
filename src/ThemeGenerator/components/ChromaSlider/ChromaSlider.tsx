@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import classNames from 'classnames'
-import {
-  Slider,
-  chromaAtom,
-  maxChromaSelector,
-  ShadeType,
-  canvasBaseWidth,
-} from 'ThemeGenerator'
 import './ChromaSlider.scss'
+import classNames from 'classnames'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { Slider } from 'ThemeGenerator/component-library'
+import { canvasBaseWidth } from 'ThemeGenerator/config'
+import { maxChromaSelector, chromaAtom } from 'ThemeGenerator/state'
+import { ShadeType } from 'ThemeGenerator/types'
 
 export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
   const maxChroma = useRecoilValue(maxChromaSelector(shade))

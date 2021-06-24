@@ -1,12 +1,9 @@
 import React from 'react'
-import { useRecoilValue } from 'recoil'
-import {
-  ScaleControls,
-  Shade,
-  shadeNames,
-  showCanvasesAtom,
-} from 'ThemeGenerator'
 import './Scale.scss'
+import { useRecoilValue } from 'recoil'
+import { shadeNames } from 'ThemeGenerator/config'
+import { showCanvasesAtom } from 'ThemeGenerator/state'
+import { ScaleControls, Shade } from 'ThemeGenerator/components'
 
 export const Scale = ({ scaleName }: { scaleName: string }) => {
   const showCanvases = useRecoilValue(showCanvasesAtom)

@@ -1,14 +1,14 @@
 import React from 'react'
+import './TextColorPlots.scss'
 import { useRecoilValue } from 'recoil'
 import {
-  Canvas,
-  colorDataSelector,
-  ShadeType,
   textColorsPlotSizeAtom,
+  colorDataSelector,
   textColorsSelector,
   safeLums,
-} from 'ThemeGenerator'
-import './TextColorPlots.scss'
+} from 'ThemeGenerator/state'
+import { ShadeType } from 'ThemeGenerator/types'
+import { Canvas } from '..'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
-import { Slider } from 'ThemeGenerator'
+import { Slider } from 'ThemeGenerator/component-library'
 import './HueSlider.scss'
 import sliderBackground from './lch-hue-picker-background.png'
 

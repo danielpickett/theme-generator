@@ -1,14 +1,13 @@
 import { selectorFamily } from 'recoil'
+import { defaultLuminances } from 'ThemeGenerator/config'
+import { ShadeType } from 'ThemeGenerator/types'
 import {
-  ShadeType,
-  defaultLuminances,
-  chromaAtom,
-  hueAtom,
-  getColorData,
   ColorDataType,
-  getMaxChroma,
+  getColorData,
   mix,
-} from 'ThemeGenerator'
+  getMaxChroma,
+} from 'ThemeGenerator/utils'
+import { hueAtom, chromaAtom } from 'ThemeGenerator/state'
 
 const regularTextConfig = {
   '000': { srcShadeName: '900', mix: 0.25 },

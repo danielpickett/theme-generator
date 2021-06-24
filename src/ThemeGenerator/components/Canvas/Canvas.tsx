@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator'
 import './Canvas.scss'
+import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
 const sizeDivisor = 2

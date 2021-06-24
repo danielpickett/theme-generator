@@ -1,7 +1,11 @@
 import React from 'react'
 import { useRecoilState } from 'recoil'
-import { canvasSizeAtom, Spacer, showCanvasesAtom } from 'ThemeGenerator'
-import { showTextColorPlotsAtom } from 'ThemeGenerator/state'
+import { Spacer } from 'ThemeGenerator/component-library'
+import {
+  canvasSizeAtom,
+  showCanvasesAtom,
+  showTextColorPlotsAtom,
+} from 'ThemeGenerator/state'
 
 import './Header.scss'
 

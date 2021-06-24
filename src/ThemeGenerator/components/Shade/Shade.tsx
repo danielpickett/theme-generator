@@ -1,16 +1,15 @@
 import React from 'react'
 import './Shade.scss'
 import { useRecoilValue } from 'recoil'
+import { ShadeType } from 'ThemeGenerator/types'
 import {
   colorDataSelector,
-  textColorsSelector,
-  ShadeType,
-  isExpectedToBeSafe,
-  TextSample,
-  Spacer,
-  TextColorPlots,
   showTextColorPlotsAtom,
-} from 'ThemeGenerator'
+  textColorsSelector,
+} from 'ThemeGenerator/state'
+import { Spacer } from 'ThemeGenerator/component-library'
+import { isExpectedToBeSafe } from 'ThemeGenerator/config'
+import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const swatchColor = useRecoilValue(colorDataSelector(shade))

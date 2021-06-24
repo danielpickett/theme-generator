@@ -1,13 +1,12 @@
 import React from 'react'
 import './ScaleControls.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { canvasSizeAtom, hueAtom } from 'ThemeGenerator/state'
 import {
   Canvas,
-  HueSlider,
   CanvasPointsOverlay,
-  hueAtom,
-  canvasSizeAtom,
-} from 'ThemeGenerator'
+  HueSlider,
+} from 'ThemeGenerator/components'
 
 export const ScaleControls = ({ scaleName }: { scaleName: string }) => {
   const [hue, setHue] = useRecoilState(hueAtom(scaleName))
