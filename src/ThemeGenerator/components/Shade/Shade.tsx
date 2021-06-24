@@ -8,6 +8,7 @@ import {
   isExpectedToBeSafe,
   SampleText,
   Spacer,
+  TextColorPlots,
 } from 'ThemeGenerator'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
@@ -41,6 +42,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         textColor={textColors.vivid.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
+      <TextColorPlots shade={shade} />
     </div>
   )
 }
