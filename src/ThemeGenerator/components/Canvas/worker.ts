@@ -11,12 +11,6 @@ declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
 }
 
-// const width = 150 * size
-// const height = 100 * size
-
-// const smallWidth = 150 * smallSize
-// const smallHeight = 100 * smallSize
-
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
 let canvas: OffscreenCanvas | undefined
 
@@ -27,6 +21,7 @@ const state: { hue: number; hasRenderPending: boolean } = {
 
 const renderChroma = (size: number) => {
   if (canvasCtx) {
+    resize(size)
     const H = state.hue
 
     const width = canvasBaseWidth * size
@@ -61,6 +56,7 @@ const renderChroma = (size: number) => {
 
 const renderMask = (size: number) => {
   if (canvasCtx) {
+    resize(size)
     const width = canvasBaseWidth * size
     const height = canvasBaseHeight * size
 
@@ -97,16 +93,9 @@ self.onmessage = (event) => {
 
   switch (request.type) {
     case 'initCanvas':
-      // const width = canvasBaseWidth * request.size
-      // const height = canvasBaseHeight * request.size
       canvas = request.canvas
-      canvasCtx = request.canvas?.getContext('2d')
       resize(request.size)
-
-      // if (canvas) {
-      //   canvas.height = height
-      //   canvas.width = width
-      // }
+      canvasCtx = request.canvas?.getContext('2d')
       break
 
     case 'paintChroma':

@@ -15,10 +15,10 @@ export const Header = () => {
     <div className="Header">
       <input
         min={1}
-        // max={10}
+        max={20}
         step={0.5}
         type="number"
-        value={canvasSize.toPrecision(2)}
+        value={canvasSize.toFixed(1)}
         onChange={(e) => setCanvasSize(+e.target.value)}
       />
       <Spacer />
