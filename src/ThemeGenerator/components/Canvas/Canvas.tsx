@@ -15,14 +15,10 @@ export const Canvas = ({
   hue: number
   sizeProp: number
 }) => {
-  const width = canvasBaseWidth * sizeProp
-  const height = canvasBaseHeight * sizeProp
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = (canvas: HTMLCanvasElement) => {
     if (!chromaWorkerRef.current) {
-      // canvas.height = height / canvasSizeDivisor
-      // canvas.width = width / canvasSizeDivisor
       const offscreen = canvas.transferControlToOffscreen()
       chromaWorkerRef.current = new Worker()
       chromaWorkerRef.current.postMessage(
