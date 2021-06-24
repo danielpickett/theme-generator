@@ -18,6 +18,7 @@ declare const self: {
 // const smallHeight = 100 * smallSize
 
 let canvasCtx: OffscreenCanvasRenderingContext2D | null | undefined
+let canvas: OffscreenCanvas | undefined
 
 const state: { hue: number; hasRenderPending: boolean } = {
   hue: 0,
@@ -79,19 +80,40 @@ const renderMask = (size: number) => {
   state.hasRenderPending = false
 }
 
+const resize = (size: number) => {
+  const width = canvasBaseWidth * size
+  const height = canvasBaseHeight * size
+  if (
+    (canvas && canvas.height !== height) ||
+    (canvas && canvas.width !== width)
+  ) {
+    canvas.height = height
+    canvas.width = width
+  }
+}
+
 self.onmessage = (event) => {
   const request = event.data
 
   switch (request.type) {
     case 'initCanvas':
+      // const width = canvasBaseWidth * request.size
+      // const height = canvasBaseHeight * request.size
+      resize(request.size)
+      canvas = request.canvas
       canvasCtx = request.canvas?.getContext('2d')
+
+      // if (canvas) {
+      //   canvas.height = height
+      //   canvas.width = width
+      // }
       break
 
     case 'paintChroma':
       state.hue = request.hue
       if (!state.hasRenderPending) {
         state.hasRenderPending = true
-        requestAnimationFrame(() => renderChroma(1))
+        requestAnimationFrame(() => renderChroma(request.size))
       }
       break
 
@@ -99,7 +121,7 @@ self.onmessage = (event) => {
       state.hue = request.hue
       if (!state.hasRenderPending) {
         state.hasRenderPending = true
-        requestAnimationFrame(() => renderMask(2))
+        requestAnimationFrame(() => renderMask(request.size))
       }
       break
 
