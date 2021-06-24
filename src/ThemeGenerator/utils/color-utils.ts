@@ -1,5 +1,5 @@
 import chromajs, { Color } from 'chroma-js'
-import { canvasBaseWidth } from 'ThemeGenerator/components/Canvas/sizes'
+import { canvasBaseWidth } from 'ThemeGenerator/config/'
 
 type AugmentedColor = Color & { clipped: () => boolean }
 

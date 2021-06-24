@@ -1,6 +1,12 @@
 import React, { useRef } from 'react'
-import { shadeNames, ChromaSlider, defaultLuminances } from 'ThemeGenerator'
-import { canvasBaseHeight, canvasBaseWidth } from '../Canvas/sizes'
+import {
+  shadeNames,
+  ChromaSlider,
+  defaultLuminances,
+  canvasBaseHeight,
+  canvasBaseWidth,
+} from 'ThemeGenerator'
+
 import './CanvasPointsOverlay.scss'
 
 export const CanvasPointsOverlay = ({

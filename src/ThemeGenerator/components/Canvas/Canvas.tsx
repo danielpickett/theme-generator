@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import { canvasBaseHeight, canvasBaseWidth, canvasSizeDivisor } from './sizes'
+import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
+
+const sizeDivisor = 2
 
 export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
   // CHROMA
@@ -14,7 +16,7 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
         {
           type: 'initCanvas', // chroma
           canvas: offscreen,
-          size: size / canvasSizeDivisor,
+          size: size / sizeDivisor,
         },
         [offscreen]
       )
@@ -49,7 +51,7 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
     chromaWorkerRef.current?.postMessage({
       type: 'paintChroma',
       hue,
-      size: size / canvasSizeDivisor,
+      size: size / sizeDivisor,
     })
     maskWorkerRef.current?.postMessage({
       type: 'paintMask',

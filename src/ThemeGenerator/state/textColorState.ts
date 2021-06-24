@@ -6,9 +6,9 @@ import {
   hueAtom,
   getColorData,
   ColorDataType,
+  getMaxChroma,
   mix,
 } from 'ThemeGenerator'
-import { getMaxChroma } from 'ThemeGenerator/utils'
 
 const regularTextConfig = {
   '000': { srcShadeName: '900', mix: 0.25 },

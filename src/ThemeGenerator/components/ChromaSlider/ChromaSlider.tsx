@@ -5,10 +5,10 @@ import {
   chromaAtom,
   maxChromaSelector,
   ShadeType,
+  canvasBaseWidth,
 } from 'ThemeGenerator'
 import './ChromaSlider.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { canvasBaseWidth } from '../Canvas/sizes'
 
 export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
   const maxChroma = useRecoilValue(maxChromaSelector(shade))

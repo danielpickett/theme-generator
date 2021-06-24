@@ -27,7 +27,6 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
-
       <TextSample
         swatchColor={swatchColor.hex}
         textColor={textColors.regular.hex}
@@ -44,6 +43,14 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         textColor={textColors.vivid.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
+      <TextSample
+        swatchColor={swatchColor.hex}
+        textColor={textColors['vivid-subdued'].hex}
+        isExpectedToBeSafe={
+          isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+        }
+      />
+      <Spacer />
       {showTextColorPlots && <TextColorPlots shade={shade} />}
     </div>
   )

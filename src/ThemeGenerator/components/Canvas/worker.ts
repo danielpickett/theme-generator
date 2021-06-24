@@ -2,10 +2,9 @@ import {
   getColorData,
   getMaxChroma,
   parseYellowProblem,
-} from 'ThemeGenerator/utils/color-utils'
-
+} from 'ThemeGenerator/utils'
+import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
 import { RequestMessageType } from './worker-types'
-import { canvasBaseHeight, canvasBaseWidth } from './sizes'
 
 declare const self: {
   onmessage: (event: MessageEvent<RequestMessageType>) => void
