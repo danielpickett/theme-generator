@@ -8,6 +8,7 @@ import {
 } from 'ThemeGenerator'
 import './ChromaSlider.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { canvasBaseWidth } from '../Canvas/sizes'
 
 export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
   const maxChroma = useRecoilValue(maxChromaSelector(shade))
@@ -29,7 +30,7 @@ export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
       <Slider
         value={chroma}
         onChange={handleChange}
-        max={150}
+        max={canvasBaseWidth}
         microStep={0.1}
         macroStep={5}
         onDragStart={() => setIsDragging(true)}

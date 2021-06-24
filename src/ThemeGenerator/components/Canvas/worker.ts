@@ -99,9 +99,9 @@ self.onmessage = (event) => {
     case 'initCanvas':
       // const width = canvasBaseWidth * request.size
       // const height = canvasBaseHeight * request.size
-      resize(request.size)
       canvas = request.canvas
       canvasCtx = request.canvas?.getContext('2d')
+      resize(request.size)
 
       // if (canvas) {
       //   canvas.height = height

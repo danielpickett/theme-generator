@@ -3,7 +3,7 @@ import {
   canvasBaseHeight,
   canvasBaseWidth,
   canvasSizeDivisor,
-  size,
+  // size,
 } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
@@ -15,10 +15,14 @@ export const Canvas = ({
   hue: number
   sizeProp: number
 }) => {
+  const width = canvasBaseWidth * sizeProp
+  const height = canvasBaseHeight * sizeProp
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = (canvas: HTMLCanvasElement) => {
     if (!chromaWorkerRef.current) {
+      // canvas.height = height / canvasSizeDivisor
+      // canvas.width = width / canvasSizeDivisor
       const offscreen = canvas.transferControlToOffscreen()
       chromaWorkerRef.current = new Worker()
       chromaWorkerRef.current.postMessage(
@@ -36,6 +40,8 @@ export const Canvas = ({
   const maskWorkerRef = useRef<Worker | null>(null)
   const initMaskWorker = (canvas: HTMLCanvasElement) => {
     if (!maskWorkerRef.current) {
+      // canvas.height = height / canvasSizeDivisor
+      // canvas.width = width / canvasSizeDivisor
       const offscreen = canvas.transferControlToOffscreen()
       maskWorkerRef.current = new Worker()
       maskWorkerRef.current.postMessage(
@@ -74,23 +80,19 @@ export const Canvas = ({
       <div
         className="Canvas"
         style={{
-          height: `${canvasBaseHeight * size}px`,
-          width: `${canvasBaseWidth * size}px`,
+          height: `${canvasBaseHeight * sizeProp}px`,
+          width: `${canvasBaseWidth * sizeProp}px`,
         }}
       >
         <canvas
-          // height={100 * smallSize}
-          // width={150 * smallSize}
-          style={{ opacity: 0.5 }}
+          // style={{ opacity: 0.5 }}
           className="Canvas__canvas"
           ref={initChromaWorker}
         >
           Your browser is not supported
         </canvas>
         <canvas
-          // height={100 * size}
-          // width={150 * size}
-          style={{ opacity: 0.5 }}
+          // style={{ opacity: 0.5 }}
           className="Canvas__canvas"
           ref={initMaskWorker}
         >
