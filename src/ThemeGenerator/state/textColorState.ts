@@ -6,7 +6,6 @@ import {
   hueAtom,
   getColorData,
   ColorDataType,
-  // maxChromaSelector,
   mix,
 } from 'ThemeGenerator'
 import { getMaxChroma } from 'ThemeGenerator/utils'
@@ -36,7 +35,7 @@ export const safeLums = {
   '600': { lum: 95, operator: '>' },
   '700': { lum: 90, operator: '>' },
   '800': { lum: 85, operator: '>' },
-  '900': { lum: 20, operator: '>' },
+  '900': { lum: 80, operator: '>' },
 }
 
 export const vividTextColorConfig = {
@@ -50,7 +49,7 @@ export const vividTextColorConfig = {
   '600': { lum: 95, minLum: 100, mix: 0.25 },
   '700': { lum: 90, minLum: 71, mix: 0.25 },
   '800': { lum: 85, minLum: 59.1, mix: 0.25 },
-  '900': { lum: 20, minLum: 52.5, mix: 0.25 },
+  '900': { lum: 80, minLum: 52.5, mix: 0.25 },
 } as const
 
 type TextColorsType = {

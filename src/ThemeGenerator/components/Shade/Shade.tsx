@@ -6,7 +6,7 @@ import {
   textColorsSelector,
   ShadeType,
   isExpectedToBeSafe,
-  SampleText,
+  TextSample,
   Spacer,
   TextColorPlots,
   showTextColorPlotsAtom,
@@ -28,18 +28,18 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     >
       <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
 
-      <SampleText
+      <TextSample
         swatchColor={swatchColor.hex}
         textColor={textColors.regular.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].regular}
       />
-      <SampleText
+      <TextSample
         swatchColor={swatchColor.hex}
         textColor={textColors.subdued.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
       />
       <Spacer />
-      <SampleText
+      <TextSample
         swatchColor={swatchColor.hex}
         textColor={textColors.vivid.hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}

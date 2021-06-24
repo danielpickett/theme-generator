@@ -1,7 +1,7 @@
 import chromajs from 'chroma-js'
-import './SampleText.scss'
+import './TextSample.scss'
 
-export const SampleText = ({
+export const TextSample = ({
   swatchColor,
   textColor,
   isExpectedToBeSafe,
@@ -16,10 +16,10 @@ export const SampleText = ({
   // const opportunity = !isExpectedToBeSafe && isActuallySafe
 
   return (
-    <div className="SampleText" style={{ color: textColor }}>
+    <div className="TextSample" style={{ color: textColor }}>
       <div>{'Sample ' + contrastRatio.toFixed(2)}</div>
       <div>
-        {problem && <span className="SampleText__problem" />}
+        {problem && <span className="TextSample__problem" />}
         {isExpectedToBeSafe ? '' : '!'}
       </div>
     </div>
