@@ -8,13 +8,7 @@ import {
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
-export const Canvas = ({
-  hue,
-  sizeProp,
-}: {
-  hue: number
-  sizeProp: number
-}) => {
+export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
   // CHROMA
   const chromaWorkerRef = useRef<Worker | null>(null)
   const initChromaWorker = (canvas: HTMLCanvasElement) => {
@@ -25,7 +19,7 @@ export const Canvas = ({
         {
           type: 'initCanvas', // chroma
           canvas: offscreen,
-          size: sizeProp / canvasSizeDivisor,
+          size: size / canvasSizeDivisor,
         },
         [offscreen]
       )
@@ -42,7 +36,7 @@ export const Canvas = ({
         {
           type: 'initCanvas', // mask
           canvas: offscreen,
-          size: sizeProp,
+          size: size,
         },
         [offscreen]
       )
@@ -60,12 +54,12 @@ export const Canvas = ({
     chromaWorkerRef.current?.postMessage({
       type: 'paintChroma',
       hue,
-      size: sizeProp / canvasSizeDivisor,
+      size: size / canvasSizeDivisor,
     })
     maskWorkerRef.current?.postMessage({
       type: 'paintMask',
       hue,
-      size: sizeProp,
+      size: size,
     })
   })
 
@@ -74,8 +68,8 @@ export const Canvas = ({
       <div
         className="Canvas"
         style={{
-          height: `${canvasBaseHeight * sizeProp}px`,
-          width: `${canvasBaseWidth * sizeProp}px`,
+          height: `${canvasBaseHeight * size}px`,
+          width: `${canvasBaseWidth * size}px`,
         }}
       >
         <canvas

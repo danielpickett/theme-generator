@@ -5,10 +5,10 @@ import './CanvasPointsOverlay.scss'
 
 export const CanvasPointsOverlay = ({
   scaleName,
-  sizeProp,
+  size,
 }: {
   scaleName: string
-  sizeProp: number
+  size: number
 }) => {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -17,15 +17,15 @@ export const CanvasPointsOverlay = ({
       ref={ref}
       className="CanvasPointsOverlay"
       style={{
-        height: `${canvasBaseHeight * sizeProp}px`,
-        width: `${canvasBaseWidth * sizeProp}px`,
+        height: `${canvasBaseHeight * size}px`,
+        width: `${canvasBaseWidth * size}px`,
       }}
     >
       {shadeNames.slice(1).map((shadeName) => (
         <div
           key={shadeName}
           className="CanvasPointsOverlay__chroma-slider"
-          style={{ bottom: defaultLuminances[shadeName] * sizeProp }}
+          style={{ bottom: defaultLuminances[shadeName] * size }}
         >
           <ChromaSlider shade={{ scaleName, shadeName }} />
         </div>
