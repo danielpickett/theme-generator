@@ -1,9 +1,7 @@
 .Canvas {
-  display: block;
   position: relative;
 
   &__canvas {
-    cursor: crosshair;
     display: block;
     position: absolute;
     width: 100%;
