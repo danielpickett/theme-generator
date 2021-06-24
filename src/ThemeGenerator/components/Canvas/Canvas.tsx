@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import {
-  canvasBaseHeight,
-  canvasBaseWidth,
-  canvasSizeDivisor,
-  // size,
-} from './sizes'
+import { canvasBaseHeight, canvasBaseWidth, canvasSizeDivisor } from './sizes'
 import './Canvas.scss'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -72,18 +67,10 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
           width: `${canvasBaseWidth * size}px`,
         }}
       >
-        <canvas
-          // style={{ opacity: 0.5 }}
-          className="Canvas__canvas"
-          ref={initChromaWorker}
-        >
+        <canvas className="Canvas__canvas" ref={initChromaWorker}>
           Your browser is not supported
         </canvas>
-        <canvas
-          // style={{ opacity: 0.5 }}
-          className="Canvas__canvas"
-          ref={initMaskWorker}
-        >
+        <canvas className="Canvas__canvas" ref={initMaskWorker}>
           Your browser is not supported
         </canvas>
       </div>
