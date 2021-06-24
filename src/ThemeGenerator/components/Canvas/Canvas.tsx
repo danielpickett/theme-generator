@@ -36,8 +36,6 @@ export const Canvas = ({
   const maskWorkerRef = useRef<Worker | null>(null)
   const initMaskWorker = (canvas: HTMLCanvasElement) => {
     if (!maskWorkerRef.current) {
-      // canvas.height = height / canvasSizeDivisor
-      // canvas.width = width / canvasSizeDivisor
       const offscreen = canvas.transferControlToOffscreen()
       maskWorkerRef.current = new Worker()
       maskWorkerRef.current.postMessage(
