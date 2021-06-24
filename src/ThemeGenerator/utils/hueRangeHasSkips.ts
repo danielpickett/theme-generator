@@ -6,14 +6,18 @@ const size = 1 / resolution
 const height = size * canvasBaseHeight
 const width = size * canvasBaseWidth
 
-export const checkHueRangeForSKips = () => {
-  for (let hue = 98; hue <= 107; hue = hue + 0.1) {
-    checkHueForSkips(hue)
+export const hueRangeHasSkips = (startHue: number, endHue: number) => {
+  let hasSkips = false
+  for (let hue = startHue; hue <= endHue; hue = hue + 0.1) {
+    if (hueHasSkips(hue)) {
+      hasSkips = true
+    }
   }
   console.log('done')
+  return hasSkips
 }
 
-const checkHueForSkips = (hue: number) => {
+const hueHasSkips = (hue: number) => {
   let prevColor = {
     hex: '#ffffff',
     lch: {
@@ -45,7 +49,11 @@ const checkHueForSkips = (hue: number) => {
       prevColor = color
     }
   }
-  if (hasSkips)
+  if (hasSkips) {
     console.log(`hue: ${hue} -------------------------- HAS SKIPS!!!`)
-  else console.log(`hue: ${hue} - no skips`)
+    return true
+  } else {
+    console.log(`hue: ${hue} - no skips`)
+    return false
+  }
 }

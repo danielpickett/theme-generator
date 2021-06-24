@@ -1,3 +1,4 @@
+import { Color } from 'chroma-js'
 import { getColorDataPlus } from 'ThemeGenerator/utils'
 
 export type ShadeNameType =
@@ -40,3 +41,5 @@ export type ScaleNameType = string
 
 // https://stackoverflow.com/questions/57683303/how-can-i-see-the-full-expanded-contract-of-a-typescript-type
 export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never
+
+export type AugmentedColor = Color & { clipped: () => boolean }
