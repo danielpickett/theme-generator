@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import {
-  canvasBaseHeight,
-  canvasBaseWidth,
+  maxPossibleLuminance,
+  maxPossibleChromaForAnyHue,
   shadeNames,
   defaultLuminances,
 } from 'ThemeGenerator/config'
@@ -23,8 +23,8 @@ export const CanvasPointsOverlay = ({
       ref={ref}
       className="CanvasPointsOverlay"
       style={{
-        height: `${canvasBaseHeight * size}px`,
-        width: `${canvasBaseWidth * size}px`,
+        height: `${maxPossibleLuminance * size}px`,
+        width: `${maxPossibleChromaForAnyHue * size}px`,
       }}
     >
       {shadeNames.slice(1).map((shadeName) => (

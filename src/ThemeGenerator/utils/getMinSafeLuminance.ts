@@ -1,4 +1,4 @@
-import { canvasBaseWidth } from 'ThemeGenerator/config'
+import { maxPossibleChromaForAnyHue } from 'ThemeGenerator/config'
 import { brightShadeNames } from 'ThemeGenerator/state'
 import { LCHUnionType, ShadeNameType } from 'ThemeGenerator/types'
 import { isClipped, toLCHObj } from 'ThemeGenerator/utils'
@@ -24,7 +24,7 @@ const getMaxChroma = (luminance: number, hue: number) => {
   // 0.01 confirmed to be accurate across all hues
   const resolution = 0.01
   let chroma = 0
-  let step = canvasBaseWidth
+  let step = maxPossibleChromaForAnyHue
 
   /**
    * BINARY SEARCH

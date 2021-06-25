@@ -1,3 +1,4 @@
+export * from './clamp'
 export * from './getColorData'
 export * from './getMaxChroma'
 export * from './hueRangeHasSkips'
