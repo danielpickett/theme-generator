@@ -1,5 +1,19 @@
+import chromajs from 'chroma-js'
+import { AugmentedColor } from 'ThemeGenerator/types'
 import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
-import { getColorDataPlus } from 'ThemeGenerator/utils'
+
+const getColorDetails = (l: number, c: number, h: number) => {
+  const color = chromajs.lch(l, c, h) as AugmentedColor
+
+  return {
+    hex: color.hex(),
+    lch: { l, c, h },
+    rgb: color.rgb(),
+    clipped_lch: chromajs(color.css()).lch(),
+    contrastOnWhite: chromajs.contrast(color, 'white'),
+    isClipped: color.clipped(),
+  }
+}
 
 const resolution = 0.05
 const size = 1 / resolution
@@ -33,7 +47,7 @@ const hueHasSkips = (hue: number) => {
 
   for (let L = height; L >= 0; L--) {
     for (let C = 0; C < width; C++) {
-      const color = getColorDataPlus(L / size, C / size, hue)
+      const color = getColorDetails(L / size, C / size, hue)
 
       if (!color.isClipped) {
         if (

@@ -1,5 +1,4 @@
 import { Color } from 'chroma-js'
-import { getColorDataPlus } from 'ThemeGenerator/utils'
 
 export type ShadeNameType =
   | '000'
@@ -29,8 +28,6 @@ export type ColorScaleType = {
   hue: number
   shades: ColorShadeType[]
 }
-
-export type ColorDataPlusType = ReturnType<typeof getColorDataPlus>
 
 export type ShadeType = {
   scaleName: string

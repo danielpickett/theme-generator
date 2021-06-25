@@ -1,21 +1,12 @@
 import { atomFamily, selectorFamily } from 'recoil'
 import { defaultTheme } from 'ThemeGenerator/themes'
-import {
-  ColorDataType,
-  getColorData,
-  getColorDataPlus,
-  getMaxChroma,
-} from 'ThemeGenerator/utils'
+import { ColorDataType, getColorData, getMaxChroma } from 'ThemeGenerator/utils'
 import {
   defaultHue,
   defaultChromas,
   defaultLuminances,
 } from 'ThemeGenerator/config'
-import {
-  ScaleNameType,
-  ShadeType,
-  ColorDataPlusType,
-} from 'ThemeGenerator/types'
+import { ScaleNameType, ShadeType } from 'ThemeGenerator/types'
 
 export const hueAtom = atomFamily<number, ScaleNameType>({
   key: 'hue',
@@ -49,21 +40,6 @@ export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
     (shade) =>
     ({ get }) =>
       getColorData(
-        defaultLuminances[shade.shadeName],
-        get(chromaAtom(shade)),
-        get(hueAtom(shade.scaleName))
-      ),
-})
-
-export const colorDataPlusSelector = selectorFamily<
-  ColorDataPlusType,
-  ShadeType
->({
-  key: 'colorDataPlus',
-  get:
-    (shade) =>
-    ({ get }) =>
-      getColorDataPlus(
         defaultLuminances[shade.shadeName],
         get(chromaAtom(shade)),
         get(hueAtom(shade.scaleName))

@@ -33,16 +33,3 @@ export const getColorData: getColorDataInterface = (...args: any) => {
     isClipped: color.clipped(),
   }
 }
-
-export const getColorDataPlus = (l: number, c: number, h: number) => {
-  const color = chromajs.lch(l, c, h) as AugmentedColor
-
-  return {
-    hex: color.hex(),
-    lch: { l, c, h },
-    rgb: color.rgb(),
-    clipped_lch: chromajs(color.css()).lch(),
-    contrastOnWhite: chromajs.contrast(color, 'white'),
-    isClipped: color.clipped(),
-  }
-}
