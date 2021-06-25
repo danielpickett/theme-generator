@@ -2,11 +2,11 @@ import { canvasBaseWidth } from 'ThemeGenerator/config'
 import { isClipped } from 'ThemeGenerator/utils'
 
 export const getMaxChroma = (luminance: number, hue: number) => {
-  const chromaLimit = parseYellowProblem(luminance, hue)
-  if (chromaLimit !== null) {
-    // We have a yellow problem. Go to LINEAR SEARCH
-    return getYellowMaxChroma(luminance, hue, chromaLimit)
-  }
+  const maxYellowChromaForThisHueBracket = parseYellowProblem(luminance, hue)
+  if (maxYellowChromaForThisHueBracket !== null) {
+    // We have a yellow problem. Go to LINEAR SEARCH of yellow hues
+    return getYellowMaxChroma(luminance, hue, maxYellowChromaForThisHueBracket)
+  } // if maxYellowChromaForThisHueBracket is null, then this hue isn't yellow
 
   // 0.01 confirmed to be accurate across all hues
   const resolution = 0.01

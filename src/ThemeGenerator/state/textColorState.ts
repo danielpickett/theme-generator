@@ -37,6 +37,15 @@ export const safeLums = {
   '900': { lum: 80, operator: '>' },
 }
 
+export const brightShadeNames = [
+  '000',
+  '050',
+  '100',
+  '200',
+  '300',
+  '400',
+] as const
+
 export const vividTextColorConfig = {
   '000': { lum: 45, maxLum: 50, mix: 0.25 },
   '050': { lum: 39, maxLum: 50, mix: 0.25 },
