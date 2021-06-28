@@ -2,15 +2,15 @@ import chromajs from 'chroma-js'
 import './TextSample.scss'
 
 export const TextSample = ({
-  swatchColor,
+  shadeColor,
   textColor,
   isExpectedToBeSafe,
 }: {
-  swatchColor: string
+  shadeColor: string
   textColor: string
   isExpectedToBeSafe: boolean
 }) => {
-  const contrastRatio = chromajs.contrast(swatchColor, textColor)
+  const contrastRatio = chromajs.contrast(shadeColor, textColor)
   const isActuallySafe = contrastRatio >= 4.5
   const problem = isExpectedToBeSafe && !isActuallySafe
   // const opportunity = !isExpectedToBeSafe && isActuallySafe

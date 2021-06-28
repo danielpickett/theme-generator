@@ -76,7 +76,7 @@ export const textColorsSelector = selectorFamily<TextColorsType, ShadeType>({
       const { srcShadeName } = regularTextConfig[shade.shadeName]
       const hue = get(hueAtom(scaleName))
 
-      const swatch = getColorData(
+      const shadeColor = getColorData(
         defaultLuminances[shadeName],
         get(chromaAtom(shade)),
         hue
@@ -90,7 +90,7 @@ export const textColorsSelector = selectorFamily<TextColorsType, ShadeType>({
 
       const subduedText = mix(
         regularText.hex,
-        swatch.hex,
+        shadeColor.hex,
         regularTextConfig[shadeName].mix
       )
 
@@ -100,7 +100,7 @@ export const textColorsSelector = selectorFamily<TextColorsType, ShadeType>({
       const vividText = getColorData(lum, chroma, hue)
       const vividSubduedText = mix(
         vividText.hex,
-        swatch.hex,
+        shadeColor.hex,
         vividTextColorConfig[shadeName].mix
       )
 

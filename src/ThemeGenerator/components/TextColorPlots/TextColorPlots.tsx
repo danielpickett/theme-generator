@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import './TextColorPlots.scss'
 import { useRecoilValue } from 'recoil'
 import {
@@ -13,13 +13,14 @@ import { MovableColorDot } from './components'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
-  const { lch: swatch } = useRecoilValue(colorDataSelector(shade))
+  const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const textColors = useRecoilValue(textColorsSelector(shade))
   const [movableColor, setMovableColor] = useState<LCHObjType>({
-    l: textColors.regular.lch.l,
-    c: textColors.regular.lch.c,
-    h: textColors.regular.lch.h,
+    l: textColors['vivid-subdued'].lch.l,
+    c: textColors['vivid-subdued'].lch.c,
+    h: textColors['vivid-subdued'].lch.h,
   })
+  const ref = useRef<HTMLDivElement>(null)
 
   const safeLum = safeLums[shade.shadeName]
 
@@ -27,8 +28,8 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const problem = textLumsArr.some((l) => l < safeLum.lum)
 
   return (
-    <div className="TextColorPlots">
-      <Canvas hue={swatch.h} size={size} />
+    <div className="TextColorPlots" ref={ref}>
+      <Canvas hue={shadeColor.h} size={size} />
       {/* <div
         className="TextColorPlots__safe-line"
         style={{ bottom: safeLums[shade.shadeName].lum * size }}
@@ -48,13 +49,16 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       <div
         className="TextColorPlots__point TextColorPlots__point--diamond"
         title="shade color"
-        style={{ bottom: swatch.l * size, left: swatch.c * size }}
+        style={{ bottom: shadeColor.l * size, left: shadeColor.c * size }}
       />
       <MovableColorDot
         color={movableColor}
         size={size}
         onColorChange={setMovableColor}
-      />
+        sliderAreaRef={ref}
+      >
+        <div className="TextColorPlots__movable-dot" />
+      </MovableColorDot>
     </div>
   )
 }
