@@ -1,43 +1,54 @@
 import React, { useRef, useState } from 'react'
 import './TextColorPlots.scss'
+import chromajs from 'chroma-js'
 import { useRecoilValue } from 'recoil'
 import {
   textColorsPlotSizeAtom,
   colorDataSelector,
-  textColorsSelector,
-  safeLums,
+  regularTextColorsSelector,
+  vividTextColorsSelector,
+  mostChromaticSafeColorSelector,
 } from 'ThemeGenerator/state'
 import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
 import { MovableColorDot } from './components'
+import {
+  getColorData,
+  getMaxChroma,
+  getMostChromaticSafeColor,
+} from 'ThemeGenerator/utils'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
-  const textColors = useRecoilValue(textColorsSelector(shade))
+  // const mostChromaticSafeColor = useRecoilValue(
+  //   mostChromaticSafeColorSelector(shade)
+  // )
+  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
+  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const [movableColor, setMovableColor] = useState<LCHObjType>({
-    l: textColors['vivid-subdued'].lch.l,
-    c: textColors['vivid-subdued'].lch.c,
-    h: textColors['vivid-subdued'].lch.h,
+    l: regularTextColors['regular'].lch.l,
+    c: regularTextColors['regular'].lch.c,
+    h: regularTextColors['regular'].lch.h,
   })
   const ref = useRef<HTMLDivElement>(null)
 
-  const safeLum = safeLums[shade.shadeName]
+  const handleChange = ({ l, c, h }: LCHObjType) => {
+    const maxChroma = getMaxChroma(l, h)
+    setMovableColor({ l, c: c > maxChroma ? maxChroma : c, h })
+  }
 
-  const textLumsArr = Object.values(textColors).map(({ lch }) => lch.l)
-  const problem = textLumsArr.some((l) => l < safeLum.lum)
+  const textColorsArr = Object.entries({
+    ...regularTextColors,
+    ...vividTextColors,
+  })
+
+  const mostChromaticSafeColor = getMostChromaticSafeColor(movableColor)
 
   return (
     <div className="TextColorPlots" ref={ref}>
       <Canvas hue={shadeColor.h} size={size} />
-      {/* <div
-        className="TextColorPlots__safe-line"
-        style={{ bottom: safeLums[shade.shadeName].lum * size }}
-      /> */}
-      <div className="TextColorPlots__problem-badge">
-        {problem && 'problem'}
-      </div>
-      {Object.entries(textColors).map(([title, { lch: color }]) => (
+      {textColorsArr.map(([title, { lch: color }]) => (
         <div
           key={title}
           className="TextColorPlots__point"
@@ -51,13 +62,30 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         title="shade color"
         style={{ bottom: shadeColor.l * size, left: shadeColor.c * size }}
       />
+      <div
+        className="TextColorPlots__point TextColorPlots__point--black"
+        style={{
+          bottom: mostChromaticSafeColor.l * size,
+          left: mostChromaticSafeColor.c * size,
+        }}
+      />
       <MovableColorDot
         color={movableColor}
         size={size}
-        onColorChange={setMovableColor}
+        onColorChange={handleChange}
         sliderAreaRef={ref}
       >
-        <div className="TextColorPlots__movable-dot" />
+        <div className="TextColorPlots__movable-dot">
+          <div className="TextColorPlots__dot-tooltip">
+            L: {movableColor.l}{' '}
+            {chromajs
+              .contrast(
+                getColorData(movableColor).hex,
+                getColorData(shadeColor).hex
+              )
+              .toFixed(2)}
+          </div>
+        </div>
       </MovableColorDot>
     </div>
   )

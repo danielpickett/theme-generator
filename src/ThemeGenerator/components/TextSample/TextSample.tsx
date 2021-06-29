@@ -1,4 +1,5 @@
 import chromajs from 'chroma-js'
+import { safeContrast } from 'ThemeGenerator/config'
 import './TextSample.scss'
 
 export const TextSample = ({
@@ -11,7 +12,7 @@ export const TextSample = ({
   isExpectedToBeSafe: boolean
 }) => {
   const contrastRatio = chromajs.contrast(shadeColor, textColor)
-  const isActuallySafe = contrastRatio >= 4.5
+  const isActuallySafe = contrastRatio >= safeContrast
   const problem = isExpectedToBeSafe && !isActuallySafe
   // const opportunity = !isExpectedToBeSafe && isActuallySafe
 

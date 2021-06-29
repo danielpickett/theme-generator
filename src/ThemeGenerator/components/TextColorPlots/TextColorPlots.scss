@@ -17,26 +17,27 @@
       border-radius: 0;
       transform: translate(-50%, 50%) rotate(45deg);
     }
+    &--black {
+      background-color: black;
+    }
   }
-  &__safe-line {
-    position: absolute;
-    width: 100%;
-    border-bottom: 1px dashed black;
-    background-color: white;
-    opacity: 0.5;
-  }
-  &__problem-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: black;
-  }
+
   &__movable-dot {
     background-color: red;
-    opacity: 0.5;
     height: 1rem;
     width: 1rem;
     transform: translate(-50%, -50%);
     border-radius: 100rem;
+    position: relative;
+  }
+  &__dot-tooltip {
+    white-space: nowrap;
+    position: absolute;
+    padding: 0 0.5rem 1px;
+    top: 50%;
+    right: calc(100% + 1rem);
+    transform: translateY(-50%);
+    background-color: $color-grey-900;
+    color: $text-on-grey-900;
   }
 }

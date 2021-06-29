@@ -5,7 +5,8 @@ import { ShadeType } from 'ThemeGenerator/types'
 import {
   colorDataSelector,
   showTextColorPlotsAtom,
-  textColorsSelector,
+  regularTextColorsSelector,
+  vividTextColorsSelector,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { isExpectedToBeSafe } from 'ThemeGenerator/config'
@@ -13,7 +14,8 @@ import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const shadeColor = useRecoilValue(colorDataSelector(shade))
-  const textColors = useRecoilValue(textColorsSelector(shade))
+  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
+  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const backgroundColor = shadeColor.isClipped ? 'black' : shadeColor.hex
 
@@ -28,23 +30,23 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
       <TextSample
         shadeColor={shadeColor.hex}
-        textColor={textColors.regular.hex}
+        textColor={regularTextColors['regular'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].regular}
       />
       <TextSample
         shadeColor={shadeColor.hex}
-        textColor={textColors.subdued.hex}
+        textColor={regularTextColors['subdued'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
       />
       <Spacer />
       <TextSample
         shadeColor={shadeColor.hex}
-        textColor={textColors.vivid.hex}
+        textColor={vividTextColors['vivid'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
       <TextSample
         shadeColor={shadeColor.hex}
-        textColor={textColors['vivid-subdued'].hex}
+        textColor={vividTextColors['vivid-subdued'].hex}
         isExpectedToBeSafe={
           isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
         }
