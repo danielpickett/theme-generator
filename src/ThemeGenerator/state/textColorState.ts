@@ -96,20 +96,3 @@ export const vividTextColorsSelector = selectorFamily<
       }
     },
 })
-
-export const mostChromaticSafeColorSelector = selectorFamily<
-  LCHObjType,
-  ShadeType
->({
-  key: 'mostChromaticSafeColor',
-  get:
-    (shade) =>
-    ({ get }) => {
-      // const l = defaultLuminances[shade.shadeName]
-      const h = get(hueAtom(shade.scaleName))
-      // const c = get(chromaAtom(shade))
-
-      return { l: 0, c: 0, h }
-      // return getMostChromaticSafeColor({ l, c, h })
-    },
-})

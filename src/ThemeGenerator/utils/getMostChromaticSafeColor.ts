@@ -15,8 +15,6 @@ export const getMostChromaticSafeColor = (bgColor: LCHObjType) => {
 }
 
 const getMostChromaticSafeColor__DARK = (bgColor: LCHObjType) => {
-  console.log('DARK', bgColor.l)
-
   const h = bgColor.h
   const bgL = bgColor.l
   const bgHex = getColorData(bgColor).hex
@@ -42,14 +40,11 @@ const getMostChromaticSafeColor__DARK = (bgColor: LCHObjType) => {
   }
 
   const result = { l: currentL, c: getMaxChroma(currentL, h), h }
-  //   console.log(`
-  // ${bgColor.l}, ${bgColor.c}, ${bgColor.h}
-  // ${result.l}, ${result.c}, ${result.h}
-  // \n`)
+  const finalContrast = chromajs.contrast(getColorData(result).hex, bgHex)
+  console.log(finalContrast)
   return result
 }
 
 const getMostChromaticSafeColor__LIGHT = (bgColor: LCHObjType) => {
-  console.log('LIGHT', bgColor.l)
-  return { l: 5, c: 0, h: bgColor.h }
+  return { l: 0, c: 0, h: bgColor.h }
 }

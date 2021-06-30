@@ -7,7 +7,6 @@ import {
   colorDataSelector,
   regularTextColorsSelector,
   vividTextColorsSelector,
-  mostChromaticSafeColorSelector,
 } from 'ThemeGenerator/state'
 import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
@@ -21,9 +20,6 @@ import {
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
-  // const mostChromaticSafeColor = useRecoilValue(
-  //   mostChromaticSafeColorSelector(shade)
-  // )
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const [movableColor, setMovableColor] = useState<LCHObjType>({
@@ -68,7 +64,16 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
           bottom: mostChromaticSafeColor.l * size,
           left: mostChromaticSafeColor.c * size,
         }}
-      />
+      >
+        <div className="TextColorPlots__tooltip">
+          {chromajs
+            .contrast(
+              getColorData(movableColor).hex,
+              getColorData(mostChromaticSafeColor).hex
+            )
+            .toFixed(2)}
+        </div>
+      </div>
       <MovableColorDot
         color={movableColor}
         size={size}
@@ -76,14 +81,16 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         sliderAreaRef={ref}
       >
         <div className="TextColorPlots__movable-dot">
-          <div className="TextColorPlots__dot-tooltip">
-            L: {movableColor.l}{' '}
-            {chromajs
-              .contrast(
-                getColorData(movableColor).hex,
-                getColorData(shadeColor).hex
-              )
-              .toFixed(2)}
+          <div className="TextColorPlots__tooltip">
+            <div>L: {movableColor.l} </div>
+            <div>
+              {chromajs
+                .contrast(
+                  getColorData(movableColor).hex,
+                  getColorData(shadeColor).hex
+                )
+                .toFixed(2)}
+            </div>
           </div>
         </div>
       </MovableColorDot>
