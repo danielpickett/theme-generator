@@ -33,7 +33,7 @@ const renderChroma = (size: number) => {
     for (let L = height; L >= 0; L--) {
       const yellowException = parseYellowProblem(L / size, H)
       for (let C = 0; C < width; C++) {
-        const color = getColorData(L / size, C / size, H)
+        const color = getColorData({ l: L / size, c: C / size, h: H })
 
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {

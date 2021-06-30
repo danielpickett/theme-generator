@@ -39,9 +39,9 @@ export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
   get:
     (shade) =>
     ({ get }) =>
-      getColorData(
-        defaultLuminances[shade.shadeName],
-        get(chromaAtom(shade)),
-        get(hueAtom(shade.scaleName))
-      ),
+      getColorData({
+        l: defaultLuminances[shade.shadeName],
+        c: get(chromaAtom(shade)),
+        h: get(hueAtom(shade.scaleName)),
+      }),
 })

@@ -48,19 +48,19 @@ export const regularTextColorsSelector = selectorFamily<
       const { scaleName, shadeName } = shade
       const hue = get(hueAtom(scaleName))
 
-      const shadeColor = getColorData(
-        defaultLuminances[shadeName],
-        get(chromaAtom(shade)),
-        hue
-      )
+      const shadeColor = getColorData({
+        l: defaultLuminances[shadeName],
+        c: get(chromaAtom(shade)),
+        h: hue,
+      })
 
       const srcShadeName = isDark(shadeColor.lch.l) ? '000' : '900'
 
-      const regularText = getColorData(
-        defaultLuminances[srcShadeName],
-        get(chromaAtom({ scaleName, shadeName: srcShadeName })),
-        hue
-      )
+      const regularText = getColorData({
+        l: defaultLuminances[srcShadeName],
+        c: get(chromaAtom({ scaleName, shadeName: srcShadeName })),
+        h: hue,
+      })
 
       const subduedText = mix(regularText.hex, shadeColor.hex, mixRatio)
 
@@ -85,9 +85,13 @@ export const vividTextColorsSelector = selectorFamily<
       const h = get(hueAtom(scaleName))
       const c = getMaxChroma(l, h)
 
-      const shadeColor = getColorData(defaultL, get(chromaAtom(shade)), h)
+      const shadeColor = getColorData({
+        l: defaultL,
+        c: get(chromaAtom(shade)),
+        h,
+      })
 
-      const vividText = getColorData(l, c, h)
+      const vividText = getColorData({ l, c, h })
       const vividSubduedText = mix(vividText.hex, shadeColor.hex, mixRatio)
 
       return {

@@ -14,15 +14,13 @@ export type ColorDataType = {
 interface getColorDataInterface {
   (lch: [number, number, number]): ColorDataType
   (lch: { l: number; c: number; h: number }): ColorDataType
-  (l: number, c: number, h: number): ColorDataType
 }
 
 export const getColorData: getColorDataInterface = (...args: any) => {
   const { l, c, h } = (() => {
     if (Array.isArray(args[0]))
       return { l: args[0][0], c: args[0][1], h: args[0][2] }
-    if (typeof args[0] === 'object') return args[0]
-    return { l: args[0], c: args[1], h: args[2] }
+    return { ...args[0] }
   })() as { l: number; c: number; h: number }
 
   const color = chromajs.lch(l, c, h) as AugmentedColor
