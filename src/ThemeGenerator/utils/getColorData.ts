@@ -1,5 +1,5 @@
 import chromajs from 'chroma-js'
-import { AugmentedColor } from 'ThemeGenerator/types'
+import { AugmentedColor, LCHUnionType } from 'ThemeGenerator/types'
 
 export type ColorDataType = {
   hex: string
@@ -11,17 +11,10 @@ export type ColorDataType = {
   isClipped: boolean
 }
 
-interface getColorDataInterface {
-  (lch: [number, number, number]): ColorDataType
-  (lch: { l: number; c: number; h: number }): ColorDataType
-}
-
-export const getColorData: getColorDataInterface = (...args: any) => {
-  const { l, c, h } = (() => {
-    if (Array.isArray(args[0]))
-      return { l: args[0][0], c: args[0][1], h: args[0][2] }
-    return { ...args[0] }
-  })() as { l: number; c: number; h: number }
+export const getColorData = (lch: LCHUnionType) => {
+  const { l, c, h } = Array.isArray(lch)
+    ? { l: lch[0], c: lch[1], h: lch[2] }
+    : lch
 
   const color = chromajs.lch(l, c, h) as AugmentedColor
 

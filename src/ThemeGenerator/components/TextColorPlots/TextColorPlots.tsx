@@ -66,12 +66,15 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         }}
       >
         <div className="TextColorPlots__tooltip">
-          {chromajs
-            .contrast(
-              getColorData(movableColor).hex,
-              getColorData(mostChromaticSafeColor).hex
-            )
-            .toFixed(2)}
+          <div>L: {mostChromaticSafeColor.l.toFixed(2)}</div>
+          <div>
+            {chromajs
+              .contrast(
+                getColorData(movableColor).hex,
+                getColorData(mostChromaticSafeColor).hex
+              )
+              .toFixed(2)}
+          </div>
         </div>
       </div>
       <MovableColorDot

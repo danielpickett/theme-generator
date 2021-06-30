@@ -41,7 +41,7 @@ export const defaultChromas = {
 } as const
 
 export const safeContrast = 4.5
-export const darkestLightLuminance = 49.5
+export const darkestLightLuminance = 50
 export const maxPossibleLuminance = 100
 export const maxPossibleChromaForAnyHue = 135
 

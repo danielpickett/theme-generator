@@ -1,7 +1,7 @@
 import { selectorFamily } from 'recoil'
 
 import { defaultLuminances } from 'ThemeGenerator/config'
-import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
+import { ShadeType } from 'ThemeGenerator/types'
 import {
   ColorDataType,
   getColorData,

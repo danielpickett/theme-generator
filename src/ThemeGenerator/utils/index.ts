@@ -1,4 +1,5 @@
 export * from './clamp'
+export * from './contrast'
 export * from './getColorData'
 export * from './getMaxChroma'
 export * from './getMostChromaticSafeColor'
