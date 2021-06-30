@@ -14,33 +14,47 @@ export const getMostChromaticSafeColor = (bgColor: LCHObjType) => {
     : getMostChromaticSafeColor__LIGHT(bgColor)
 }
 
+const resolution = 0.01
+
 const getMostChromaticSafeColor__DARK = (bgColor: LCHObjType) => {
   const h = bgColor.h
-  const bgL = bgColor.l
-  const bgHex = getColorData(bgColor).hex
 
-  const resolution = 0.01
-
-  let currentL = bgL
-  let step = 100 - bgL
+  let step = 100 - bgColor.l
+  let currentL = bgColor.l
+  let nextColor = {
+    l: bgColor.l,
+    c: getMaxChroma(bgColor.l, h),
+    h,
+  }
 
   while (step >= resolution) {
-    if (currentL > 100 || currentL < 0) debugger
+    if (currentL > 100 || currentL < 0) {
+      console.log('big problem')
+      break
+    }
     const nextStep = step / 2
-    const nextL = currentL + nextStep
-    const nextC = getMaxChroma(nextL, h)
-    const nextColor = { l: nextL, c: nextC, h }
+    nextColor = {
+      l: currentL + nextStep,
+      c: getMaxChroma(currentL + nextStep, h),
+      h,
+    }
 
-    const nextContrast = chromajs.contrast(getColorData(nextColor).hex, bgHex)
+    const nextContrast = chromajs.contrast(
+      getColorData(nextColor).hex,
+      getColorData(bgColor).hex
+    )
     if (nextContrast >= 4.5) {
       step = nextStep
     } else {
-      currentL = nextL
+      currentL = nextColor.l
     }
   }
 
-  const result = { l: currentL, c: getMaxChroma(currentL, h), h }
-  const finalContrast = chromajs.contrast(getColorData(result).hex, bgHex)
+  const result = { ...nextColor }
+  const finalContrast = chromajs.contrast(
+    getColorData(result).hex,
+    getColorData(bgColor).hex
+  )
   console.log(finalContrast)
   return result
 }
