@@ -44,13 +44,9 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   })
   let mostChromaticSafeColor: LCHObjType
 
-  if (shade.scaleName === 'grey' && shade.shadeName === '900') {
-    console.log(shade)
-    mostChromaticSafeColor = getMostChromaticSafeColor(movableColor, 0)
-  } else {
-    mostChromaticSafeColor = getMostChromaticSafeColor(movableColor)
-  }
-
+  console.time('time')
+  mostChromaticSafeColor = getMostChromaticSafeColor(movableColor)
+  console.timeEnd('time')
   return (
     <div
       className="TextColorPlots"
