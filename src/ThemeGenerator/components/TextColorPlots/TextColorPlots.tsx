@@ -16,6 +16,10 @@ import {
   getMaxChroma,
   getMostChromaticSafeColor,
 } from 'ThemeGenerator/utils'
+import {
+  maxPossibleChromaForAnyHue,
+  maxPossibleLuminance,
+} from 'ThemeGenerator/config'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
@@ -38,11 +42,24 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
     ...regularTextColors,
     ...vividTextColors,
   })
+  let mostChromaticSafeColor: LCHObjType
 
-  const mostChromaticSafeColor = getMostChromaticSafeColor(movableColor)
+  if (shade.scaleName === 'grey' && shade.shadeName === '900') {
+    console.log(shade)
+    mostChromaticSafeColor = getMostChromaticSafeColor(movableColor, 0)
+  } else {
+    mostChromaticSafeColor = getMostChromaticSafeColor(movableColor)
+  }
 
   return (
-    <div className="TextColorPlots" ref={ref}>
+    <div
+      className="TextColorPlots"
+      ref={ref}
+      style={{
+        height: `${maxPossibleLuminance * size}px`,
+        width: `${maxPossibleChromaForAnyHue * size}px`,
+      }}
+    >
       <Canvas hue={shadeColor.h} size={size} />
       {textColorsArr.map(([title, { lch: color }]) => (
         <div
