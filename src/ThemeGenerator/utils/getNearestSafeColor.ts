@@ -1,9 +1,11 @@
 import { LCHObjType } from 'ThemeGenerator/types'
-import { contrast, isDark, getMaxChroma } from '.'
-import { getColorData } from './getColorData'
+import { getMaxChroma, isDark, isSameColor } from '.'
 
-export const getNearestFullChromaSafeColor = (color: LCHObjType) => {
-  const { l, h } = color
+export const getNearestSafeColor = (
+  color: LCHObjType,
+  maximizeChroma?: boolean
+) => {
+  const { l, c, h } = color
   const sign = isDark(l) ? 1 : -1
 
   let step = sign === 1 ? 100 - color.l : color.l
@@ -13,17 +15,13 @@ export const getNearestFullChromaSafeColor = (color: LCHObjType) => {
   while (true) {
     const nextColor = {
       l: currColor.l + step * sign,
-      c: getMaxChroma(currColor.l + step * sign, h),
+      c: maximizeChroma ? getMaxChroma(currColor.l + step * sign, h) : c,
       h,
     }
 
-    const nextIsSame =
-      getColorData(currColor).hex === getColorData(nextColor).hex
+    if (isSameColor(currColor, nextColor)) break
 
-    const nextIsSafe = contrast(nextColor, color) >= 4.5
-
-    if (nextIsSame) break
-    if (nextIsSafe) {
+    if (isSameColor(nextColor, color)) {
       safeColor = { ...nextColor }
       step = step / 2
     } else {

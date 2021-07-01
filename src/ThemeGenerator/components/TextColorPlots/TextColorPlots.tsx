@@ -14,13 +14,14 @@ import { MovableColorDot } from './components'
 import {
   getColorData,
   getMaxChroma,
-  getNearestFullChromaSafeColor,
+  getNearestSafeColor,
 } from 'ThemeGenerator/utils'
 import {
   maxPossibleChromaForAnyHue,
   maxPossibleLuminance,
 } from 'ThemeGenerator/config'
 import classNames from 'classnames'
+import { isSafe } from 'ThemeGenerator/utils/isSafe'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
@@ -29,19 +30,24 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
 
   const { l, c, h } = shadeColor
-  const mostChromaticSafeColor = useMemo(
-    () => getNearestFullChromaSafeColor({ l, c, h }),
+  const nearestSafeColor = useMemo(
+    () => getNearestSafeColor({ l, c, h }),
     [l, c, h]
   )
 
   const [movableColor, setMovableColor] = useState<LCHObjType>({
-    ...mostChromaticSafeColor,
+    ...nearestSafeColor,
   })
   const ref = useRef<HTMLDivElement>(null)
 
   const handleChange = ({ l, c, h }: LCHObjType) => {
     const maxChroma = getMaxChroma(l, h)
-    setMovableColor({ l, c: c > maxChroma ? maxChroma : c, h })
+
+    if (c > maxChroma) c = maxChroma
+    if (isSafe({ l, c, h }, shadeColor)) {
+      setMovableColor({ l, c, h })
+    } else {
+    }
   }
 
   const textColorsArr = Object.entries({
@@ -76,17 +82,17 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       <div
         className="TextColorPlots__point TextColorPlots__point--black"
         style={{
-          bottom: mostChromaticSafeColor.l * size,
-          left: mostChromaticSafeColor.c * size,
+          bottom: nearestSafeColor.l * size,
+          left: nearestSafeColor.c * size,
         }}
       >
         <div className="TextColorPlots__tooltip">
-          <div>L: {mostChromaticSafeColor.l.toFixed(2)}</div>
+          <div>L: {nearestSafeColor.l.toFixed(2)}</div>
           <div>
             {chromajs
               .contrast(
                 getColorData(movableColor).hex,
-                getColorData(mostChromaticSafeColor).hex
+                getColorData(nearestSafeColor).hex
               )
               .toFixed(2)}
           </div>
