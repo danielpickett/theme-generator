@@ -14,7 +14,7 @@ import { MovableColorDot } from './components'
 import {
   getColorData,
   getMaxChroma,
-  getNearestSafeColor,
+  getNearestFullChromaSafeColor,
 } from 'ThemeGenerator/utils'
 import {
   maxPossibleChromaForAnyHue,
@@ -27,10 +27,15 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
+
+  const { l, c, h } = shadeColor
+  const mostChromaticSafeColor = useMemo(
+    () => getNearestFullChromaSafeColor({ l, c, h }),
+    [l, c, h]
+  )
+
   const [movableColor, setMovableColor] = useState<LCHObjType>({
-    l: regularTextColors['regular'].lch.l,
-    c: regularTextColors['regular'].lch.c,
-    h: regularTextColors['regular'].lch.h,
+    ...mostChromaticSafeColor,
   })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -43,13 +48,6 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
     ...regularTextColors,
     ...vividTextColors,
   })
-
-  const { l, c, h } = movableColor
-
-  const mostChromaticSafeColor = useMemo(
-    () => getNearestSafeColor({ l, c, h }),
-    [l, c, h]
-  )
 
   return (
     <div
@@ -108,7 +106,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
             })}
           >
             <div className="TextColorPlots__tooltip">
-              <div>L: {movableColor.l} </div>
+              <div>L: {movableColor.l.toFixed(2)} </div>
               <div>
                 {chromajs
                   .contrast(
