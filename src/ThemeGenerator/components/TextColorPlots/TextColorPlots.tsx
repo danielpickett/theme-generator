@@ -14,7 +14,7 @@ import { MovableColorDot } from './components'
 import {
   getColorData,
   getMaxChroma,
-  getMostChromaticSafeColor,
+  getNearestSafeColor,
 } from 'ThemeGenerator/utils'
 import {
   maxPossibleChromaForAnyHue,
@@ -47,7 +47,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const { l, c, h } = movableColor
 
   const mostChromaticSafeColor = useMemo(
-    () => getMostChromaticSafeColor({ l, c, h }),
+    () => getNearestSafeColor({ l, c, h }),
     [l, c, h]
   )
 

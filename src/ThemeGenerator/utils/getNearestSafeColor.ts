@@ -2,7 +2,7 @@ import { LCHObjType } from 'ThemeGenerator/types'
 import { contrast, isDark, getMaxChroma } from '.'
 import { getColorData } from './getColorData'
 
-export const getMostChromaticSafeColor = (color: LCHObjType) => {
+export const getNearestSafeColor = (color: LCHObjType) => {
   const { l, h } = color
   const sign = isDark(l) ? 1 : -1
 
