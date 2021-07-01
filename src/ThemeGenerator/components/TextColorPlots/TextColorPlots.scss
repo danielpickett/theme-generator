@@ -29,6 +29,9 @@
     transform: translate(-50%, -50%);
     border-radius: 100rem;
     position: relative;
+    &--has-keyboard-focus {
+      box-shadow: $focus-ring;
+    }
   }
   &__tooltip {
     white-space: nowrap;

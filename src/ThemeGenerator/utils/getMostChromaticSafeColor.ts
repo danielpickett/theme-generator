@@ -11,10 +11,9 @@ export const getMostChromaticSafeColor = (color: LCHObjType) => {
   let safeColor = { l: isDark(l) ? 100 : 0, c: 0, h }
 
   while (true) {
-    const nextStep = step / 2
     const nextColor = {
-      l: currColor.l + nextStep * sign,
-      c: getMaxChroma(currColor.l + nextStep * sign, h),
+      l: currColor.l + step * sign,
+      c: getMaxChroma(currColor.l + step * sign, h),
       h,
     }
 
@@ -24,7 +23,7 @@ export const getMostChromaticSafeColor = (color: LCHObjType) => {
 
     if (nextContrast >= 4.5) {
       safeColor = { ...nextColor }
-      step = nextStep
+      step = step / 2
     } else {
       currColor = { ...nextColor }
     }
