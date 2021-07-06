@@ -3,48 +3,61 @@ import './Shade.scss'
 import { useRecoilValue } from 'recoil'
 import { ShadeType } from 'ThemeGenerator/types'
 import {
-  colorDataSelector,
   showTextColorPlotsAtom,
-  textColorsSelector,
+  regularTextColorsSelector,
+  vividTextColorsSelector,
+  hueAtom,
+  chromaSelector,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
-import { isExpectedToBeSafe } from 'ThemeGenerator/config'
+import { defaultLuminances, isExpectedToBeSafe } from 'ThemeGenerator/config'
 import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
+import { getColorData } from 'ThemeGenerator/utils'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
-  const swatchColor = useRecoilValue(colorDataSelector(shade))
-  const textColors = useRecoilValue(textColorsSelector(shade))
+  const shadeL = defaultLuminances[shade.shadeName]
+  const shadeC = useRecoilValue(chromaSelector(shade))
+  const shadeH = useRecoilValue(hueAtom(shade.scaleName))
+  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
+  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
-  const backgroundColor = swatchColor.isClipped ? 'black' : swatchColor.hex
+
+  const shadeColorData = getColorData([shadeL, shadeC, shadeH])
+  const backgroundColor = shadeColorData.isClipped
+    ? 'black'
+    : shadeColorData.hex
 
   return (
     <div
       className="Shade"
       style={{
         backgroundColor,
-        color: swatchColor.lch.l > 60 ? 'black' : 'white',
+        color: regularTextColors['regular'].hex,
       }}
     >
-      <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
+      <div className="Shade__header">
+        <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
+        <div className="Shade__details">{`h: ${shadeColorData.lch.h}`}</div>
+      </div>
       <TextSample
-        swatchColor={swatchColor.hex}
-        textColor={textColors.regular.hex}
+        shadeColor={shadeColorData.hex}
+        textColor={regularTextColors['regular'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].regular}
       />
       <TextSample
-        swatchColor={swatchColor.hex}
-        textColor={textColors.subdued.hex}
+        shadeColor={shadeColorData.hex}
+        textColor={regularTextColors['subdued'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
       />
       <Spacer />
       <TextSample
-        swatchColor={swatchColor.hex}
-        textColor={textColors.vivid.hex}
+        shadeColor={shadeColorData.hex}
+        textColor={vividTextColors['vivid'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
       />
       <TextSample
-        swatchColor={swatchColor.hex}
-        textColor={textColors['vivid-subdued'].hex}
+        shadeColor={shadeColorData.hex}
+        textColor={vividTextColors['vivid-subdued'].hex}
         isExpectedToBeSafe={
           isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
         }

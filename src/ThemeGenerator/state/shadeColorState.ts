@@ -34,14 +34,29 @@ export const maxChromaSelector = selectorFamily<number, ShadeType>({
       ),
 })
 
+export const chromaSelector = selectorFamily<number, ShadeType>({
+  key: 'clampedChroma',
+  get:
+    (shade) =>
+    ({ get }) => {
+      const chroma = get(chromaAtom(shade))
+      const maxChroma = get(maxChromaSelector(shade))
+      return chroma > maxChroma ? maxChroma : chroma
+    },
+  set:
+    (shade) =>
+    ({ set }, newValue) =>
+      set(chromaAtom(shade), newValue),
+})
+
 export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({
   key: 'colorData',
   get:
     (shade) =>
     ({ get }) =>
-      getColorData(
-        defaultLuminances[shade.shadeName],
-        get(chromaAtom(shade)),
-        get(hueAtom(shade.scaleName))
-      ),
+      getColorData({
+        l: defaultLuminances[shade.shadeName],
+        c: get(chromaSelector(shade)),
+        h: get(hueAtom(shade.scaleName)),
+      }),
 })

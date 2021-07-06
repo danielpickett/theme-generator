@@ -3,7 +3,10 @@ import {
   getMaxChroma,
   parseYellowProblem,
 } from 'ThemeGenerator/utils'
-import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
+import {
+  maxPossibleLuminance,
+  maxPossibleChromaForAnyHue,
+} from 'ThemeGenerator/config'
 import { RequestMessageType } from './worker-types'
 
 declare const self: {
@@ -23,14 +26,14 @@ const renderChroma = (size: number) => {
     resize(size)
     const H = state.hue
 
-    const width = canvasBaseWidth * size
-    const height = canvasBaseHeight * size
+    const width = maxPossibleChromaForAnyHue * size
+    const height = maxPossibleLuminance * size
 
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
       const yellowException = parseYellowProblem(L / size, H)
       for (let C = 0; C < width; C++) {
-        const color = getColorData(L / size, C / size, H)
+        const color = getColorData({ l: L / size, c: C / size, h: H })
 
         canvasCtx.fillStyle = color.hex
         if (!color.isClipped) {
@@ -56,8 +59,8 @@ const renderChroma = (size: number) => {
 const renderMask = (size: number) => {
   if (canvasCtx) {
     resize(size)
-    const width = canvasBaseWidth * size
-    const height = canvasBaseHeight * size
+    const width = maxPossibleChromaForAnyHue * size
+    const height = maxPossibleLuminance * size
 
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
@@ -66,8 +69,8 @@ const renderMask = (size: number) => {
       canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
       canvasCtx.fillRect(
         maxChroma * size,
-        canvasBaseHeight * size - L,
-        canvasBaseWidth * size - maxChroma,
+        maxPossibleLuminance * size - L,
+        maxPossibleChromaForAnyHue * size - maxChroma,
         1
       )
     }
@@ -76,8 +79,8 @@ const renderMask = (size: number) => {
 }
 
 const resize = (size: number) => {
-  const width = canvasBaseWidth * size
-  const height = canvasBaseHeight * size
+  const width = maxPossibleChromaForAnyHue * size
+  const height = maxPossibleLuminance * size
   if (
     (canvas && canvas.height !== height) ||
     (canvas && canvas.width !== width)

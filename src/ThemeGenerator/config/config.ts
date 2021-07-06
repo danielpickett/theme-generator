@@ -40,8 +40,10 @@ export const defaultChromas = {
   '900': 6.37,
 } as const
 
-export const canvasBaseHeight = 100
-export const canvasBaseWidth = 135
+export const safeContrast = 4.5
+export const darkestLightLuminance = 50
+export const maxPossibleLuminance = 100
+export const maxPossibleChromaForAnyHue = 135
 
 export const defaultHue = 240
 

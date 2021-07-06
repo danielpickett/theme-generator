@@ -40,3 +40,7 @@ export type ScaleNameType = string
 export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never
 
 export type AugmentedColor = Color & { clipped: () => boolean }
+
+export type LCHObjType = { l: number; c: number; h: number }
+export type LCHArrayType = [number, number, number]
+export type LCHUnionType = LCHObjType | LCHArrayType

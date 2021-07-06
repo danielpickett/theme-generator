@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import './Canvas.scss'
-import { canvasBaseHeight, canvasBaseWidth } from 'ThemeGenerator/config'
+import {
+  maxPossibleLuminance,
+  maxPossibleChromaForAnyHue,
+} from 'ThemeGenerator/config'
 import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
 const sizeDivisor = 2
@@ -65,8 +68,8 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
       <div
         className="Canvas"
         style={{
-          height: `${canvasBaseHeight * size}px`,
-          width: `${canvasBaseWidth * size}px`,
+          height: `${maxPossibleLuminance * size}px`,
+          width: `${maxPossibleChromaForAnyHue * size}px`,
         }}
       >
         <canvas className="Canvas__canvas" ref={initChromaWorker}>
