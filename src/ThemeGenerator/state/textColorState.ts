@@ -1,4 +1,4 @@
-import { selectorFamily } from 'recoil'
+import { atomFamily, selectorFamily, DefaultValue } from 'recoil'
 
 import { defaultLuminances } from 'ThemeGenerator/config'
 import { ShadeType } from 'ThemeGenerator/types'
@@ -71,6 +71,14 @@ export const regularTextColorsSelector = selectorFamily<
     },
 })
 
+export const vividTextColorAtom = atomFamily<
+  ColorDataType | undefined,
+  ShadeType
+>({
+  key: 'vividTextTargetColor',
+  default: undefined,
+})
+
 export const vividTextColorsSelector = selectorFamily<
   VividTextColorsType,
   ShadeType
@@ -81,9 +89,16 @@ export const vividTextColorsSelector = selectorFamily<
     ({ get }) => {
       const { scaleName, shadeName } = shade
       const defaultL = defaultLuminances[shadeName]
+
+      let vividText = get(vividTextColorAtom(shade))
+
       const l = vividLums[shadeName]
       const h = get(hueAtom(scaleName))
       const c = getMaxChroma(l, h)
+
+      if (!vividText) {
+        vividText = getColorData({ l, c, h })
+      }
 
       const shadeColor = getColorData({
         l: defaultL,
@@ -91,12 +106,20 @@ export const vividTextColorsSelector = selectorFamily<
         h,
       })
 
-      const vividText = getColorData({ l, c, h })
       const vividSubduedText = mix(vividText.hex, shadeColor.hex, mixRatio)
 
       return {
         vivid: vividText,
         'vivid-subdued': vividSubduedText,
       }
+    },
+  set:
+    (shade) =>
+    ({ set }, newVividTextColors) => {
+      const newValue =
+        newVividTextColors instanceof DefaultValue
+          ? newVividTextColors
+          : newVividTextColors.vivid
+      set(vividTextColorAtom(shade), newValue)
     },
 })

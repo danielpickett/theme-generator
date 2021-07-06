@@ -12,7 +12,7 @@ export const showCanvasesAtom = atom({
 
 export const textColorsPlotSizeAtom = atom({
   key: 'textColorsPlotSize',
-  default: 2,
+  default: 3,
 })
 
 export const showTextColorPlotsAtom = atom({

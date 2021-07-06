@@ -40,13 +40,26 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   })
   const ref = useRef<HTMLDivElement>(null)
 
-  const handleChange = ({ l, c, h }: LCHObjType) => {
-    const maxChroma = getMaxChroma(l, h)
+  console.log()
 
-    if (c > maxChroma) c = maxChroma
-    if (isSafe({ l, c, h }, shadeColor)) {
-      setMovableColor({ l, c, h })
+  const handleChange = (changeColor: LCHObjType, debug?: boolean) => {
+    const _changeColor = { ...changeColor }
+    if (debug) debugger
+
+    if (_changeColor.l > 100) _changeColor.l = 100
+    if (_changeColor.l < 0) _changeColor.l = 0
+
+    const maxChroma = getMaxChroma(_changeColor.l, _changeColor.h)
+    if (_changeColor.c > maxChroma) _changeColor.c = maxChroma
+
+    console.log('change', _changeColor)
+    const _isSafe = isSafe(_changeColor, shadeColor)
+    if (_isSafe) {
+      setMovableColor(_changeColor)
     } else {
+      const _nearestSafeColor = getNearestSafeColor(shadeColor, _changeColor.c)
+      console.log('nearest', _nearestSafeColor)
+      setMovableColor(_nearestSafeColor)
     }
   }
 
@@ -88,14 +101,8 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       >
         <div className="TextColorPlots__tooltip">
           <div>L: {nearestSafeColor.l.toFixed(2)}</div>
-          <div>
-            {chromajs
-              .contrast(
-                getColorData(movableColor).hex,
-                getColorData(nearestSafeColor).hex
-              )
-              .toFixed(2)}
-          </div>
+          <div>C: {nearestSafeColor.c.toFixed(2)}</div>
+          <div>H: {nearestSafeColor.h.toFixed(2)}</div>
         </div>
       </div>
       <MovableColorDot
@@ -112,8 +119,11 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
             })}
           >
             <div className="TextColorPlots__tooltip">
-              <div>L: {movableColor.l.toFixed(2)} </div>
+              <div>L: {movableColor.l.toFixed(2)}</div>
+              <div>C: {movableColor.c.toFixed(2)}</div>
+              <div>H: {movableColor.h.toFixed(2)}</div>
               <div>
+                con:{' '}
                 {chromajs
                   .contrast(
                     getColorData(movableColor).hex,
