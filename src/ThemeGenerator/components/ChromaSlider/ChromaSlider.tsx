@@ -4,12 +4,12 @@ import classNames from 'classnames'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Slider } from 'ThemeGenerator/component-library'
 import { maxPossibleChromaForAnyHue } from 'ThemeGenerator/config'
-import { maxChromaSelector, chromaAtom } from 'ThemeGenerator/state'
+import { maxChromaSelector, chromaSelector } from 'ThemeGenerator/state'
 import { ShadeType } from 'ThemeGenerator/types'
 
 export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
   const maxChroma = useRecoilValue(maxChromaSelector(shade))
-  const [chroma, setChroma] = useRecoilState(chromaAtom(shade))
+  const [chroma, setChroma] = useRecoilState(chromaSelector(shade))
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)

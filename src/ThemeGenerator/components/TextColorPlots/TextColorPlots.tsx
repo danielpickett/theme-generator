@@ -1,7 +1,6 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import './TextColorPlots.scss'
-import chromajs from 'chroma-js'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   textColorsPlotSizeAtom,
   colorDataSelector,
@@ -27,20 +26,21 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
-  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
-
-  const { l, c, h } = shadeColor
-  const nearestSafeColor = useMemo(
-    () => getNearestSafeColor({ l, c, h }),
-    [l, c, h]
+  const [vividTextColors, setVividTextColors] = useRecoilState(
+    vividTextColorsSelector(shade)
   )
 
-  const [movableColor, setMovableColor] = useState<LCHObjType>({
-    ...nearestSafeColor,
-  })
-  const ref = useRef<HTMLDivElement>(null)
+  const nearestSafeColor = useMemo(
+    () =>
+      getNearestSafeColor({
+        l: shadeColor.l,
+        c: shadeColor.c,
+        h: shadeColor.h,
+      }),
+    [shadeColor.l, shadeColor.c, shadeColor.h]
+  )
 
-  console.log()
+  const ref = useRef<HTMLDivElement>(null)
 
   const handleChange = (changeColor: LCHObjType, debug?: boolean) => {
     const _changeColor = { ...changeColor }
@@ -52,14 +52,19 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
     const maxChroma = getMaxChroma(_changeColor.l, _changeColor.h)
     if (_changeColor.c > maxChroma) _changeColor.c = maxChroma
 
-    console.log('change', _changeColor)
     const _isSafe = isSafe(_changeColor, shadeColor)
     if (_isSafe) {
-      setMovableColor(_changeColor)
+      setVividTextColors((prev) => ({
+        ...prev,
+        vivid: getColorData(_changeColor),
+      }))
     } else {
       const _nearestSafeColor = getNearestSafeColor(shadeColor, _changeColor.c)
-      console.log('nearest', _nearestSafeColor)
-      setMovableColor(_nearestSafeColor)
+
+      setVividTextColors((prev) => ({
+        ...prev,
+        vivid: getColorData(_nearestSafeColor),
+      }))
     }
   }
 
@@ -78,19 +83,9 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <Canvas hue={shadeColor.h} size={size} />
-      {textColorsArr.map(([title, { lch: color }]) => (
-        <div
-          key={title}
-          className="TextColorPlots__point"
-          title={`${title} text color`}
-          style={{ left: color.c * size, bottom: color.l * size }}
-        />
-      ))}
-
       <div
-        className="TextColorPlots__point TextColorPlots__point--diamond"
-        title="shade color"
-        style={{ bottom: shadeColor.l * size, left: shadeColor.c * size }}
+        className="TextColorPlots__line"
+        style={{ bottom: nearestSafeColor.l * size }}
       />
       <div
         className="TextColorPlots__point TextColorPlots__point--black"
@@ -98,43 +93,57 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
           bottom: nearestSafeColor.l * size,
           left: nearestSafeColor.c * size,
         }}
-      >
-        <div className="TextColorPlots__tooltip">
-          <div>L: {nearestSafeColor.l.toFixed(2)}</div>
-          <div>C: {nearestSafeColor.c.toFixed(2)}</div>
-          <div>H: {nearestSafeColor.h.toFixed(2)}</div>
-        </div>
-      </div>
-      <MovableColorDot
-        color={movableColor}
-        size={size}
-        onColorChange={handleChange}
-        sliderAreaRef={ref}
-      >
-        {(hasKeyboardFocus) => (
-          <div
-            className={classNames('TextColorPlots__movable-dot', {
-              'TextColorPlots__movable-dot--has-keyboard-focus':
-                hasKeyboardFocus,
-            })}
+      />
+
+      {textColorsArr.map(([title, { lch: color }]) =>
+        title === 'vivid' ? (
+          <MovableColorDot
+            key={title}
+            color={color}
+            size={size}
+            onColorChange={handleChange}
+            sliderAreaRef={ref}
           >
-            <div className="TextColorPlots__tooltip">
-              <div>L: {movableColor.l.toFixed(2)}</div>
-              <div>C: {movableColor.c.toFixed(2)}</div>
-              <div>H: {movableColor.h.toFixed(2)}</div>
-              <div>
-                con:{' '}
-                {chromajs
-                  .contrast(
-                    getColorData(movableColor).hex,
-                    getColorData(shadeColor).hex
-                  )
-                  .toFixed(2)}
+            {(hasKeyboardFocus) => (
+              <div
+                className={classNames(
+                  'TextColorPlots__point TextColorPlots__point--movable TextColorPlots__point--large',
+                  {
+                    'TextColorPlots____point--has-keyboard-focus':
+                      hasKeyboardFocus,
+                  }
+                )}
+              >
+                <div className="TextColorPlots__tooltip">
+                  <div>{`h: ${getColorData(color).lch.h.toFixed(2)}`}</div>
+                </div>
               </div>
+            )}
+          </MovableColorDot>
+        ) : (
+          <div
+            key={title}
+            className={classNames('TextColorPlots__point', {
+              'TextColorPlots__point--large': !/subdued/.test(
+                title.toLowerCase()
+              ),
+            })}
+            title={`${title} text color`}
+            style={{ left: color.c * size, bottom: color.l * size }}
+          >
+            {' '}
+            <div className="TextColorPlots__tooltip">
+              <div>{`h: ${getColorData(color).lch.h.toFixed(2)}`}</div>
             </div>
           </div>
-        )}
-      </MovableColorDot>
+        )
+      )}
+
+      <div
+        className="TextColorPlots__point TextColorPlots__point--diamond  TextColorPlots__point--large"
+        title="shade color"
+        style={{ bottom: shadeColor.l * size, left: shadeColor.c * size }}
+      />
     </div>
   )
 }

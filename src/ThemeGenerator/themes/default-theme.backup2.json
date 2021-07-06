@@ -52,7 +52,7 @@
   },
   {
     "id": "warning",
-    "hue": 104,
+    "hue": 59,
     "shades": [
       { "id": "000", "chroma": 0.0 },
       { "id": "050", "chroma": 3.88 },

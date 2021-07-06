@@ -1,8 +1,16 @@
 .Shade {
   padding: 0.5rem;
   min-height: 5rem;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
   &__token-name {
     font-size: 1rem;
     margin-bottom: 1rem;
+  }
+  &__details {
+    border: 1px solid currentColor;
+    padding: 0.25rem;
   }
 }
