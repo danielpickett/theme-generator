@@ -6,12 +6,12 @@ import {
 import { LCHObjType } from 'ThemeGenerator/types'
 import { useKeyboardFocus } from 'ThemeGenerator/hooks'
 import { clamp } from 'ThemeGenerator/utils'
-import './MovableColorDot.scss'
+import './SliderThumb2D.scss'
 
 const clampL = (l: number) => clamp(l, maxPossibleLuminance, 0)
 const clampC = (c: number) => clamp(c, maxPossibleChromaForAnyHue, 0)
 
-export const MovableColorDot = ({
+export const SliderThumb2D = ({
   color,
   size,
   onColorChange,
@@ -68,7 +68,7 @@ export const MovableColorDot = ({
 
   return (
     <div
-      className="MovableColorDot"
+      className="SliderThumb2D"
       style={{ left: color.c * size, bottom: color.l * size }}
       onMouseDown={handleMouseDown}
       onKeyDown={handleKeyDown}

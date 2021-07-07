@@ -76,17 +76,17 @@ export const regularTextColorsSelector = selectorFamily<
     },
 })
 
-// const vividTextColorAtom = atomFamily<ColorDataType | undefined, ShadeType>({
-//   key: 'vividTextTargetColor',
-//   default: undefined,
-// })
-
-const vividTextChromaAtom = atomFamily<number, ShadeType>({
+export const vividTextChromaAtom = atomFamily<number, ShadeType>({
   key: 'vividTextChroma',
   default: maxPossibleChromaForAnyHue,
 })
 
-const vividTextLuminaceAtom = atomFamily<number, ShadeType>({
+export const vividTextLuminanceAtom = atomFamily<number, ShadeType>({
+  key: 'vividTextLuminace',
+  default: (shade) => defaultLuminances[shade.shadeName],
+})
+
+export const vividTextHueAtom = atomFamily<number, ShadeType>({
   key: 'vividTextLuminace',
   default: (shade) => defaultLuminances[shade.shadeName],
 })
@@ -106,7 +106,7 @@ export const vividTextColorsSelector = selectorFamily<
         h,
       }
 
-      const l = get(vividTextLuminaceAtom(shade))
+      const l = get(vividTextLuminanceAtom(shade))
       const c = get(vividTextChromaAtom(shade))
       const maxChroma = getMaxChroma(l, h)
 
@@ -140,7 +140,7 @@ export const vividTextColorsSelector = selectorFamily<
         newValue instanceof DefaultValue ? newValue : newValue.vivid.lch.c
       )
       set(
-        vividTextLuminaceAtom(shade),
+        vividTextLuminanceAtom(shade),
         newValue instanceof DefaultValue ? newValue : newValue.vivid.lch.l
       )
     },
