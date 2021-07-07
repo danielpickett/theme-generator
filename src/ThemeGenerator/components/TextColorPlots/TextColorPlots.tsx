@@ -1,34 +1,27 @@
 import React, { useMemo, useRef } from 'react'
 import './TextColorPlots.scss'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import {
   textColorsPlotSizeAtom,
   colorDataSelector,
   regularTextColorsSelector,
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
-import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
+import { ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
 
-import {
-  getColorData,
-  getMaxChroma,
-  getNearestSafeColor,
-} from 'ThemeGenerator/utils'
+import { getNearestSafeColor } from 'ThemeGenerator/utils'
 import {
   maxPossibleChromaForAnyHue,
   maxPossibleLuminance,
 } from 'ThemeGenerator/config'
-import { isSafe } from 'ThemeGenerator/utils/isSafe'
 import { TextColorEditor } from './components'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
-  const [vividTextColors, setVividTextColors] = useRecoilState(
-    vividTextColorsSelector(shade)
-  )
+  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
 
   const nearestSafeColor = useMemo(
     () =>
@@ -45,32 +38,6 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   )
 
   const ref = useRef<HTMLDivElement>(null)
-
-  const handleChange = (changeColor: LCHObjType, debug?: boolean) => {
-    const _changeColor = { ...changeColor }
-    if (debug) debugger
-
-    if (_changeColor.l > 100) _changeColor.l = 100
-    if (_changeColor.l < 0) _changeColor.l = 0
-
-    const maxChroma = getMaxChroma(_changeColor.l, _changeColor.h)
-    if (_changeColor.c > maxChroma) _changeColor.c = maxChroma
-
-    const _isSafe = isSafe(_changeColor, shadeColor)
-    if (_isSafe) {
-      setVividTextColors((prev) => ({
-        ...prev,
-        vivid: getColorData(_changeColor),
-      }))
-    } else {
-      const _nearestSafeColor = getNearestSafeColor(shadeColor, _changeColor.c)
-
-      setVividTextColors((prev) => ({
-        ...prev,
-        vivid: getColorData(_nearestSafeColor),
-      }))
-    }
-  }
 
   return (
     <div
@@ -91,7 +58,6 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         shade={shade}
         title={'regular text color'}
         color={vividTextColors.vivid.lch}
-        onColorChange={handleChange}
         sliderAreaRef={ref}
       />
 

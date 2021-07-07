@@ -1,9 +1,6 @@
-import React, { useRef } from 'react'
-import classNames from 'classnames'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { SliderThumb2DOld } from 'ThemeGenerator/components'
+import React from 'react'
+import { useSetRecoilState } from 'recoil'
 import {
-  textColorsPlotSizeAtom,
   vividTextChromaAtom,
   vividTextLuminanceAtom,
 } from 'ThemeGenerator/state'
@@ -19,13 +16,11 @@ export const TextColorEditor = ({
   shade,
   title,
   color,
-  onColorChange,
   sliderAreaRef,
 }: {
   shade: ShadeType
   title: string
   color: LCHObjType
-  onColorChange: (color: LCHObjType) => void
   sliderAreaRef:
     | React.RefObject<HTMLDivElement>
     | React.MutableRefObject<HTMLDivElement>
@@ -42,7 +37,7 @@ export const TextColorEditor = ({
     <SliderThumb2D
       maxXY={[maxPossibleChromaForAnyHue, maxPossibleLuminance]}
       xy={[color.c, color.l]}
-      aria-label="text color adjustment"
+      aria-label={title}
       sliderAreaRef={sliderAreaRef}
       onChange={handleChange}
     />
