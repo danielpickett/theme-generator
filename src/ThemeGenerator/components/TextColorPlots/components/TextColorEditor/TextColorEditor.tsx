@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import classNames from 'classnames'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { SliderThumb2D } from 'ThemeGenerator/components'
+import { SliderThumb2DOld } from 'ThemeGenerator/components'
 import {
   textColorsPlotSizeAtom,
   vividTextChromaAtom,
@@ -9,7 +9,11 @@ import {
 } from 'ThemeGenerator/state'
 import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
 import './TextColorEditor.scss'
-import { getColorData } from 'ThemeGenerator/utils'
+import { SliderThumb2D } from 'ThemeGenerator/component-library'
+import {
+  maxPossibleChromaForAnyHue,
+  maxPossibleLuminance,
+} from 'ThemeGenerator/config'
 
 export const TextColorEditor = ({
   shade,
@@ -26,35 +30,21 @@ export const TextColorEditor = ({
     | React.RefObject<HTMLDivElement>
     | React.MutableRefObject<HTMLDivElement>
 }) => {
-  const size = useRecoilValue(textColorsPlotSizeAtom)
-
   const setTextChroma = useSetRecoilState(vividTextChromaAtom(shade))
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))
 
-  const handleChange = (color: LCHObjType) => {
-    setTextChroma(color.c)
-    setTextLuminance(color.l)
+  const handleChange = ([chroma, luminance]: [number, number]) => {
+    setTextChroma(chroma)
+    setTextLuminance(luminance)
   }
 
   return (
     <SliderThumb2D
-      key={title}
-      color={color}
-      size={size}
-      onColorChange={handleChange}
+      maxXY={[maxPossibleChromaForAnyHue, maxPossibleLuminance]}
+      xy={[color.c, color.l]}
+      aria-label="text color adjustment"
       sliderAreaRef={sliderAreaRef}
-    >
-      {(hasKeyboardFocus) => (
-        <div
-          className={classNames('TextColorEditor', {
-            'TextColorEditor--has-keyboard-focus': hasKeyboardFocus,
-          })}
-        >
-          <div className="TextColorEditor__tooltip">
-            <div>{`h: ${color.h.toFixed(2)}`}</div>
-          </div>
-        </div>
-      )}
-    </SliderThumb2D>
+      onChange={handleChange}
+    />
   )
 }

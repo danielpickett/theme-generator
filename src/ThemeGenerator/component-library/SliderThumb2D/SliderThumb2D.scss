@@ -1,0 +1,20 @@
+@import 'src/tokens';
+
+.SliderThumb2D {
+  position: absolute;
+  height: 0;
+  width: 0;
+  outline: none;
+  &__thumb {
+    position: relative;
+    transform: translate(-50%, -50%);
+    height: 0.75rem;
+    width: 0.75rem;
+    border-radius: 100rem;
+    background-color: $color-white;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    &--has-keyboard-focus {
+      box-shadow: $focus-ring;
+    }
+  }
+}
