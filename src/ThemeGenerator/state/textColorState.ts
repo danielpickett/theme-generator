@@ -15,20 +15,6 @@ import {
 } from 'ThemeGenerator/utils'
 import { hueAtom, chromaSelector } from 'ThemeGenerator/state'
 
-export const vividLums = {
-  '000': 45,
-  '050': 39,
-  '100': 35,
-  '200': 32,
-  '300': 30,
-  '400': 18.2,
-  '500': 100,
-  '600': 95,
-  '700': 90,
-  '800': 85,
-  '900': 80,
-}
-
 const mixRatio = 0.25
 
 type RegularTextColorsType = {
@@ -59,10 +45,11 @@ export const regularTextColorsSelector = selectorFamily<
       })
 
       const srcShadeName = isDark(shadeColor.lch.l) ? '000' : '900'
+      const isOnDark = isDark(shadeColor.lch.l)
 
       const regularText = getColorData({
-        l: defaultLuminances[srcShadeName],
-        c: get(chromaSelector({ scaleName, shadeName: srcShadeName })),
+        l: isOnDark ? 100 : 5,
+        c: isOnDark ? 0 : 10,
         h: hue,
       })
 
