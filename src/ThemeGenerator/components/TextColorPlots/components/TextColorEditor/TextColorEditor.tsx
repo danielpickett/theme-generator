@@ -29,6 +29,7 @@ export const TextColorEditor = ({
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))
 
   const handleChange = ([chroma, luminance]: [number, number]) => {
+    console.log(chroma, luminance)
     setTextChroma(chroma)
     setTextLuminance(luminance)
   }

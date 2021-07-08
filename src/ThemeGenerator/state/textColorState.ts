@@ -1,5 +1,4 @@
-import { atomFamily, selectorFamily, DefaultValue } from 'recoil'
-
+import { atomFamily, selectorFamily } from 'recoil'
 import {
   defaultLuminances,
   maxPossibleChromaForAnyHue,
@@ -86,9 +85,9 @@ export const vividTextLuminanceAtom = atomFamily<number, ShadeType>({
   default: (shade) => defaultLuminances[shade.shadeName],
 })
 
-export const vividTextHueAtom = atomFamily<number, ShadeType>({
+export const vividTextHueAtom = atomFamily<number | null, ShadeType>({
   key: 'vividTextLuminace',
-  default: (shade) => defaultLuminances[shade.shadeName],
+  default: null,
 })
 
 export const vividTextColorsSelector = selectorFamily<
@@ -118,9 +117,6 @@ export const vividTextColorsSelector = selectorFamily<
         )
       }
 
-      const vividTextHex = vividText.hex
-      console.log(vividTextHex)
-
       const vividSubduedText = mix(
         vividText.hex,
         getColorData(shadeColor).hex,
@@ -131,17 +127,5 @@ export const vividTextColorsSelector = selectorFamily<
         vivid: vividText,
         'vivid-subdued': vividSubduedText,
       }
-    },
-  set:
-    (shade) =>
-    ({ set }, newValue) => {
-      set(
-        vividTextChromaAtom(shade),
-        newValue instanceof DefaultValue ? newValue : newValue.vivid.lch.c
-      )
-      set(
-        vividTextLuminanceAtom(shade),
-        newValue instanceof DefaultValue ? newValue : newValue.vivid.lch.l
-      )
     },
 })
