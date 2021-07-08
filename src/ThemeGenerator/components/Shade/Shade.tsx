@@ -37,7 +37,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     >
       <div className="Shade__header">
         <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
-        <div className="Shade__details">{`h: ${shadeColorData.lch.h}`}</div>
+        {/* <div className="Shade__details">{`h: ${shadeColorData.lch.h}`}</div> */}
       </div>
       <TextSample
         shadeColor={shadeColorData.hex}

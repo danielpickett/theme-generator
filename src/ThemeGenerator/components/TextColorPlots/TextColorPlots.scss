@@ -11,44 +11,24 @@
     background-color: $color-white;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
     transform: translate(-50%, 50%);
+
     &--has-keyboard-focus {
       box-shadow: $focus-ring;
     }
+
     &--diamond {
       height: 0.375rem;
       width: 0.375rem;
       border-radius: 0;
       transform: translate(-50%, 50%) rotate(45deg);
     }
-    &--black {
-      background-color: black;
-      height: 0.25rem;
-      width: 0.25rem;
-    }
-    &--yellow {
-      background-color: yellow;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
-    }
-    &--movable {
-      transform: translate(-50%, -50%);
-    }
+
     &--large {
       height: 0.75rem;
       width: 0.75rem;
     }
   }
 
-  &__movable-dot {
-    background-color: rgba(255, 0, 0, 0.5);
-    height: 1rem;
-    width: 1rem;
-    transform: translate(-50%, -50%);
-    border-radius: 100rem;
-    position: relative;
-    &--has-keyboard-focus {
-      box-shadow: $focus-ring;
-    }
-  }
   &__tooltip {
     white-space: nowrap;
     position: absolute;

@@ -21,6 +21,7 @@ export const TextSample = ({
       <div>{'Sample ' + contrastRatio.toFixed(2)}</div>
       <div>
         {problem && <span className="TextSample__problem" />}
+
         {isExpectedToBeSafe ? '' : '!'}
       </div>
     </div>

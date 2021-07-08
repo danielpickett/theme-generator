@@ -1,0 +1,24 @@
+@import 'tokens';
+
+.TextColorEditor {
+  display: block;
+  position: relative;
+  transform: translate(-50%, -50%);
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 100rem;
+  background-color: $color-white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  &__tooltip {
+    white-space: nowrap;
+    position: absolute;
+    padding: 0 0.25rem 1px;
+    min-width: 2.75rem;
+    top: 50%;
+    left: calc(100% + 1rem);
+    transform: translateY(-50%);
+    background-color: $color-grey-900;
+    color: $text-on-grey-900;
+    font-size: $text-size-xs;
+  }
+}

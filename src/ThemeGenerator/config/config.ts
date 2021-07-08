@@ -13,7 +13,7 @@ export const shadeNames = [
 ] as const
 
 export const defaultLuminances = {
-  '000': 99.99, // white
+  '000': 99.99, // white had some bugs when set to 100
   '050': 97.0,
   '100': 92.0,
   '200': 85.0,

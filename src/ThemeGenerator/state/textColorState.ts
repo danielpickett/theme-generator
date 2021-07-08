@@ -1,6 +1,8 @@
-import { atomFamily, selectorFamily, DefaultValue } from 'recoil'
-
-import { defaultLuminances } from 'ThemeGenerator/config'
+import { atomFamily, selectorFamily } from 'recoil'
+import {
+  defaultLuminances,
+  maxPossibleChromaForAnyHue,
+} from 'ThemeGenerator/config'
 import { ShadeType } from 'ThemeGenerator/types'
 import {
   ColorDataType,
@@ -8,22 +10,10 @@ import {
   mix,
   isDark,
   getNearestSafeColor,
+  getMaxChroma,
+  isSafe,
 } from 'ThemeGenerator/utils'
 import { hueAtom, chromaSelector } from 'ThemeGenerator/state'
-
-export const vividLums = {
-  '000': 45,
-  '050': 39,
-  '100': 35,
-  '200': 32,
-  '300': 30,
-  '400': 18.2,
-  '500': 100,
-  '600': 95,
-  '700': 90,
-  '800': 85,
-  '900': 80,
-}
 
 const mixRatio = 0.25
 
@@ -55,10 +45,11 @@ export const regularTextColorsSelector = selectorFamily<
       })
 
       const srcShadeName = isDark(shadeColor.lch.l) ? '000' : '900'
+      const isOnDark = isDark(shadeColor.lch.l)
 
       const regularText = getColorData({
-        l: defaultLuminances[srcShadeName],
-        c: get(chromaSelector({ scaleName, shadeName: srcShadeName })),
+        l: isOnDark ? 100 : 5,
+        c: isOnDark ? 0 : 10,
         h: hue,
       })
 
@@ -71,19 +62,19 @@ export const regularTextColorsSelector = selectorFamily<
     },
 })
 
-const vividTextColorAtom = atomFamily<ColorDataType | undefined, ShadeType>({
-  key: 'vividTextTargetColor',
-  default: undefined,
-})
-
-const vividTextChromaAtom = atomFamily<number | undefined, ShadeType>({
+export const vividTextChromaAtom = atomFamily<number, ShadeType>({
   key: 'vividTextChroma',
-  default: undefined,
+  default: maxPossibleChromaForAnyHue,
 })
 
-const vividTextLuminaceAtom = atomFamily<number | undefined, ShadeType>({
+export const vividTextLuminanceAtom = atomFamily<number, ShadeType>({
   key: 'vividTextLuminace',
-  default: undefined,
+  default: (shade) => defaultLuminances[shade.shadeName],
+})
+
+export const vividTextHueAtom = atomFamily<number | null, ShadeType>({
+  key: 'vividTextHue',
+  default: null,
 })
 
 export const vividTextColorsSelector = selectorFamily<
@@ -94,41 +85,32 @@ export const vividTextColorsSelector = selectorFamily<
   get:
     (shade) =>
     ({ get }) => {
-      const L = defaultLuminances[shade.shadeName]
-      const H = get(hueAtom(shade.scaleName))
-
-      let vividText = get(vividTextColorAtom(shade))
-
-      const nearestSafeColor = getNearestSafeColor({
-        l: L,
+      const h = get(hueAtom(shade.scaleName))
+      const shadeColor = {
+        l: defaultLuminances[shade.shadeName],
         c: get(chromaSelector(shade)),
-        h: H,
-      })
-
-      if (!vividText) {
-        vividText = getColorData(nearestSafeColor)
+        h,
       }
 
-      const shadeColor = getColorData({
-        l: L,
-        c: get(chromaSelector(shade)),
-        h: H,
-      })
+      const l = get(vividTextLuminanceAtom(shade))
+      const c = get(vividTextChromaAtom(shade))
+      const maxChroma = getMaxChroma(l, h)
 
-      const vividSubduedText = mix(vividText.hex, shadeColor.hex, mixRatio)
+      let vividText = getColorData({ l, c: c > maxChroma ? maxChroma : c, h })
+
+      if (!isSafe(vividText.hex, shadeColor)) {
+        vividText = getColorData(getNearestSafeColor(shadeColor, c))
+      }
+
+      const vividSubduedText = mix(
+        vividText.hex,
+        getColorData(shadeColor).hex,
+        mixRatio
+      )
 
       return {
         vivid: vividText,
         'vivid-subdued': vividSubduedText,
       }
-    },
-  set:
-    (shade) =>
-    ({ set }, newVividTextColors) => {
-      const newValue =
-        newVividTextColors instanceof DefaultValue
-          ? newVividTextColors
-          : newVividTextColors.vivid
-      set(vividTextColorAtom(shade), newValue)
     },
 })
