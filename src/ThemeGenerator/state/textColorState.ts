@@ -86,7 +86,7 @@ export const vividTextLuminanceAtom = atomFamily<number, ShadeType>({
 })
 
 export const vividTextHueAtom = atomFamily<number | null, ShadeType>({
-  key: 'vividTextLuminace',
+  key: 'vividTextHue',
   default: null,
 })
 
@@ -112,9 +112,7 @@ export const vividTextColorsSelector = selectorFamily<
       let vividText = getColorData({ l, c: c > maxChroma ? maxChroma : c, h })
 
       if (!isSafe(vividText.hex, shadeColor)) {
-        vividText = getColorData(
-          getNearestSafeColor(shadeColor, maxPossibleChromaForAnyHue)
-        )
+        vividText = getColorData(getNearestSafeColor(shadeColor, c))
       }
 
       const vividSubduedText = mix(

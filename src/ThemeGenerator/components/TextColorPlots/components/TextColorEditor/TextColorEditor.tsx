@@ -29,7 +29,6 @@ export const TextColorEditor = ({
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))
 
   const handleChange = ([chroma, luminance]: [number, number]) => {
-    console.log(chroma, luminance)
     setTextChroma(chroma)
     setTextLuminance(luminance)
   }
@@ -37,6 +36,7 @@ export const TextColorEditor = ({
   return (
     <SliderThumb2D
       maxXY={[maxPossibleChromaForAnyHue, maxPossibleLuminance]}
+      allowFloat
       xy={[color.c, color.l]}
       aria-label={title}
       sliderAreaRef={sliderAreaRef}

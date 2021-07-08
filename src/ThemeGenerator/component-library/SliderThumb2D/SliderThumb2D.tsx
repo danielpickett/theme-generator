@@ -196,9 +196,15 @@ export const SliderThumb2D = React.forwardRef(
         if (e.altKey && microStep) _step = step * microStep
         else if (e.shiftKey && macroStep) _step = step * macroStep
 
-        const diffX = _step * sign
+        const diff = _step * sign
 
-        if (onChange) onChange([clampX(x + diffX), y])
+        if (onChange) {
+          if (['ArrowRight', 'ArrowLeft'].includes(e.key))
+            onChange([clampX(x + diff), y])
+          else {
+            onChange([x, clampY(y + diff)])
+          }
+        }
       }
     }
 
