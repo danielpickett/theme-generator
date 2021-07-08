@@ -3,7 +3,7 @@ import {
   defaultLuminances,
   maxPossibleChromaForAnyHue,
 } from 'ThemeGenerator/config'
-import { ShadeType } from 'ThemeGenerator/types'
+import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import {
   ColorDataType,
   getColorData,
@@ -35,46 +35,36 @@ export const regularTextColorsSelector = selectorFamily<
   get:
     (shade) =>
     ({ get }) => {
-      const { scaleName, shadeName } = shade
-      const hue = get(hueAtom(scaleName))
+      const hue = get(hueAtom(shade.scaleName))
 
       const shadeColor = getColorData({
-        l: defaultLuminances[shadeName],
+        l: defaultLuminances[shade.shadeName],
         c: get(chromaSelector(shade)),
         h: hue,
       })
 
-      const srcShadeName = isDark(shadeColor.lch.l) ? '000' : '900'
       const isOnDark = isDark(shadeColor.lch.l)
-
       const regularText = getColorData({
-        l: isOnDark ? 100 : 5,
-        c: isOnDark ? 0 : 10,
+        l: isOnDark ? 99.99 : 5,
+        c: isOnDark ? 0 : 5,
         h: hue,
       })
 
-      const subduedText = mix(regularText.hex, shadeColor.hex, mixRatio)
-
       return {
         regular: regularText,
-        subdued: subduedText,
+        subdued: mix(regularText.hex, shadeColor.hex, mixRatio),
       }
     },
 })
 
-export const vividTextChromaAtom = atomFamily<number, ShadeType>({
+export const vividTextChromaAtom = atomFamily<number, FirstOrLastShadeType>({
   key: 'vividTextChroma',
   default: maxPossibleChromaForAnyHue,
 })
 
-export const vividTextLuminanceAtom = atomFamily<number, ShadeType>({
+export const vividTextLuminanceAtom = atomFamily<number, FirstOrLastShadeType>({
   key: 'vividTextLuminace',
   default: (shade) => defaultLuminances[shade.shadeName],
-})
-
-export const vividTextHueAtom = atomFamily<number | null, ShadeType>({
-  key: 'vividTextHue',
-  default: null,
 })
 
 export const vividTextColorsSelector = selectorFamily<
@@ -85,21 +75,32 @@ export const vividTextColorsSelector = selectorFamily<
   get:
     (shade) =>
     ({ get }) => {
-      const h = get(hueAtom(shade.scaleName))
+      const shadeL = defaultLuminances[shade.shadeName]
+      const shadeC = get(chromaSelector(shade))
+      const shadeH = get(hueAtom(shade.scaleName))
       const shadeColor = {
-        l: defaultLuminances[shade.shadeName],
-        c: get(chromaSelector(shade)),
-        h,
+        l: shadeL,
+        c: shadeC,
+        h: shadeH,
       }
 
-      const l = get(vividTextLuminanceAtom(shade))
-      const c = get(vividTextChromaAtom(shade))
-      const maxChroma = getMaxChroma(l, h)
+      const textColorShadeID = {
+        scaleName: shade.scaleName,
+        shadeName: (isDark(shadeL) ? '900' : '000') as '900' | '000',
+      }
 
-      let vividText = getColorData({ l, c: c > maxChroma ? maxChroma : c, h })
+      const textL = get(vividTextLuminanceAtom(textColorShadeID))
+      const textC = get(vividTextChromaAtom(textColorShadeID))
+      const maxTextChroma = getMaxChroma(textL, shadeH)
+
+      let vividText = getColorData({
+        l: textL,
+        c: textC > maxTextChroma ? maxTextChroma : textC,
+        h: shadeH,
+      })
 
       if (!isSafe(vividText.hex, shadeColor)) {
-        vividText = getColorData(getNearestSafeColor(shadeColor, c))
+        vividText = getColorData(getNearestSafeColor(shadeColor, textC))
       }
 
       const vividSubduedText = mix(

@@ -7,7 +7,7 @@ import {
   regularTextColorsSelector,
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
-import { ShadeType } from 'ThemeGenerator/types'
+import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
@@ -71,21 +71,29 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
 
       <ColorPoint
         color={regularTextColors.subdued.lch}
-        title="regular subdued text color"
+        title="subdued text color"
         size={size}
       />
+
+      {shade.shadeName === '000' || shade.shadeName === '900' ? (
+        <TextColorEditor
+          shade={shade as FirstOrLastShadeType}
+          title={'regular text color'}
+          color={vividTextColors.vivid.lch}
+          sliderAreaRef={ref}
+        />
+      ) : (
+        <ColorPoint
+          color={vividTextColors.vivid.lch}
+          title="regular text color"
+          size={size}
+        />
+      )}
 
       <ColorPoint
         color={vividTextColors['vivid-subdued'].lch}
-        title="regular text color"
+        title="vivid-subdued text color"
         size={size}
-      />
-
-      <TextColorEditor
-        shade={shade}
-        title={'regular text color'}
-        color={vividTextColors.vivid.lch}
-        sliderAreaRef={ref}
       />
     </div>
   )
