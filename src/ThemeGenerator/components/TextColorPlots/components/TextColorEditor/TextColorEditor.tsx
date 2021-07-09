@@ -4,7 +4,7 @@ import {
   vividTextChromaAtom,
   vividTextLuminanceAtom,
 } from 'ThemeGenerator/state'
-import { LCHObjType, ShadeType } from 'ThemeGenerator/types'
+import { FirstOrLastShadeType, LCHObjType } from 'ThemeGenerator/types'
 import './TextColorEditor.scss'
 import { SliderThumb2D } from 'ThemeGenerator/component-library'
 import {
@@ -18,7 +18,7 @@ export const TextColorEditor = ({
   color,
   sliderAreaRef,
 }: {
-  shade: ShadeType
+  shade: FirstOrLastShadeType
   title: string
   color: LCHObjType
   sliderAreaRef:
@@ -29,8 +29,10 @@ export const TextColorEditor = ({
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))
 
   const handleChange = ([chroma, luminance]: [number, number]) => {
-    setTextChroma(chroma)
-    setTextLuminance(luminance)
+    requestAnimationFrame(() => {
+      setTextChroma(chroma)
+      setTextLuminance(luminance)
+    })
   }
 
   return (

@@ -8,6 +8,7 @@ import {
   vividTextColorsSelector,
   hueAtom,
   chromaSelector,
+  showAllTextColorPlotsAtom,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { defaultLuminances, isExpectedToBeSafe } from 'ThemeGenerator/config'
@@ -21,11 +22,17 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
+  const showAllTextColorPlots = useRecoilValue(showAllTextColorPlotsAtom)
 
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
     : shadeColorData.hex
+
+  const definitelyShowTextColorPlots =
+    (showTextColorPlots &&
+      (shade.shadeName === '000' || shade.shadeName === '900')) ||
+    showAllTextColorPlots
 
   return (
     <div
@@ -63,7 +70,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         }
       />
       <Spacer />
-      {showTextColorPlots && <TextColorPlots shade={shade} />}
+      {definitelyShowTextColorPlots && <TextColorPlots shade={shade} />}
     </div>
   )
 }

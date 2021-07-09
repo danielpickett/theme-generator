@@ -1,0 +1,8 @@
+.ColumnDivider {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  &__line {
+    height: 100%;
+  }
+}

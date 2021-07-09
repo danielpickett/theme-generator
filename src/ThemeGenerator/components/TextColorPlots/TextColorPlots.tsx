@@ -7,7 +7,7 @@ import {
   regularTextColorsSelector,
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
-import { ShadeType } from 'ThemeGenerator/types'
+import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
@@ -16,6 +16,7 @@ import {
   maxPossibleLuminance,
 } from 'ThemeGenerator/config'
 import { TextColorEditor } from './components'
+import classNames from 'classnames'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
   const size = useRecoilValue(textColorsPlotSizeAtom)
@@ -54,60 +55,73 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         style={{ bottom: nearestSafeColor.l * size }}
       />
 
-      <TextColorEditor
-        shade={shade}
-        title={'regular text color'}
-        color={vividTextColors.vivid.lch}
-        sliderAreaRef={ref}
+      <ColorPoint
+        color={shadeColor}
+        title="background color"
+        size={size}
+        diamond
+      />
+      <ColorPoint
+        color={regularTextColors.regular.lch}
+        title="regular text color"
+        size={size}
+        large
       />
 
-      <div
-        className="TextColorPlots__point"
-        title={`regular subdued text color`}
-        style={{
-          left: vividTextColors['vivid-subdued'].lch.c * size,
-          bottom: vividTextColors['vivid-subdued'].lch.l * size,
-        }}
-      >
-        <div className="TextColorPlots__tooltip">
-          <div>{`h: ${vividTextColors['vivid-subdued'].lch.h.toFixed(2)}`}</div>
-        </div>
-      </div>
+      <ColorPoint
+        color={regularTextColors.subdued.lch}
+        title="subdued text color"
+        size={size}
+      />
 
-      <div
-        className={[
-          'TextColorPlots__point',
-          'TextColorPlots__point--large',
-        ].join(' ')}
-        title={`regular subdued text color`}
-        style={{
-          left: regularTextColors.regular.lch.c * size,
-          bottom: regularTextColors.regular.lch.l * size,
-        }}
-      >
-        <div className="TextColorPlots__tooltip">
-          <div>{`h: ${regularTextColors.regular.lch.h.toFixed(2)}`}</div>
-        </div>
-      </div>
+      {shade.shadeName === '000' || shade.shadeName === '900' ? (
+        <TextColorEditor
+          shade={shade as FirstOrLastShadeType}
+          title={'regular text color'}
+          color={vividTextColors.vivid.lch}
+          sliderAreaRef={ref}
+        />
+      ) : (
+        <ColorPoint
+          color={vividTextColors.vivid.lch}
+          title="regular text color"
+          size={size}
+        />
+      )}
 
-      <div
-        className="TextColorPlots__point"
-        title={`regular subdued text color`}
-        style={{
-          left: regularTextColors.subdued.lch.c * size,
-          bottom: regularTextColors.subdued.lch.l * size,
-        }}
-      >
-        <div className="TextColorPlots__tooltip">
-          <div>{`h: ${regularTextColors.subdued.lch.h.toFixed(2)}`}</div>
-        </div>
-      </div>
-
-      <div
-        className="TextColorPlots__point TextColorPlots__point--diamond  TextColorPlots__point--large"
-        title="shade color"
-        style={{ bottom: shadeColor.l * size, left: shadeColor.c * size }}
+      <ColorPoint
+        color={vividTextColors['vivid-subdued'].lch}
+        title="vivid-subdued text color"
+        size={size}
       />
     </div>
+  )
+}
+
+const ColorPoint = ({
+  color,
+  size,
+  title,
+  large = false,
+  diamond = false,
+}: {
+  color: { l: number; c: number; h?: number }
+  size: number
+  title?: string
+  large?: boolean
+  diamond?: boolean
+}) => {
+  return (
+    <div
+      className={classNames('TextColorPlots__point', {
+        'TextColorPlots__point--large': large,
+        'TextColorPlots__point--diamond': diamond,
+      })}
+      title={title}
+      style={{
+        left: color.c * size,
+        bottom: color.l * size,
+      }}
+    />
   )
 }

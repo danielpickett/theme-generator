@@ -34,6 +34,11 @@ export type ShadeType = {
   shadeName: ShadeNameType
 }
 
+export type FirstOrLastShadeType = {
+  scaleName: string
+  shadeName: '000' | '900'
+}
+
 export type ScaleNameType = string
 
 // https://stackoverflow.com/questions/57683303/how-can-i-see-the-full-expanded-contract-of-a-typescript-type
