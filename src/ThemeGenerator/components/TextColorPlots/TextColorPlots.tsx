@@ -59,7 +59,6 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         color={shadeColor}
         title="background color"
         size={size}
-        large
         diamond
       />
       <ColorPoint

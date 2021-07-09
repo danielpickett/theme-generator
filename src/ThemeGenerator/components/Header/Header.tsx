@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRecoilState } from 'recoil'
-import { Spacer } from 'ThemeGenerator/component-library'
+import { ColumnDivider, Spacer } from 'ThemeGenerator/component-library'
 import {
   canvasSizeAtom,
   showAllTextColorPlotsAtom,
@@ -26,18 +26,6 @@ export const Header = () => {
   return (
     <div className="Header">
       <input
-        id="canvas-size"
-        min={1}
-        max={20}
-        step={0.5}
-        type="number"
-        value={canvasSize.toFixed(1)}
-        onChange={(e) => setCanvasSize(+e.target.value)}
-      />
-      <label htmlFor="canvas-size">canvas size</label>
-
-      <Spacer />
-      <input
         id="show-canvases"
         type="checkbox"
         checked={showCanvases}
@@ -45,19 +33,23 @@ export const Header = () => {
       />
       <label htmlFor="show-canvases">show canvases</label>
 
-      <Spacer />
-      <input
-        id="text-color-canvas-size"
-        min={1}
-        max={20}
-        step={0.5}
-        type="number"
-        value={textColorCanvasSize.toFixed(1)}
-        onChange={(e) => setTextColorCanvasSize(+e.target.value)}
-      />
-      <label htmlFor="text-color-canvas-size">text color canvas size</label>
+      {showCanvases && (
+        <>
+          <Spacer />
+          <input
+            id="canvas-size"
+            min={1}
+            max={20}
+            step={0.5}
+            type="number"
+            value={canvasSize.toFixed(1)}
+            onChange={(e) => setCanvasSize(+e.target.value)}
+          />
+          <label htmlFor="canvas-size">canvas size</label>
+        </>
+      )}
 
-      <Spacer />
+      <ColumnDivider />
       <input
         id="show-text-color-plots"
         type="checkbox"
@@ -66,16 +58,31 @@ export const Header = () => {
       />
       <label htmlFor="show-text-color-plots">show text color canvases</label>
 
-      <Spacer />
-      <input
-        id="show-all-text-color-plots"
-        type="checkbox"
-        checked={showAllTextColorPlots}
-        onChange={(e) => setShowAllTextColorPlots(e.target.checked)}
-      />
-      <label htmlFor="show-all-text-color-plots">
-        show all text color canvases
-      </label>
+      {showTextColorPlots && (
+        <>
+          <Spacer />
+          <input
+            id="text-color-canvas-size"
+            min={1}
+            max={20}
+            step={0.5}
+            type="number"
+            value={textColorCanvasSize.toFixed(1)}
+            onChange={(e) => setTextColorCanvasSize(+e.target.value)}
+          />
+          <label htmlFor="text-color-canvas-size">text color canvas size</label>
+          <Spacer />
+          <input
+            id="show-all-text-color-plots"
+            type="checkbox"
+            checked={showAllTextColorPlots}
+            onChange={(e) => setShowAllTextColorPlots(e.target.checked)}
+          />
+          <label htmlFor="show-all-text-color-plots">
+            show all text color canvases
+          </label>
+        </>
+      )}
     </div>
   )
 }
