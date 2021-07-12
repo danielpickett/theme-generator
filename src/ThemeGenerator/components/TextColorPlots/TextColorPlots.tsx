@@ -84,7 +84,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       ) : (
         <ColorPoint
           color={vividTextColors.vivid.lch}
-          title="regular text color"
+          title="vivid text color"
           size={size}
         />
       )}
