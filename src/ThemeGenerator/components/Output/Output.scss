@@ -1,0 +1,18 @@
+@import 'tokens';
+
+.Output {
+  background-color: $color-grey-900;
+
+  padding: 0.5rem;
+  display: flex;
+
+  &__column {
+    background-color: $color-grey-900;
+    color: $text-on-grey-900--subdued;
+    font-weight: $text-weight-bold;
+    border: $border-width-thin solid $text-on-grey-900--subdued;
+    border-radius: $border-radius-m;
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+}

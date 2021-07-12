@@ -1,9 +1,14 @@
-import { atomFamily, selectorFamily } from 'recoil'
+import { atomFamily, selector, selectorFamily } from 'recoil'
 import {
   defaultLuminances,
   maxPossibleChromaForAnyHue,
+  shadeNames,
 } from 'ThemeGenerator/config'
-import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
+import {
+  FirstOrLastShadeType,
+  ScaleNameType,
+  ShadeType,
+} from 'ThemeGenerator/types'
 import {
   ColorDataType,
   getColorData,
@@ -14,6 +19,7 @@ import {
   isSafe,
 } from 'ThemeGenerator/utils'
 import { hueAtom, chromaSelector } from 'ThemeGenerator/state'
+import { scaleNamesAtom } from './scaleNamesState'
 
 const mixRatio = 0.25
 
@@ -113,5 +119,34 @@ export const vividTextColorsSelector = selectorFamily<
         vivid: vividText,
         'vivid-subdued': vividSubduedText,
       }
+    },
+})
+
+type VividTextColorsOnGreyType = {
+  scaleName: string
+  vivid: ColorDataType
+  'vivid-subdued': ColorDataType
+}
+
+export const vividTextColorsOnGreyShadeSelector = selectorFamily<
+  VividTextColorsOnGreyType[],
+  ShadeType
+>({
+  key: 'vividTextColorsOnGrey',
+  get:
+    (shade) =>
+    ({ get }) => {
+      return get(scaleNamesAtom)
+        .filter((shadeName) => shadeName !== 'grey')
+        .map((scaleName) => {
+          const vividTextColors = get(
+            vividTextColorsSelector({ shadeName: shade.shadeName, scaleName })
+          )
+          return {
+            scaleName,
+            vivid: vividTextColors.vivid,
+            'vivid-subdued': vividTextColors['vivid-subdued'],
+          }
+        })
     },
 })

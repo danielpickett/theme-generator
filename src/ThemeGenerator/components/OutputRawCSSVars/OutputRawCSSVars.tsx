@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react'
 import { useRecoilValue } from 'recoil'
 import { shadeNames } from 'ThemeGenerator/config'
-import { colorDataSelector, scaleNamesAtom } from 'ThemeGenerator/state'
+import { scaleNamesAtom, shadeColorSelector } from 'ThemeGenerator/state'
 import { ShadeType } from 'ThemeGenerator/types'
+import { getColorData } from 'ThemeGenerator/utils'
 
 const COLUMN_WIDTH = 20
 
-export const RawCSSVarsOutput = ({ styled = false }: { styled?: boolean }) => {
+export const OutputRawCSSVars = ({ styled = false }: { styled?: boolean }) => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
 
   const content = (
@@ -16,7 +17,7 @@ export const RawCSSVarsOutput = ({ styled = false }: { styled?: boolean }) => {
         <Fragment key={scaleName}>
           {shadeNames.map((shadeName) => {
             return (
-              <TokenOutput
+              <OutputToken
                 key={shadeName}
                 shade={{ scaleName, shadeName }}
                 styled={styled}
@@ -32,14 +33,16 @@ export const RawCSSVarsOutput = ({ styled = false }: { styled?: boolean }) => {
   return styled ? <pre>{content}</pre> : content
 }
 
-const TokenOutput = ({
+const OutputToken = ({
   shade,
   styled,
 }: {
   shade: ShadeType
   styled: boolean
 }) => {
-  const { hex, isClipped } = useRecoilValue(colorDataSelector(shade))
+  const shadeColor = useRecoilValue(shadeColorSelector(shade))
+
+  const { hex, isClipped } = getColorData(shadeColor)
   const color = isClipped ? '-ERROR-' : hex
   const padding = ' '.repeat(
     COLUMN_WIDTH - shade.scaleName.length - shade.shadeName.length

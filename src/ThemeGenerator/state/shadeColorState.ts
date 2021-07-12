@@ -6,7 +6,7 @@ import {
   defaultChromas,
   defaultLuminances,
 } from 'ThemeGenerator/config'
-import { ScaleNameType, ShadeType } from 'ThemeGenerator/types'
+import { LCHObjType, ScaleNameType, ShadeType } from 'ThemeGenerator/types'
 
 export const hueAtom = atomFamily<number, ScaleNameType>({
   key: 'hue',
@@ -47,6 +47,17 @@ export const chromaSelector = selectorFamily<number, ShadeType>({
     (shade) =>
     ({ set }, newValue) =>
       set(chromaAtom(shade), newValue),
+})
+
+export const shadeColorSelector = selectorFamily<LCHObjType, ShadeType>({
+  key: 'shadeColor',
+  get:
+    (shade) =>
+    ({ get }) => ({
+      l: defaultLuminances[shade.shadeName],
+      c: get(chromaSelector(shade)),
+      h: get(hueAtom(shade.scaleName)),
+    }),
 })
 
 export const colorDataSelector = selectorFamily<ColorDataType, ShadeType>({

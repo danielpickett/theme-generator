@@ -77,7 +77,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       {shade.shadeName === '000' || shade.shadeName === '900' ? (
         <TextColorEditor
           shade={shade as FirstOrLastShadeType}
-          title={'regular text color'}
+          title={'vivid text color'}
           color={vividTextColors.vivid.lch}
           sliderAreaRef={ref}
         />

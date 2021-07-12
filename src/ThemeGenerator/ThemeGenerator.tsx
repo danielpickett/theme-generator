@@ -2,8 +2,7 @@ import React from 'react'
 import './ThemeGenerator.scss'
 import '../theme.css'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import ReactDOM from 'react-dom'
-import { Header, RawCSSVarsOutput, Scale } from './components'
+import { Header, Output, Scale } from './components'
 import { scaleNamesAtom } from './state'
 
 export const ThemeGenerator = () => (
@@ -27,14 +26,8 @@ const ThemeGeneratorBase = () => {
           ))}
         </div>
         <div className="ThemeGenerator__output">
-          <RawCSSVarsOutput styled />
+          <Output />
         </div>
-        {ReactDOM.createPortal(
-          <style className="color-tokens">
-            <RawCSSVarsOutput />
-          </style>,
-          document.head
-        )}
       </div>
     </div>
   )
