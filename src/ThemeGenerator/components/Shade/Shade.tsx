@@ -9,6 +9,7 @@ import {
   hueAtom,
   chromaSelector,
   showAllTextColorPlotsAtom,
+  vividTextColorsOnGreyShadeSelector,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { defaultLuminances, isExpectedToBeSafe } from 'ThemeGenerator/config'
@@ -16,6 +17,7 @@ import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
 import { getColorData } from 'ThemeGenerator/utils'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
+  console.log(shade)
   const shadeL = defaultLuminances[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
@@ -23,7 +25,8 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const showAllTextColorPlots = useRecoilValue(showAllTextColorPlotsAtom)
-
+  const greyTextALL = useRecoilValue(vividTextColorsOnGreyShadeSelector(shade))
+  console.log(greyTextALL)
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
@@ -57,18 +60,43 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
       />
       <Spacer />
-      <TextSample
-        shadeColor={shadeColorData.hex}
-        textColor={vividTextColors['vivid'].hex}
-        isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
-      />
-      <TextSample
-        shadeColor={shadeColorData.hex}
-        textColor={vividTextColors['vivid-subdued'].hex}
-        isExpectedToBeSafe={
-          isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
-        }
-      />
+      {shade.shadeName !== '000' && (
+        <>
+          {' '}
+          <TextSample
+            shadeColor={shadeColorData.hex}
+            textColor={vividTextColors['vivid'].hex}
+            isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
+          />
+          <TextSample
+            shadeColor={shadeColorData.hex}
+            textColor={vividTextColors['vivid-subdued'].hex}
+            isExpectedToBeSafe={
+              isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+            }
+          />
+        </>
+      )}
+      {shade.scaleName === 'grey' &&
+        greyTextALL.map((currentColor) => {
+          return (
+            <>
+              <Spacer />
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={currentColor.vivid.hex}
+                isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
+              />
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={currentColor['vivid-subdued'].hex}
+                isExpectedToBeSafe={
+                  isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+                }
+              />
+            </>
+          )
+        })}
       <Spacer />
       {definitelyShowTextColorPlots && <TextColorPlots shade={shade} />}
     </div>
