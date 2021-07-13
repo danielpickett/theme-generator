@@ -156,12 +156,6 @@ export const vividTextColorsOnGreyShadeSelector = selectorFamily<
                 )
               )
 
-          console.log(
-            shade.scaleName,
-            shade.shadeName,
-            vivid.hex,
-            greyShadeColor.hex
-          )
           const vividSubdued = mix(
             vivid.hex,
             greyShadeColor.hex,
