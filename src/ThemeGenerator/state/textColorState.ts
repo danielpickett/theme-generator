@@ -134,12 +134,6 @@ export const vividTextColorsOnGreyShadeSelector = selectorFamily<
       return get(scaleNamesAtom)
         .filter((shadeName) => shadeName !== 'grey')
         .map((scaleName) => {
-          // const vividShadeColor = getColorData({
-          //   l: defaultLuminances[shade.shadeName],
-          //   c: get(chromaSelector(shade)),
-          //   h: get(hueAtom(shade.scaleName)),
-          // })
-
           const greyShadeColor = getColorData({
             l: defaultLuminances[shade.shadeName],
             c: get(
