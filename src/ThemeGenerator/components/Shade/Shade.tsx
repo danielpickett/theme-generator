@@ -32,7 +32,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const definitelyShowTextColorPlots =
     (showTextColorPlots &&
       (shade.shadeName === '000' || shade.shadeName === '900')) ||
-    showAllTextColorPlots
+    (showAllTextColorPlots && showTextColorPlots)
 
   return (
     <div
