@@ -8,7 +8,7 @@ import {
 } from 'ThemeGenerator/state'
 import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
 import './OutputTheme.scss'
-import { ShadeNameType, ShadeType } from 'ThemeGenerator/types'
+import { ShadeType } from 'ThemeGenerator/types'
 import { Fragment } from 'react'
 
 export const OutputTheme = () => {
