@@ -103,7 +103,6 @@ const getSuffix = (textKind: string, shade: ShadeType) => {
     if (isSubdued) return 'vivid-subdued'
     return 'vivid'
   })() as unknown as 'regular' | 'subdued' | 'vivid' | 'vivid-subdued'
-  console.table({ textKind, shade, unsafeLookupKey })
   const isSafe = isExpectedToBeSafe[shade.shadeName][unsafeLookupKey]
   return !!textKind ? `--${textKind}${isSafe ? '' : '--UNSAFE'}` : ''
 }
