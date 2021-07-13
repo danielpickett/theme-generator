@@ -1,14 +1,9 @@
-import { atomFamily, selector, selectorFamily } from 'recoil'
+import { atomFamily, selectorFamily } from 'recoil'
 import {
   defaultLuminances,
   maxPossibleChromaForAnyHue,
-  shadeNames,
 } from 'ThemeGenerator/config'
-import {
-  FirstOrLastShadeType,
-  ScaleNameType,
-  ShadeType,
-} from 'ThemeGenerator/types'
+import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import {
   ColorDataType,
   getColorData,
