@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import './ThemeGenerator.scss'
 import '../theme.css'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Header, Output, Scale } from './components'
+import { Footer, Header, Output, Scale } from './components'
 import { scaleNamesAtom } from './state'
+import { useDragHandle } from './hooks'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
@@ -25,9 +26,9 @@ const ThemeGeneratorBase = () => {
             <Scale key={scaleName} scaleName={scaleName} />
           ))}
         </div>
-        <div className="ThemeGenerator__output">
-          <Output />
-        </div>
+      </div>
+      <div className="ThemeGenerator__footer">
+        <Footer />
       </div>
     </div>
   )
