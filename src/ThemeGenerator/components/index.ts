@@ -1,6 +1,7 @@
 export * from './Canvas'
 export * from './CanvasPointsOverlay'
 export * from './ChromaSlider'
+export * from './Footer'
 export * from './Header'
 export * from './HueSlider'
 export * from './Output'

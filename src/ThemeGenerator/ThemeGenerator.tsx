@@ -2,7 +2,7 @@ import React from 'react'
 import './ThemeGenerator.scss'
 import '../theme.css'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Header, Output, Scale } from './components'
+import { Footer, Header, Scale } from './components'
 import { scaleNamesAtom } from './state'
 
 export const ThemeGenerator = () => (
@@ -25,9 +25,9 @@ const ThemeGeneratorBase = () => {
             <Scale key={scaleName} scaleName={scaleName} />
           ))}
         </div>
-        <div className="ThemeGenerator__output">
-          <Output />
-        </div>
+      </div>
+      <div className="ThemeGenerator__footer">
+        <Footer />
       </div>
     </div>
   )

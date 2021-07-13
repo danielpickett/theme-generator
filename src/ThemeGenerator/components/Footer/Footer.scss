@@ -1,0 +1,16 @@
+.Footer {
+  position: relative;
+
+  &__drag-handle {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    opacity: 0.5;
+    height: 16px;
+    width: 100%;
+    cursor: ns-resize;
+    &:hover {
+      background-color: grey;
+    }
+  }
+}
