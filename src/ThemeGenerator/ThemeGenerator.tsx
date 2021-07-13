@@ -1,10 +1,9 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import './ThemeGenerator.scss'
 import '../theme.css'
 import { RecoilRoot, useRecoilValue } from 'recoil'
-import { Footer, Header, Output, Scale } from './components'
+import { Footer, Header, Scale } from './components'
 import { scaleNamesAtom } from './state'
-import { useDragHandle } from './hooks'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
