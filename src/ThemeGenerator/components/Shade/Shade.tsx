@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import './Shade.scss'
 import { useRecoilValue } from 'recoil'
 import { ShadeType } from 'ThemeGenerator/types'
@@ -17,7 +17,6 @@ import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
 import { getColorData } from 'ThemeGenerator/utils'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
-  console.log(shade)
   const shadeL = defaultLuminances[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
@@ -25,8 +24,9 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const showAllTextColorPlots = useRecoilValue(showAllTextColorPlotsAtom)
-  const greyTextALL = useRecoilValue(vividTextColorsOnGreyShadeSelector(shade))
-  console.log(greyTextALL)
+  const vividTextOnGrey = useRecoilValue(
+    vividTextColorsOnGreyShadeSelector(shade)
+  )
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
@@ -47,7 +47,6 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     >
       <div className="Shade__header">
         <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
-        {/* <div className="Shade__details">{`h: ${shadeColorData.lch.h}`}</div> */}
       </div>
       <TextSample
         shadeColor={shadeColorData.hex}
@@ -78,23 +77,23 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         </>
       )}
       {shade.scaleName === 'grey' &&
-        greyTextALL.map((currentColor) => {
+        vividTextOnGrey.map((vividTextColor) => {
           return (
-            <>
+            <Fragment key={vividTextColor.scaleName}>
               <Spacer />
               <TextSample
                 shadeColor={shadeColorData.hex}
-                textColor={currentColor.vivid.hex}
+                textColor={vividTextColor.vivid.hex}
                 isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
               />
               <TextSample
                 shadeColor={shadeColorData.hex}
-                textColor={currentColor['vivid-subdued'].hex}
+                textColor={vividTextColor['vivid-subdued'].hex}
                 isExpectedToBeSafe={
                   isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
                 }
               />
-            </>
+            </Fragment>
           )
         })}
       <Spacer />
