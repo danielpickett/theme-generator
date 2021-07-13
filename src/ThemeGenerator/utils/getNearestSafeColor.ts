@@ -13,13 +13,19 @@ import { getMaxChroma, isDark, isSameHex, isSafe } from '.'
  * match this chroma in its output color, or as close to it as possible.
  * If omitted, the resulting color will have the same chroma as the
  * input/background 'color' param, or as close to it as possible.
+ *
+ * @param targetHue - If provided, the resulting color will be of this hue.
+ * If omitted, the resulting color will be the same hue as teh input/background
+ * 'color' param.
  */
 
 export const getNearestSafeColor = (
   color: LCHObjType,
-  targetChroma?: number
+  targetChroma?: number,
+  targetHue?: number
 ): LCHObjType => {
-  const { l, h } = color
+  const { l } = color
+  const h = targetHue ? targetHue : color.h
   const sign = isDark(l) ? 1 : -1
 
   let step = isDark(l) ? 100 - color.l : color.l

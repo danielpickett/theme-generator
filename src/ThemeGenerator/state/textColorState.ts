@@ -134,13 +134,39 @@ export const vividTextColorsOnGreyShadeSelector = selectorFamily<
       return get(scaleNamesAtom)
         .filter((shadeName) => shadeName !== 'grey')
         .map((scaleName) => {
+          const greyShadeColor = getColorData({
+            l: defaultLuminances[shade.shadeName],
+            c: get(
+              chromaSelector({ scaleName: 'grey', shadeName: shade.shadeName })
+            ),
+            h: get(hueAtom('grey')),
+          })
+
           const vividTextColors = get(
             vividTextColorsSelector({ shadeName: shade.shadeName, scaleName })
           )
+
+          const vivid = isSafe(vividTextColors.vivid.hex, greyShadeColor.hex)
+            ? vividTextColors.vivid
+            : getColorData(
+                getNearestSafeColor(
+                  greyShadeColor.lch,
+                  vividTextColors.vivid.lch.c,
+                  vividTextColors.vivid.lch.h
+                )
+              )
+
+          const vividSubdued = mix(
+            vivid.hex,
+            greyShadeColor.hex,
+            mixRatio,
+            'rgb'
+          )
+
           return {
             scaleName,
-            vivid: vividTextColors.vivid,
-            'vivid-subdued': vividTextColors['vivid-subdued'],
+            vivid: vivid,
+            'vivid-subdued': vividSubdued,
           }
         })
     },

@@ -7,9 +7,6 @@ export const Output = React.memo(() => {
   return (
     <div className="Output">
       <div className="Output__column">
-        <OutputRawCSSVars styled />
-      </div>
-      <div className="Output__column">
         <OutputTheme />
       </div>
 
