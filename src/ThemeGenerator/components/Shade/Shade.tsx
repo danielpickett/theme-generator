@@ -49,7 +49,11 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <div className="Shade__header">
-        <div className="Shade__token-name">{`${shade.scaleName}-${shade.shadeName}`}</div>
+        <div className="Shade__token-name">
+          {shade.scaleName === 'grey' && shade.shadeName === '000'
+            ? 'White'
+            : `${shade.scaleName}-${shade.shadeName}`}
+        </div>
       </div>
       <TextSample
         shadeColor={shadeColorData.hex}
@@ -65,22 +69,28 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       {shade.shadeName !== '000' && (
         <>
           {' '}
-          <TextSample
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors['vivid'].hex}
-            isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
-          />
-          <TextSample
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors['vivid-subdued'].hex}
-            isExpectedToBeSafe={
-              isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
-            }
-          />
+          {shade.scaleName !== 'grey' && (
+            <>
+              {' '}
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={vividTextColors['vivid'].hex}
+                isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
+              />
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={vividTextColors['vivid-subdued'].hex}
+                isExpectedToBeSafe={
+                  isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+                }
+              />
+            </>
+          )}
         </>
       )}
       {shade.scaleName === 'grey' &&
         vividTextOnGrey.map((vividTextColor) => {
+          console.log(vividTextOnGrey)
           return (
             <Fragment key={vividTextColor.scaleName}>
               <Spacer />
