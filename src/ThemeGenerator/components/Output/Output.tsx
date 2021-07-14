@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { OutputRawCSSVars, OutputTheme } from 'ThemeGenerator/components'
+import { OutputTheme } from 'ThemeGenerator/components'
 import './Output.scss'
 
 export const Output = React.memo(() => {
@@ -12,7 +12,7 @@ export const Output = React.memo(() => {
 
       {ReactDOM.createPortal(
         <style className="color-tokens">
-          <OutputRawCSSVars />
+          <OutputTheme />
         </style>,
         document.head
       )}
