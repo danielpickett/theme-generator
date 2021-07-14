@@ -1,7 +1,6 @@
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import { requiredTokens as _requiredTokens } from 'resources'
-import { staticTokens } from 'ThemeGenerator/config/staticTokens'
 import { allTokensSelector } from 'ThemeGenerator/state'
 
 export const TestOutput = () => {
