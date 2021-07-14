@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import { requiredTokens as _requiredTokens } from 'resources'
 import { allTokensSelector } from 'ThemeGenerator/state'
 
-export const TestOutput = () => {
+export const OutputTestButton = () => {
   const allTokens = useRecoilValue(allTokensSelector)
 
   const handleClick = () => {
@@ -33,12 +33,5 @@ export const TestOutput = () => {
     extraTokens.forEach((token) => console.log(token))
   }
 
-  return (
-    <>
-      <button onClick={handleClick}>Test Tokens</button>
-      <br />
-      <br />
-      {`:root{\n${allTokens}\n\n}\n\n`}
-    </>
-  )
+  return <button onClick={handleClick}>Test Tokens</button>
 }

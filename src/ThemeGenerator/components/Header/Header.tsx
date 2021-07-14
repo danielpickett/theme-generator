@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import { ColumnDivider, Spacer } from 'ThemeGenerator/component-library'
+import { OutputTestButton } from 'ThemeGenerator/components'
 import {
   canvasSizeAtom,
   showAllTextColorPlotsAtom,
@@ -83,6 +84,9 @@ export const Header = () => {
           </label>
         </>
       )}
+      <div className="Header__right-side-container">
+        <OutputTestButton />
+      </div>
     </div>
   )
 }

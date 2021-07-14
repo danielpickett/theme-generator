@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { useRecoilValue } from 'recoil'
 import {
   regularTextColorsSelector,
@@ -7,14 +7,12 @@ import {
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
 import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
-import './OutputTheme.scss'
 import { ShadeType } from 'ThemeGenerator/types'
-import { Fragment } from 'react'
 import { staticTokens } from 'ThemeGenerator/config/staticTokens'
 
 const columnWidth = 82
 
-export const OutputTheme = () => {
+export const OutputThemeJSX = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
 
   return (
@@ -86,8 +84,7 @@ const getTokenString = (
   value: string
 ) => {
   const { scaleName, shadeName } = shade
-  // prettier-ignore
-  const tokenName = `  --${prefix}-${scaleName}-${shadeName}` //${!!textKind ? `--${textKind}` : ''}
+  const tokenName = `  --${prefix}-${scaleName}-${shadeName}`
   const suffix = getSuffix(textKind, shade)
 
   const charCount = tokenName.length + value.length + suffix.length
@@ -96,15 +93,6 @@ const getTokenString = (
 }
 
 const textKindModifiers = ['', 'subdued', 'vivid', 'vivid-subdued']
-
-//
-// subdued
-// vivid
-// vivid-subdued
-// success
-// success-subdued
-// danger
-// danger-subdued
 
 const getSuffix = (textKind: string, shade: ShadeType) => {
   const unsafeLookupKey = (() => {

@@ -85,7 +85,7 @@ export const allTokensSelector = selector({
       })
       .join('')
 
-    return allTokens + '\n' + staticTokens + '\n  --unnecessary-token: foo;'
+    return allTokens + '\n' + staticTokens
   },
 })
 
