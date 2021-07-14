@@ -36,6 +36,9 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     (showTextColorPlots &&
       (shade.shadeName === '000' || shade.shadeName === '900')) ||
     (showAllTextColorPlots && showTextColorPlots)
+  if (shade.scaleName !== 'grey' && shade.shadeName === '000') {
+    return <div></div>
+  }
 
   return (
     <div
