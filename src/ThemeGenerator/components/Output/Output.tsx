@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { OutputTheme } from 'ThemeGenerator/components'
+import { OutputTheme, TestOutput } from 'ThemeGenerator/components'
 import './Output.scss'
 
 export const Output = React.memo(() => {
@@ -8,6 +8,9 @@ export const Output = React.memo(() => {
     <div className="Output">
       <div className="Output__column">
         <OutputTheme />
+      </div>
+      <div className="Output__column">
+        <TestOutput />
       </div>
 
       {ReactDOM.createPortal(

@@ -90,7 +90,6 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       )}
       {shade.scaleName === 'grey' &&
         vividTextOnGrey.map((vividTextColor) => {
-          console.log(vividTextOnGrey)
           return (
             <Fragment key={vividTextColor.scaleName}>
               <Spacer />
