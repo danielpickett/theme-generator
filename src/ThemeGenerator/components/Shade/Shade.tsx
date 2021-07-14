@@ -34,10 +34,10 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
 
   const definitelyShowTextColorPlots =
     (showTextColorPlots &&
-      (shade.shadeName === '000' || shade.shadeName === '900')) ||
-    (showAllTextColorPlots && showTextColorPlots)
-  if (shade.scaleName !== 'grey' && shade.shadeName === '000') {
-    return <div></div>
+      (shade.shadeName === "000" || shade.shadeName === "900")) ||
+    (showAllTextColorPlots && showTextColorPlots);
+  if (shade.scaleName !== "grey" && shade.shadeName === "000") {
+    return <div></div>;
   }
 
   return (
@@ -69,22 +69,28 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       {shade.shadeName !== "000" && (
         <>
           {" "}
-          <TextSample
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors["vivid"].hex}
-            isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
-          />
-          <TextSample
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors["vivid-subdued"].hex}
-            isExpectedToBeSafe={
-              isExpectedToBeSafe[shade.shadeName]["vivid-subdued"]
-            }
-          />
+          {shade.scaleName !== "grey" && (
+            <>
+              {" "}
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={vividTextColors["vivid"].hex}
+                isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
+              />
+              <TextSample
+                shadeColor={shadeColorData.hex}
+                textColor={vividTextColors["vivid-subdued"].hex}
+                isExpectedToBeSafe={
+                  isExpectedToBeSafe[shade.shadeName]["vivid-subdued"]
+                }
+              />
+            </>
+          )}
         </>
       )}
       {shade.scaleName === "grey" &&
         vividTextOnGrey.map((vividTextColor) => {
+          console.log(vividTextOnGrey);
           return (
             <Fragment key={vividTextColor.scaleName}>
               <Spacer />
