@@ -12,9 +12,9 @@ export const ScaleControls = ({ scaleName }: { scaleName: string }) => {
   const [hue, setHue] = useRecoilState(hueAtom(scaleName))
   const size = useRecoilValue(canvasSizeAtom)
 
-  const handleHueChange = (newHue: number) => {
-    requestAnimationFrame(() => setHue(newHue))
-  }
+  // const handleHueChange = (newHue: number) => {
+  //   requestAnimationFrame(() => setHue(newHue))
+  // }
 
   return (
     <div className="ScaleControls">
@@ -26,7 +26,7 @@ export const ScaleControls = ({ scaleName }: { scaleName: string }) => {
       </div>
       <div className="ScaleControls__hue-slider">
         <div>{hue.toFixed(2)}</div>
-        <HueSlider hue={hue} onHueChange={handleHueChange} />
+        <HueSlider hue={hue} onHueChange={setHue} />
       </div>
     </div>
   )
