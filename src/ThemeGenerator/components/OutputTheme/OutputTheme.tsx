@@ -10,12 +10,15 @@ import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
 import './OutputTheme.scss'
 import { ShadeType } from 'ThemeGenerator/types'
 import { Fragment } from 'react'
+import { staticTokens } from 'ThemeGenerator/config/staticTokens'
+
+const columnWidth = 82
 
 export const OutputTheme = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
 
   return (
-    <div className="OutputTheme">
+    <>
       {':root {\n'}
       {scaleNames.map((scaleName) => (
         <Fragment key={scaleName}>
@@ -27,8 +30,9 @@ export const OutputTheme = () => {
           ))}
         </Fragment>
       ))}
+      {staticTokens}
       {'}\n\n'}
-    </div>
+    </>
   )
 }
 
@@ -46,9 +50,17 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const vividTextColorHex = vividTextColors.vivid.hex
   const vividSubduedTextColorHex = vividTextColors['vivid-subdued'].hex
 
+  const nameComment = `  /* ${shade.scaleName.toUpperCase()} ${
+    shade.shadeName
+  } ${'*'.repeat(
+    columnWidth - 13 - shade.scaleName.length + shade.shadeName.length
+  )} */`
+  // {`  /* ${shade.scaleName.toUpperCase()} ${shade.shadeName} */\n\n`}
+
   /* prettier-ignore */
   return (
     <>
+      {`${nameComment}\n`}
       {getTokenString('color', shade, '', vividSubduedTextColorHex)}
       {'\n'}
       {getTokenString('text-on', shade, '', textColorHex)}
@@ -74,7 +86,6 @@ const getTokenString = (
   value: string
 ) => {
   const { scaleName, shadeName } = shade
-  const columnWidth = 60
   // prettier-ignore
   const tokenName = `  --${prefix}-${scaleName}-${shadeName}` //${!!textKind ? `--${textKind}` : ''}
   const suffix = getSuffix(textKind, shade)
