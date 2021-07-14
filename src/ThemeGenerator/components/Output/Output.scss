@@ -5,8 +5,12 @@
   padding: 0.5rem;
   display: flex;
   height: 100%;
+  display: block;
+  white-space: pre;
+  font-family: monospace;
 
   &__column {
+    flex-grow: 1;
     background-color: $color-grey-900;
     color: $text-on-grey-900--subdued;
     font-weight: $text-weight-bold;

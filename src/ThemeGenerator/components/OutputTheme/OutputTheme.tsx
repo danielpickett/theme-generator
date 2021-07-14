@@ -10,12 +10,13 @@ import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
 import './OutputTheme.scss'
 import { ShadeType } from 'ThemeGenerator/types'
 import { Fragment } from 'react'
+import { staticTokens } from 'ThemeGenerator/config/staticTokens'
 
 export const OutputTheme = () => {
   const scaleNames = useRecoilValue(scaleNamesAtom)
 
   return (
-    <div className="OutputTheme">
+    <>
       {':root {\n'}
       {scaleNames.map((scaleName) => (
         <Fragment key={scaleName}>
@@ -27,8 +28,9 @@ export const OutputTheme = () => {
           ))}
         </Fragment>
       ))}
+      {staticTokens}
       {'}\n\n'}
-    </div>
+    </>
   )
 }
 
@@ -74,7 +76,7 @@ const getTokenString = (
   value: string
 ) => {
   const { scaleName, shadeName } = shade
-  const columnWidth = 60
+  const columnWidth = 82
   // prettier-ignore
   const tokenName = `  --${prefix}-${scaleName}-${shadeName}` //${!!textKind ? `--${textKind}` : ''}
   const suffix = getSuffix(textKind, shade)
