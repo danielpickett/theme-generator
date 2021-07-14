@@ -22,4 +22,8 @@
     padding: 1rem;
     overflow: auto;
   }
+  &____textarea {
+    white-space: pre;
+    font-family: monospace;
+  }
 }
