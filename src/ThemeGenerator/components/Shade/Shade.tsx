@@ -53,6 +53,11 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <div className="Shade__header">
+        <div className="Shade__token-name">
+          {shade.scaleName === 'grey' && shade.shadeName === '000'
+            ? 'White'
+            : `${shade.scaleName}-${shade.shadeName}`}
+        </div>
         {shade.scaleName !== 'grey' &&
           shade.shadeName !== '000' &&
           shade.shadeName !== '900' && (
@@ -61,12 +66,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
               onChange={() => setDefaultShade(shade.shadeName)}
               checked={defaultShade === shade.shadeName}
             />
-          )}{' '}
-        <div className="Shade__token-name">
-          {shade.scaleName === 'grey' && shade.shadeName === '000'
-            ? 'White'
-            : `${shade.scaleName}-${shade.shadeName}`}
-        </div>
+          )}
       </div>
       <TextSample
         shadeColor={shadeColorData.hex}
