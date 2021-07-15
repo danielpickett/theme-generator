@@ -72,6 +72,7 @@ export const allTokensSelector = selector({
           : '')
       )
     }
+    // TODO ADD HOVER CLASS NAMES FOR HOVER: LIGHTER && HOVER: DARKER //
     const getScaleColorAlias = (scaleName: string) => {
       if (scaleName === 'grey') return ''
       const defaultShade = get(defaultScaleColorAtom(scaleName))

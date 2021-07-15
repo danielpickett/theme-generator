@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import './Shade.scss'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilState } from 'recoil'
 import { ShadeType } from 'ThemeGenerator/types'
 import {
   showTextColorPlotsAtom,
@@ -10,6 +10,7 @@ import {
   chromaSelector,
   showAllTextColorPlotsAtom,
   vividTextColorsOnGreyShadeSelector,
+  defaultScaleColorAtom,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { defaultLuminances, isExpectedToBeSafe } from 'ThemeGenerator/config'
@@ -17,6 +18,9 @@ import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
 import { getColorData } from 'ThemeGenerator/utils'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
+  const [defaultShade, setDefaultShade] = useRecoilState(
+    defaultScaleColorAtom(shade.scaleName),
+  )
   const shadeL = defaultLuminances[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
@@ -25,7 +29,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const showAllTextColorPlots = useRecoilValue(showAllTextColorPlotsAtom)
   const vividTextOnGrey = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade)
+    vividTextColorsOnGreyShadeSelector(shade),
   )
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
@@ -49,6 +53,13 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <div className="Shade__header">
+        {shade.scaleName !== 'grey' &&  shade.shadeName !== '000' && shade.shadeName !== '900' &&
+          <input
+            type="checkbox"
+            onChange={() => setDefaultShade(shade.shadeName)}
+            checked={defaultShade === shade.shadeName}
+          />
+        }{' '}
         <div className="Shade__token-name">
           {shade.scaleName === 'grey' && shade.shadeName === '000'
             ? 'White'
