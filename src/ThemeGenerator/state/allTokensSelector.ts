@@ -6,6 +6,7 @@ import {
   regularTextColorsSelector,
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
+  defaultScaleShadeAtom,
 } from 'ThemeGenerator/state'
 import { staticTokens } from 'ThemeGenerator/config/staticTokens'
 
@@ -19,7 +20,7 @@ export const allTokensSelector = selector({
     const getShadeColorTokens = (shade: ShadeType) => {
       const regularTextColors = get(regularTextColorsSelector(shade))
       const vividTextColorsOnGreyShade = get(
-        vividTextColorsOnGreyShadeSelector(shade)
+        vividTextColorsOnGreyShadeSelector(shade),
       )
 
       const textColorHex = regularTextColors.regular.hex
@@ -30,11 +31,17 @@ export const allTokensSelector = selector({
       const vividTextColorHex = vividTextColors.vivid.hex
       const vividSubduedTextColorHex = vividTextColors['vivid-subdued'].hex
 
-      const nameComment = `  /* ${shade.scaleName.toUpperCase()} ${
-        shade.shadeName
-      } ${'*'.repeat(
-        columnWidth - 13 - shade.scaleName.length + shade.shadeName.length
-      )} */`
+      const nameComment =
+        shade.shadeName === '000' && shade.scaleName !== 'grey'
+          ? ''
+          : `  /* ${shade.scaleName.toUpperCase()} ${
+              shade.shadeName
+            } ${'*'.repeat(
+              columnWidth -
+                13 -
+                shade.scaleName.length +
+                shade.shadeName.length,
+            )} */`
 
       return (
         `${nameComment}\n` +
@@ -47,7 +54,7 @@ export const allTokensSelector = selector({
           'text-on',
           shade,
           `vivid-subdued`,
-          vividSubduedTextColorHex
+          vividSubduedTextColorHex,
         ) +
         '\n' +
         (shade.scaleName === 'grey'
@@ -58,20 +65,48 @@ export const allTokensSelector = selector({
                     'text-on',
                     shade,
                     `${txtColors.scaleName}`,
-                    txtColors.vivid.hex
+                    txtColors.vivid.hex,
                   ) +
                   getTokenString(
                     'text-on',
                     shade,
                     `${txtColors.scaleName}-subdued`,
-                    txtColors['vivid-subdued'].hex
-                  )
+                    txtColors['vivid-subdued'].hex,
+                  ),
               )
               .join('') + '\n'
           : '')
       )
     }
-
+    // TODO ADD HOVER CLASS NAMES FOR HOVER: LIGHTER && HOVER: DARKER //
+    const getScaleColorAlias = (scaleName: string) => {
+      if (scaleName === 'grey') return ''
+      const defaultShade = get(defaultScaleShadeAtom(scaleName))
+      const lighter =
+        defaultShade === '050'
+          ? '050'
+          : shadeNames[shadeNames.indexOf(defaultShade) - 1]
+      const darker =
+        defaultShade === '050'
+          ? '050'
+          : shadeNames[shadeNames.indexOf(defaultShade) + 1]
+      const sillyString = `  --color-${scaleName}-lighter:                                                   var(--color-${scaleName}-${lighter});
+  --color-${scaleName}:                                                           var(--color-${scaleName}-${defaultShade});
+  --color-${scaleName}-darker:                                                    var(--color-${scaleName}-${darker});
+  --text-on-${scaleName}-lighter:                                                 var(--text-on-${scaleName}-${lighter});
+  --text-on-${scaleName}-lighter--subdued--UNSAFE:                                var(--text-on-${scaleName}-${lighter}--subdued--UNSAFE);
+  --text-on-${scaleName}-lighter--vivid:                                          var(--text-on-${scaleName}-${lighter}--vivid);
+  --text-on-${scaleName}-lighter--vivid-subdued--UNSAFE:                          var(--text-on-${scaleName}-${lighter}--vivid-subdued--UNSAFE);
+  --text-on-${scaleName}:                                                         var(--text-on-${scaleName}-${defaultShade});
+  --text-on-${scaleName}--subdued--UNSAFE:                                        var(--text-on-${scaleName}-${defaultShade}--subdued--UNSAFE);
+  --text-on-${scaleName}--vivid:                                                  var(--text-on-${scaleName}-${defaultShade}--vivid);
+  --text-on-${scaleName}--vivid-subdued--UNSAFE:                                  var(--text-on-${scaleName}-${defaultShade}--vivid-subdued--UNSAFE);
+  --text-on-${scaleName}-darker:                                                  var(--text-on-${scaleName}-${darker});
+  --text-on-${scaleName}-darker--subdued--UNSAFE:                                 var(--text-on-${scaleName}-${darker}--subdued--UNSAFE);
+  --text-on-${scaleName}-darker--vivid:                                           var(--text-on-${scaleName}-${darker}--vivid);
+  --text-on-${scaleName}-darker--vivid-subdued--UNSAFE:                           var(--text-on-${scaleName}-${darker}--vivid-subdued--UNSAFE);\n\n`
+      return sillyString
+    }
     const allTokens = scaleNames
       .map((scaleName) => {
         const result = shadeNames
@@ -81,7 +116,7 @@ export const allTokensSelector = selector({
             return result
           })
           .join('')
-        return result
+        return result.concat(getScaleColorAlias(scaleName))
       })
       .join('')
 
@@ -93,16 +128,23 @@ const getTokenString = (
   prefix: string,
   shade: ShadeType,
   textKind: string,
-  value: string
+  value: string,
 ) => {
   const { scaleName, shadeName } = shade
   // prettier-ignore
-  const tokenName = `  --${prefix}-${scaleName}-${shadeName}`
-  const suffix = getSuffix(textKind, shade)
 
+  const tokenName = `  --${prefix}-${
+    scaleName === "grey" && shadeName === "000" ? "white" : scaleName
+  }${shadeName === "000" ? "" : `-${shadeName}`}`;
+  const suffix = getSuffix(textKind, shade)
   const charCount = tokenName.length + value.length + suffix.length
   const gap = charCount < columnWidth ? ' '.repeat(columnWidth - charCount) : ''
-  return `${tokenName}${suffix}: ${gap}${value};\n`
+  if (scaleName !== 'grey' && shadeName === '000') {
+    return ''
+  }
+  return scaleName === 'grey' && suffix.match('vivid')
+    ? ''
+    : `${tokenName}${suffix}: ${gap}${value};\n`
 }
 
 const textKindModifiers = ['', 'subdued', 'vivid', 'vivid-subdued']
