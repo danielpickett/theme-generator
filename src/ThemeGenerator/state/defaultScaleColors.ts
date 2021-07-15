@@ -1,9 +1,7 @@
-import { atomFamily, selectorFamily } from 'recoil'
-import { ShadeNameType, ScaleNameType, ShadeType } from 'ThemeGenerator/types'
-
-
+import { atomFamily } from 'recoil'
+import { ShadeNameType, ScaleNameType } from 'ThemeGenerator/types'
 
 export const defaultScaleColorAtom = atomFamily<ShadeNameType, ScaleNameType>({
-    key: 'defaultScale',
-    default: '500',
+  key: 'defaultScale',
+  default: '500',
 })
