@@ -10,7 +10,7 @@ import {
   chromaSelector,
   showAllTextColorPlotsAtom,
   vividTextColorsOnGreyShadeSelector,
-  defaultScaleColorAtom,
+  defaultScaleShadeAtom,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { defaultLuminances, isExpectedToBeSafe } from 'ThemeGenerator/config'
@@ -19,7 +19,7 @@ import { getColorData } from 'ThemeGenerator/utils'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [defaultShade, setDefaultShade] = useRecoilState(
-    defaultScaleColorAtom(shade.scaleName),
+    defaultScaleShadeAtom(shade.scaleName),
   )
   const shadeL = defaultLuminances[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
@@ -53,13 +53,15 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       }}
     >
       <div className="Shade__header">
-        {shade.scaleName !== 'grey' &&  shade.shadeName !== '000' && shade.shadeName !== '900' &&
-          <input
-            type="checkbox"
-            onChange={() => setDefaultShade(shade.shadeName)}
-            checked={defaultShade === shade.shadeName}
-          />
-        }{' '}
+        {shade.scaleName !== 'grey' &&
+          shade.shadeName !== '000' &&
+          shade.shadeName !== '900' && (
+            <input
+              type="checkbox"
+              onChange={() => setDefaultShade(shade.shadeName)}
+              checked={defaultShade === shade.shadeName}
+            />
+          )}{' '}
         <div className="Shade__token-name">
           {shade.scaleName === 'grey' && shade.shadeName === '000'
             ? 'White'
