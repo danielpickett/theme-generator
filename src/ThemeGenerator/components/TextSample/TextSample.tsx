@@ -5,10 +5,12 @@ import './TextSample.scss'
 export const TextSample = ({
   shadeColor,
   textColor,
+  label,
   isExpectedToBeSafe,
 }: {
   shadeColor: string
   textColor: string
+  label?: string
   isExpectedToBeSafe: boolean
 }) => {
   const contrastRatio = chromajs.contrast(shadeColor, textColor)
@@ -18,7 +20,7 @@ export const TextSample = ({
 
   return (
     <div className="TextSample" style={{ color: textColor }}>
-      <div>{'Sample ' + contrastRatio.toFixed(2)}</div>
+      <div>{`${label ? label : 'Sample'} ` + contrastRatio.toFixed(2)}</div>
       <div>
         {problem && <span className="TextSample__problem" />}
 

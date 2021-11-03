@@ -40,9 +40,11 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     (showTextColorPlots &&
       (shade.shadeName === '000' || shade.shadeName === '900')) ||
     (showAllTextColorPlots && showTextColorPlots)
-  if (shade.scaleName !== 'grey' && shade.shadeName === '000') {
-    return <div></div>
-  }
+
+  const showCheckbox =
+    shade.scaleName !== 'grey' &&
+    shade.shadeName !== '000' &&
+    shade.shadeName !== '900'
 
   return (
     <div
@@ -54,64 +56,59 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     >
       <div className="Shade__header">
         <div className="Shade__token-name">
-          {shade.scaleName === 'grey' && shade.shadeName === '000'
-            ? 'White'
-            : `${shade.scaleName}-${shade.shadeName}`}
+          {`${shade.scaleName}-${shade.shadeName}`}
         </div>
-        {shade.scaleName !== 'grey' &&
-          shade.shadeName !== '000' &&
-          shade.shadeName !== '900' && (
-            <input
-              type="checkbox"
-              onChange={() => setDefaultShade(shade.shadeName)}
-              checked={defaultShade === shade.shadeName}
-            />
-          )}
+        {showCheckbox && (
+          <input
+            type="checkbox"
+            onChange={() => setDefaultShade(shade.shadeName)}
+            checked={defaultShade === shade.shadeName}
+          />
+        )}
       </div>
       <TextSample
+        label={`text-on-${shade.scaleName}-${shade.shadeName}`}
         shadeColor={shadeColorData.hex}
         textColor={regularTextColors['regular'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].regular}
       />
       <TextSample
+        label={`text-on-${shade.scaleName}-${shade.shadeName}--subdued`}
         shadeColor={shadeColorData.hex}
         textColor={regularTextColors['subdued'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
       />
+
       <Spacer />
-      {shade.shadeName !== '000' && (
-        <>
-          {' '}
-          {shade.scaleName !== 'grey' && (
-            <>
-              {' '}
-              <TextSample
-                shadeColor={shadeColorData.hex}
-                textColor={vividTextColors['vivid'].hex}
-                isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
-              />
-              <TextSample
-                shadeColor={shadeColorData.hex}
-                textColor={vividTextColors['vivid-subdued'].hex}
-                isExpectedToBeSafe={
-                  isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
-                }
-              />
-            </>
-          )}
-        </>
-      )}
+
+      <TextSample
+        label={`text-on-${shade.scaleName}-${shade.shadeName}--vivid`}
+        shadeColor={shadeColorData.hex}
+        textColor={vividTextColors['vivid'].hex}
+        isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
+      />
+      <TextSample
+        label={`text-on-${shade.scaleName}-${shade.shadeName}--vivid-subdued`}
+        shadeColor={shadeColorData.hex}
+        textColor={vividTextColors['vivid-subdued'].hex}
+        isExpectedToBeSafe={
+          isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
+        }
+      />
+
       {shade.scaleName === 'grey' &&
         vividTextOnGrey.map((vividTextColor) => {
           return (
             <Fragment key={vividTextColor.scaleName}>
               <Spacer />
               <TextSample
+                label={`text-on-${shade.scaleName}-${shade.shadeName}--vivid`}
                 shadeColor={shadeColorData.hex}
                 textColor={vividTextColor.vivid.hex}
                 isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].vivid}
               />
               <TextSample
+                label={`text-on-${shade.scaleName}-${shade.shadeName}--vivid-subdued`}
                 shadeColor={shadeColorData.hex}
                 textColor={vividTextColor['vivid-subdued'].hex}
                 isExpectedToBeSafe={
@@ -123,6 +120,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         })}
       <Spacer />
       {definitelyShowTextColorPlots && <TextColorPlots shade={shade} />}
+      {/* {showTextColorPlots && <TextColorPlots shade={shade} />} */}
     </div>
   )
 }
