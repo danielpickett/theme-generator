@@ -131,11 +131,10 @@ const getTokenString = (
   value: string,
 ) => {
   const { scaleName, shadeName } = shade
-  // prettier-ignore
 
   const tokenName = `  --${prefix}-${
-    scaleName === "grey" && shadeName === "000" ? "white" : scaleName
-  }${shadeName === "000" ? "" : `-${shadeName}`}`;
+    scaleName === 'grey' && shadeName === '000' ? 'white' : scaleName
+  }${shadeName === '000' ? '' : `-${shadeName}`}`
   const suffix = getSuffix(textKind, shade)
   const charCount = tokenName.length + value.length + suffix.length
   const gap = charCount < columnWidth ? ' '.repeat(columnWidth - charCount) : ''

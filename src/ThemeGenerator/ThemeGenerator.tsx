@@ -26,9 +26,9 @@ const ThemeGeneratorBase = () => {
           ))}
         </div>
       </div>
-      <div className="ThemeGenerator__footer">
+      {/* <div className="ThemeGenerator__footer">
         <Footer />
-      </div>
+      </div> */}
     </div>
   )
 }
