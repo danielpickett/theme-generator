@@ -24,13 +24,15 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const shadeL = defaultLuminances[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
-  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
-  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
+
+  // const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
+  // const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
+  // const vividTextOnGrey = useRecoilValue(
+  //   vividTextColorsOnGreyShadeSelector(shade),
+  // )
+
   const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const showAllTextColorPlots = useRecoilValue(showAllTextColorPlotsAtom)
-  const vividTextOnGrey = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade),
-  )
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
@@ -51,7 +53,8 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       className="Shade"
       style={{
         backgroundColor,
-        color: regularTextColors['regular'].hex,
+        // color: regularTextColors['regular'].hex,
+        color: 'black',
       }}
     >
       <div className="Shade__header">
@@ -66,7 +69,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
           />
         )}
       </div>
-      <TextSample
+      {/* <TextSample
         label={`text-on-${shade.scaleName}-${shade.shadeName}`}
         shadeColor={shadeColorData.hex}
         textColor={regularTextColors['regular'].hex}
@@ -77,11 +80,11 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         shadeColor={shadeColorData.hex}
         textColor={regularTextColors['subdued'].hex}
         isExpectedToBeSafe={isExpectedToBeSafe[shade.shadeName].subdued}
-      />
+      /> */}
 
       <Spacer />
 
-      <TextSample
+      {/* <TextSample
         label={`text-on-${shade.scaleName}-${shade.shadeName}--vivid`}
         shadeColor={shadeColorData.hex}
         textColor={vividTextColors['vivid'].hex}
@@ -94,9 +97,9 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         isExpectedToBeSafe={
           isExpectedToBeSafe[shade.shadeName]['vivid-subdued']
         }
-      />
+      /> */}
 
-      {shade.scaleName === 'grey' &&
+      {/* {shade.scaleName === 'grey' &&
         vividTextOnGrey.map((vividTextColor) => {
           return (
             <Fragment key={vividTextColor.scaleName}>
@@ -117,7 +120,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
               />
             </Fragment>
           )
-        })}
+        })} */}
       <Spacer />
       {definitelyShowTextColorPlots && <TextColorPlots shade={shade} />}
       {/* {showTextColorPlots && <TextColorPlots shade={shade} />} */}
