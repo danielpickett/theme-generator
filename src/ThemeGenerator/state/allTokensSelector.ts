@@ -1,5 +1,8 @@
 import { selector } from 'recoil'
-import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
+import {
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'ThemeGenerator/constants'
 import { ShadeType } from 'ThemeGenerator/types'
 import { scaleNamesAtom } from './scaleNamesState'
 import {
@@ -8,7 +11,7 @@ import {
   vividTextColorsSelector,
   defaultScaleShadeAtom,
 } from 'ThemeGenerator/state'
-import { staticTokens } from 'ThemeGenerator/config/staticTokens'
+import { staticTokens } from 'ThemeGenerator/constants/staticTokens'
 
 const columnWidth = 82
 
@@ -85,11 +88,11 @@ export const allTokensSelector = selector({
       const lighter =
         defaultShade === '050'
           ? '050'
-          : shadeNames[shadeNames.indexOf(defaultShade) - 1]
+          : SHADE_NAMES[SHADE_NAMES.indexOf(defaultShade) - 1]
       const darker =
         defaultShade === '050'
           ? '050'
-          : shadeNames[shadeNames.indexOf(defaultShade) + 1]
+          : SHADE_NAMES[SHADE_NAMES.indexOf(defaultShade) + 1]
       const sillyString = `  --color-${scaleName}-lighter:                                                   var(--color-${scaleName}-${lighter});
   --color-${scaleName}:                                                           var(--color-${scaleName}-${defaultShade});
   --color-${scaleName}-darker:                                                    var(--color-${scaleName}-${darker});
@@ -109,13 +112,11 @@ export const allTokensSelector = selector({
     }
     const allTokens = scaleNames
       .map((scaleName) => {
-        const result = shadeNames
-          .map((shadeName) => {
-            const shade = { scaleName, shadeName }
-            const result = getShadeColorTokens(shade)
-            return result
-          })
-          .join('')
+        const result = SHADE_NAMES.map((shadeName) => {
+          const shade = { scaleName, shadeName }
+          const result = getShadeColorTokens(shade)
+          return result
+        }).join('')
         return result.concat(getScaleColorAlias(scaleName))
       })
       .join('')
@@ -157,6 +158,6 @@ const getSuffix = (textKind: string, shade: ShadeType) => {
     if (isSubdued) return 'vivid-subdued'
     return 'vivid'
   })() as unknown as 'regular' | 'subdued' | 'vivid' | 'vivid-subdued'
-  const isSafe = isExpectedToBeSafe[shade.shadeName][unsafeLookupKey]
+  const isSafe = IS_EXPECTED_TO_BE_SAFE_CONFIG[shade.shadeName][unsafeLookupKey]
   return !!textKind ? `--${textKind}${isSafe ? '' : '--UNSAFE'}` : ''
 }

@@ -1,4 +1,4 @@
-import { maxPossibleChromaForAnyHue } from 'ThemeGenerator/config'
+import { MAX_POSSIBLE_CHROMA_FOR_ANY_HUE } from 'ThemeGenerator/constants'
 import { isClipped } from 'ThemeGenerator/utils'
 
 export const getMaxChroma = (luminance: number, hue: number) => {
@@ -11,7 +11,7 @@ export const getMaxChroma = (luminance: number, hue: number) => {
   // 0.01 confirmed to be accurate across all hues
   const resolution = 0.01
   let chroma = 0
-  let step = maxPossibleChromaForAnyHue
+  let step = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE
 
   /**
    * BINARY SEARCH
@@ -32,7 +32,7 @@ export const getMaxChroma = (luminance: number, hue: number) => {
 const getYellowMaxChroma = (
   luminance: number,
   hue: number,
-  chromaLimit: number
+  chromaLimit: number,
 ) => {
   // 0.05 confirmed to be accurate, but not excessive for yellow hues 98.1 to 106.6
   const resolution = 0.05

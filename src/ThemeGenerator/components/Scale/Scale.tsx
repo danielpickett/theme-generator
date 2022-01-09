@@ -1,7 +1,7 @@
 import React from 'react'
 import './Scale.scss'
 import { useRecoilValue } from 'recoil'
-import { shadeNames } from 'ThemeGenerator/config'
+import { SHADE_NAMES } from 'ThemeGenerator/constants'
 import { showCanvasesAtom } from 'ThemeGenerator/state'
 import { ScaleControls, Shade } from 'ThemeGenerator/components'
 
@@ -11,7 +11,7 @@ export const Scale = ({ scaleName }: { scaleName: string }) => {
     <div className="Scale">
       {showCanvases && <ScaleControls scaleName={scaleName} />}
       <div className="Scale__shades">
-        {shadeNames.map((shadeName) => (
+        {SHADE_NAMES.map((shadeName) => (
           <Shade key={shadeName} shade={{ scaleName, shadeName }} />
         ))}
       </div>

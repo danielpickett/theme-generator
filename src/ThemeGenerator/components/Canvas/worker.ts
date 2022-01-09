@@ -4,9 +4,9 @@ import {
   parseYellowProblem,
 } from 'ThemeGenerator/utils'
 import {
-  maxPossibleLuminance,
-  maxPossibleChromaForAnyHue,
-} from 'ThemeGenerator/config'
+  MAX_POSSIBLE_LUMINANCE,
+  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+} from 'ThemeGenerator/constants'
 import { RequestMessageType } from './worker-types'
 
 declare const self: {
@@ -26,8 +26,8 @@ const renderChroma = (size: number) => {
     resize(size)
     const H = state.hue
 
-    const width = maxPossibleChromaForAnyHue * size
-    const height = maxPossibleLuminance * size
+    const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
+    const height = MAX_POSSIBLE_LUMINANCE * size
 
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
@@ -59,8 +59,8 @@ const renderChroma = (size: number) => {
 const renderMask = (size: number) => {
   if (canvasCtx) {
     resize(size)
-    const width = maxPossibleChromaForAnyHue * size
-    const height = maxPossibleLuminance * size
+    const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
+    const height = MAX_POSSIBLE_LUMINANCE * size
 
     canvasCtx.clearRect(0, 0, width, height)
     for (let L = height; L >= 0; L--) {
@@ -69,9 +69,9 @@ const renderMask = (size: number) => {
       canvasCtx.fillStyle = 'rgba(255, 255, 255, 1)'
       canvasCtx.fillRect(
         maxChroma * size,
-        maxPossibleLuminance * size - L,
-        maxPossibleChromaForAnyHue * size - maxChroma,
-        1
+        MAX_POSSIBLE_LUMINANCE * size - L,
+        MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size - maxChroma,
+        1,
       )
     }
   }
@@ -79,8 +79,8 @@ const renderMask = (size: number) => {
 }
 
 const resize = (size: number) => {
-  const width = maxPossibleChromaForAnyHue * size
-  const height = maxPossibleLuminance * size
+  const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
+  const height = MAX_POSSIBLE_LUMINANCE * size
   if (
     (canvas && canvas.height !== height) ||
     (canvas && canvas.width !== width)

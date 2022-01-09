@@ -6,9 +6,12 @@ import {
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
-import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
+import {
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'ThemeGenerator/constants'
 import { ShadeType } from 'ThemeGenerator/types'
-import { staticTokens } from 'ThemeGenerator/config/staticTokens'
+import { staticTokens } from 'ThemeGenerator/constants/staticTokens'
 
 const columnWidth = 82
 
@@ -20,7 +23,7 @@ export const OutputThemeJSX = () => {
       {':root {\n'}
       {scaleNames.map((scaleName) => (
         <Fragment key={scaleName}>
-          {shadeNames.map((shadeName) => (
+          {SHADE_NAMES.map((shadeName) => (
             <ShadeColorTokens
               key={shadeName}
               shade={{ scaleName, shadeName }}
@@ -37,7 +40,7 @@ export const OutputThemeJSX = () => {
 const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColorsOnGreyShade = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade)
+    vividTextColorsOnGreyShadeSelector(shade),
   )
 
   const textColorHex = regularTextColors.regular.hex
@@ -51,7 +54,7 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const nameComment = `  /* ${shade.scaleName.toUpperCase()} ${
     shade.shadeName
   } ${'*'.repeat(
-    columnWidth - 13 - shade.scaleName.length + shade.shadeName.length
+    columnWidth - 13 - shade.scaleName.length + shade.shadeName.length,
   )} */`
   // {`  /* ${shade.scaleName.toUpperCase()} ${shade.shadeName} */\n\n`}
 
@@ -81,7 +84,7 @@ const getTokenString = (
   prefix: string,
   shade: ShadeType,
   textKind: string,
-  value: string
+  value: string,
 ) => {
   const { scaleName, shadeName } = shade
   const tokenName = `  --${prefix}-${scaleName}-${shadeName}`
@@ -102,6 +105,6 @@ const getSuffix = (textKind: string, shade: ShadeType) => {
     if (isSubdued) return 'vivid-subdued'
     return 'vivid'
   })() as unknown as 'regular' | 'subdued' | 'vivid' | 'vivid-subdued'
-  const isSafe = isExpectedToBeSafe[shade.shadeName][unsafeLookupKey]
+  const isSafe = IS_EXPECTED_TO_BE_SAFE_CONFIG[shade.shadeName][unsafeLookupKey]
   return !!textKind ? `--${textKind}${isSafe ? '' : '--UNSAFE'}` : ''
 }

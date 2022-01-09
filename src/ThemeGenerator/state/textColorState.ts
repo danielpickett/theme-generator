@@ -1,8 +1,8 @@
 import { atomFamily, selectorFamily } from 'recoil'
 import {
-  defaultLuminances,
-  maxPossibleChromaForAnyHue,
-} from 'ThemeGenerator/config'
+  DEFAULT_LUMINANCES,
+  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+} from 'ThemeGenerator/constants'
 import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import {
   ColorDataType,
@@ -39,7 +39,7 @@ export const regularTextColorsSelector = selectorFamily<
       const hue = get(hueAtom(shade.scaleName))
 
       const shadeColor = getColorData({
-        l: defaultLuminances[shade.shadeName],
+        l: DEFAULT_LUMINANCES[shade.shadeName],
         c: get(chromaSelector(shade)),
         h: hue,
       })
@@ -60,12 +60,12 @@ export const regularTextColorsSelector = selectorFamily<
 
 export const vividTextChromaAtom = atomFamily<number, FirstOrLastShadeType>({
   key: 'vividTextChroma',
-  default: maxPossibleChromaForAnyHue,
+  default: MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
 })
 
 export const vividTextLuminanceAtom = atomFamily<number, FirstOrLastShadeType>({
   key: 'vividTextLuminace',
-  default: (shade) => defaultLuminances[shade.shadeName],
+  default: (shade) => DEFAULT_LUMINANCES[shade.shadeName],
 })
 
 export const vividTextColorsSelector = selectorFamily<
@@ -76,7 +76,7 @@ export const vividTextColorsSelector = selectorFamily<
   get:
     (shade) =>
     ({ get }) => {
-      const shadeL = defaultLuminances[shade.shadeName]
+      const shadeL = DEFAULT_LUMINANCES[shade.shadeName]
       const shadeC = get(chromaSelector(shade))
       const shadeH = get(hueAtom(shade.scaleName))
       const shadeColor = {
@@ -107,7 +107,7 @@ export const vividTextColorsSelector = selectorFamily<
       const vividSubduedText = mix(
         vividText.hex,
         getColorData(shadeColor).hex,
-        mixRatio
+        mixRatio,
       )
 
       return {
@@ -135,15 +135,15 @@ export const vividTextColorsOnGreyShadeSelector = selectorFamily<
         .filter((shadeName) => shadeName !== 'grey')
         .map((scaleName) => {
           const greyShadeColor = getColorData({
-            l: defaultLuminances[shade.shadeName],
+            l: DEFAULT_LUMINANCES[shade.shadeName],
             c: get(
-              chromaSelector({ scaleName: 'grey', shadeName: shade.shadeName })
+              chromaSelector({ scaleName: 'grey', shadeName: shade.shadeName }),
             ),
             h: get(hueAtom('grey')),
           })
 
           const vividTextColors = get(
-            vividTextColorsSelector({ shadeName: shade.shadeName, scaleName })
+            vividTextColorsSelector({ shadeName: shade.shadeName, scaleName }),
           )
 
           const vivid = isSafe(vividTextColors.vivid.hex, greyShadeColor.hex)
@@ -152,15 +152,15 @@ export const vividTextColorsOnGreyShadeSelector = selectorFamily<
                 getNearestSafeColor(
                   greyShadeColor.lch,
                   vividTextColors.vivid.lch.c,
-                  vividTextColors.vivid.lch.h
-                )
+                  vividTextColors.vivid.lch.h,
+                ),
               )
 
           const vividSubdued = mix(
             vivid.hex,
             greyShadeColor.hex,
             mixRatio,
-            'rgb'
+            'rgb',
           )
 
           return {
