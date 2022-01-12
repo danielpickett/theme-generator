@@ -19,8 +19,3 @@ export const showTextColorPlotsAtom = atom({
   key: 'showTextColorPlots',
   default: true,
 })
-
-export const showAllTextColorPlotsAtom = atom({
-  key: 'showAllTextColorPlots',
-  default: false,
-})

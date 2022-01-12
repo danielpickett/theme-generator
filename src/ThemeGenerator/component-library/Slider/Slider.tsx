@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
 import './Slider.scss'
+import React, { useEffect, useRef, useState } from 'react'
 import { useKeyboardFocus } from 'ThemeGenerator/hooks'
 import classNames from 'classnames'
 
@@ -80,7 +80,7 @@ export const Slider = ({
   })
 
   const handleTrackMouseDown = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     if (e.button === 0) {
       setIsDragging(true)
@@ -101,7 +101,7 @@ export const Slider = ({
   }
 
   const handleThumbMouseDown = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     e.stopPropagation()
     if (e.button === 0) {
@@ -116,7 +116,7 @@ export const Slider = ({
       if (thumbRef.current) {
         const thumb = thumbRef.current.getBoundingClientRect()
         clickOffsetRef.current = Math.round(
-          thumb.left + thumb.width / 2 - e.clientX
+          thumb.left + thumb.width / 2 - e.clientX,
         )
       }
 

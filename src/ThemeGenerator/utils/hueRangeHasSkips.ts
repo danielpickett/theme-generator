@@ -1,9 +1,9 @@
 import chromajs from 'chroma-js'
 import { AugmentedColor } from 'ThemeGenerator/types'
 import {
-  maxPossibleLuminance,
-  maxPossibleChromaForAnyHue,
-} from 'ThemeGenerator/config'
+  MAX_POSSIBLE_LUMINANCE,
+  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+} from 'ThemeGenerator/constants'
 
 const getColorDetails = (l: number, c: number, h: number) => {
   const color = chromajs.lch(l, c, h) as AugmentedColor
@@ -20,8 +20,9 @@ const getColorDetails = (l: number, c: number, h: number) => {
 
 const resolution = 0.05
 const size = 1 / resolution
-const height = size * maxPossibleLuminance
-const width = size * maxPossibleChromaForAnyHue
+const height = size * MAX_POSSIBLE_LUMINANCE
+
+const width = size * MAX_POSSIBLE_CHROMA_FOR_ANY_HUE
 
 export const hueRangeHasSkips = (startHue: number, endHue: number) => {
   let hasSkips = false

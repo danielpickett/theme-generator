@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import './TextColorPlots.scss'
 import { useRecoilValue } from 'recoil'
 import {
@@ -12,9 +12,9 @@ import { Canvas } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
 import {
-  maxPossibleChromaForAnyHue,
-  maxPossibleLuminance,
-} from 'ThemeGenerator/config'
+  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+  MAX_POSSIBLE_LUMINANCE,
+} from 'ThemeGenerator/constants'
 import { TextColorEditor } from './components'
 import classNames from 'classnames'
 
@@ -35,7 +35,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         c: shadeColor.c,
         h: shadeColor.h,
       }),
-    [shadeColor.l, shadeColor.c, shadeColor.h]
+    [shadeColor.l, shadeColor.c, shadeColor.h],
   )
 
   const ref = useRef<HTMLDivElement>(null)
@@ -45,8 +45,8 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       className="TextColorPlots"
       ref={ref}
       style={{
-        height: `${maxPossibleLuminance * size}px`,
-        width: `${maxPossibleChromaForAnyHue * size}px`,
+        height: `${MAX_POSSIBLE_LUMINANCE * size}px`,
+        width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
       }}
     >
       <Canvas hue={shadeColor.h} size={size} />

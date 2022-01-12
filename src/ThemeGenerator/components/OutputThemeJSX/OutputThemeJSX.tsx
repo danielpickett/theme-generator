@@ -1,26 +1,27 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { useRecoilValue } from 'recoil'
 import {
   regularTextColorsSelector,
-  scaleNamesAtom,
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
-import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
-import { ShadeType } from 'ThemeGenerator/types'
-import { staticTokens } from 'ThemeGenerator/config/staticTokens'
+import {
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'ThemeGenerator/constants'
+import { ScaleNameType, ShadeType } from 'ThemeGenerator/types'
+import { staticTokens } from 'ThemeGenerator/constants/staticTokens'
+import { DEFAULT_THEME_SCALE_NAMES } from 'ThemeGenerator/themes'
 
 const columnWidth = 82
 
 export const OutputThemeJSX = () => {
-  const scaleNames = useRecoilValue(scaleNamesAtom)
-
   return (
     <>
       {':root {\n'}
-      {scaleNames.map((scaleName) => (
+      {DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
         <Fragment key={scaleName}>
-          {shadeNames.map((shadeName) => (
+          {SHADE_NAMES.map((shadeName) => (
             <ShadeColorTokens
               key={shadeName}
               shade={{ scaleName, shadeName }}
@@ -37,7 +38,7 @@ export const OutputThemeJSX = () => {
 const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColorsOnGreyShade = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade)
+    vividTextColorsOnGreyShadeSelector(shade),
   )
 
   const textColorHex = regularTextColors.regular.hex
@@ -51,7 +52,7 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const nameComment = `  /* ${shade.scaleName.toUpperCase()} ${
     shade.shadeName
   } ${'*'.repeat(
-    columnWidth - 13 - shade.scaleName.length + shade.shadeName.length
+    columnWidth - 13 - shade.scaleName.length + shade.shadeName.length,
   )} */`
   // {`  /* ${shade.scaleName.toUpperCase()} ${shade.shadeName} */\n\n`}
 
@@ -66,13 +67,29 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
       {getTokenString('text-on', shade, 'vivid', vividTextColorHex)}
       {getTokenString('text-on', shade, `vivid-subdued`, vividSubduedTextColorHex)}
       {'\n'}
-      {shade.scaleName === 'grey' && vividTextColorsOnGreyShade.map((txtColors) => (
-        <Fragment key={`${txtColors.scaleName}`}>
-          {getTokenString('text-on', shade, `${txtColors.scaleName}`, txtColors.vivid.hex)}
-          {getTokenString('text-on', shade, `${txtColors.scaleName}-subdued`, txtColors['vivid-subdued'].hex)}
-         </Fragment>
+      {shade.scaleName === 'grey' && DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
+        <TextOnGreyTokens shade={shade} scaleName={scaleName} key={`${scaleName}`} />
       ))}
       {'\n'}
+    </>
+  )
+}
+
+const TextOnGreyTokens = ({
+  shade,
+  scaleName,
+}: {
+  shade: ShadeType
+  scaleName: ScaleNameType
+}) => {
+  const vividTextOnGrey = useRecoilValue(
+    vividTextColorsOnGreyShadeSelector(shade),
+  )
+  /* prettier-ignore */
+  return (
+    <>
+      {getTokenString('text-on', shade, `${scaleName}`, vividTextOnGrey.vivid.hex)}
+      {getTokenString('text-on', shade, `${scaleName}-subdued`, vividTextOnGrey['vivid-subdued'].hex)}
     </>
   )
 }
@@ -81,7 +98,7 @@ const getTokenString = (
   prefix: string,
   shade: ShadeType,
   textKind: string,
-  value: string
+  value: string,
 ) => {
   const { scaleName, shadeName } = shade
   const tokenName = `  --${prefix}-${scaleName}-${shadeName}`
@@ -102,6 +119,6 @@ const getSuffix = (textKind: string, shade: ShadeType) => {
     if (isSubdued) return 'vivid-subdued'
     return 'vivid'
   })() as unknown as 'regular' | 'subdued' | 'vivid' | 'vivid-subdued'
-  const isSafe = isExpectedToBeSafe[shade.shadeName][unsafeLookupKey]
+  const isSafe = IS_EXPECTED_TO_BE_SAFE_CONFIG[shade.shadeName][unsafeLookupKey]
   return !!textKind ? `--${textKind}${isSafe ? '' : '--UNSAFE'}` : ''
 }

@@ -1,9 +1,8 @@
-import React from 'react'
 import './ThemeGenerator.scss'
 import '../theme.css'
-import { RecoilRoot, useRecoilValue } from 'recoil'
+import { RecoilRoot } from 'recoil'
 import { Footer, Header, Scale } from './components'
-import { scaleNamesAtom } from './state'
+import { DEFAULT_THEME_SCALE_NAMES } from './themes'
 
 export const ThemeGenerator = () => (
   <RecoilRoot>
@@ -12,8 +11,6 @@ export const ThemeGenerator = () => (
 )
 
 const ThemeGeneratorBase = () => {
-  const scaleNames = useRecoilValue(scaleNamesAtom)
-
   return (
     <div className="ThemeGenerator dark-blue-theme">
       <div className="ThemeGenerator__header">
@@ -21,14 +18,12 @@ const ThemeGeneratorBase = () => {
       </div>
       <div className="ThemeGenerator__body">
         <div className="ThemeGenerator__scales">
-          {scaleNames.map((scaleName) => (
+          {DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
             <Scale key={scaleName} scaleName={scaleName} />
           ))}
         </div>
       </div>
-      <div className="ThemeGenerator__footer">
-        <Footer />
-      </div>
+      <div className="ThemeGenerator__footer">{/* <Footer /> */}</div>
     </div>
   )
 }

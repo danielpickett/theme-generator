@@ -1,27 +1,26 @@
 import { selector } from 'recoil'
-import { isExpectedToBeSafe, shadeNames } from 'ThemeGenerator/config'
+import {
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'ThemeGenerator/constants'
 import { ShadeType } from 'ThemeGenerator/types'
-import { scaleNamesAtom } from './scaleNamesState'
+
 import {
   regularTextColorsSelector,
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
   defaultScaleShadeAtom,
 } from 'ThemeGenerator/state'
-import { staticTokens } from 'ThemeGenerator/config/staticTokens'
+import { staticTokens } from 'ThemeGenerator/constants/staticTokens'
+import { DEFAULT_THEME_SCALE_NAMES } from 'ThemeGenerator/themes'
 
 const columnWidth = 82
 
 export const allTokensSelector = selector({
   key: 'allTokens',
   get: ({ get }) => {
-    const scaleNames = get(scaleNamesAtom)
-
     const getShadeColorTokens = (shade: ShadeType) => {
       const regularTextColors = get(regularTextColorsSelector(shade))
-      const vividTextColorsOnGreyShade = get(
-        vividTextColorsOnGreyShadeSelector(shade),
-      )
 
       const textColorHex = regularTextColors.regular.hex
       const subduedTextColorHex = regularTextColors.subdued.hex
@@ -58,23 +57,26 @@ export const allTokensSelector = selector({
         ) +
         '\n' +
         (shade.scaleName === 'grey'
-          ? vividTextColorsOnGreyShade
-              .map(
-                (txtColors) =>
-                  getTokenString(
-                    'text-on',
-                    shade,
-                    `${txtColors.scaleName}`,
-                    txtColors.vivid.hex,
-                  ) +
-                  getTokenString(
-                    'text-on',
-                    shade,
-                    `${txtColors.scaleName}-subdued`,
-                    txtColors['vivid-subdued'].hex,
-                  ),
+          ? DEFAULT_THEME_SCALE_NAMES.map((scaleName) => {
+              const vividTextColorsOnGreyShade = get(
+                vividTextColorsOnGreyShadeSelector(shade),
               )
-              .join('') + '\n'
+
+              return (
+                getTokenString(
+                  'text-on',
+                  shade,
+                  `${scaleName}`,
+                  vividTextColorsOnGreyShade.vivid.hex,
+                ) +
+                getTokenString(
+                  'text-on',
+                  shade,
+                  `${scaleName}-subdued`,
+                  vividTextColorsOnGreyShade['vivid-subdued'].hex,
+                )
+              )
+            }).join('') + '\n'
           : '')
       )
     }
@@ -85,11 +87,11 @@ export const allTokensSelector = selector({
       const lighter =
         defaultShade === '050'
           ? '050'
-          : shadeNames[shadeNames.indexOf(defaultShade) - 1]
+          : SHADE_NAMES[SHADE_NAMES.indexOf(defaultShade) - 1]
       const darker =
         defaultShade === '050'
           ? '050'
-          : shadeNames[shadeNames.indexOf(defaultShade) + 1]
+          : SHADE_NAMES[SHADE_NAMES.indexOf(defaultShade) + 1]
       const sillyString = `  --color-${scaleName}-lighter:                                                   var(--color-${scaleName}-${lighter});
   --color-${scaleName}:                                                           var(--color-${scaleName}-${defaultShade});
   --color-${scaleName}-darker:                                                    var(--color-${scaleName}-${darker});
@@ -107,18 +109,14 @@ export const allTokensSelector = selector({
   --text-on-${scaleName}-darker--vivid-subdued--UNSAFE:                           var(--text-on-${scaleName}-${darker}--vivid-subdued--UNSAFE);\n\n`
       return sillyString
     }
-    const allTokens = scaleNames
-      .map((scaleName) => {
-        const result = shadeNames
-          .map((shadeName) => {
-            const shade = { scaleName, shadeName }
-            const result = getShadeColorTokens(shade)
-            return result
-          })
-          .join('')
-        return result.concat(getScaleColorAlias(scaleName))
-      })
-      .join('')
+    const allTokens = DEFAULT_THEME_SCALE_NAMES.map((scaleName) => {
+      const result = SHADE_NAMES.map((shadeName) => {
+        const shade = { scaleName, shadeName }
+        const result = getShadeColorTokens(shade)
+        return result
+      }).join('')
+      return result.concat(getScaleColorAlias(scaleName))
+    }).join('')
 
     return allTokens + '\n' + staticTokens
   },
@@ -157,6 +155,6 @@ const getSuffix = (textKind: string, shade: ShadeType) => {
     if (isSubdued) return 'vivid-subdued'
     return 'vivid'
   })() as unknown as 'regular' | 'subdued' | 'vivid' | 'vivid-subdued'
-  const isSafe = isExpectedToBeSafe[shade.shadeName][unsafeLookupKey]
+  const isSafe = IS_EXPECTED_TO_BE_SAFE_CONFIG[shade.shadeName][unsafeLookupKey]
   return !!textKind ? `--${textKind}${isSafe ? '' : '--UNSAFE'}` : ''
 }

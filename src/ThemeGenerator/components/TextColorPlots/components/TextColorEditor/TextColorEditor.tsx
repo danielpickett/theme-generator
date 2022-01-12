@@ -1,16 +1,16 @@
-import React from 'react'
+import './TextColorEditor.scss'
+import { MutableRefObject, RefObject } from 'react'
 import { useSetRecoilState } from 'recoil'
 import {
   vividTextChromaAtom,
   vividTextLuminanceAtom,
 } from 'ThemeGenerator/state'
 import { FirstOrLastShadeType, LCHObjType } from 'ThemeGenerator/types'
-import './TextColorEditor.scss'
 import { SliderThumb2D } from 'ThemeGenerator/component-library'
 import {
-  maxPossibleChromaForAnyHue,
-  maxPossibleLuminance,
-} from 'ThemeGenerator/config'
+  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+  MAX_POSSIBLE_LUMINANCE,
+} from 'ThemeGenerator/constants'
 
 export const TextColorEditor = ({
   shade,
@@ -21,9 +21,7 @@ export const TextColorEditor = ({
   shade: FirstOrLastShadeType
   title: string
   color: LCHObjType
-  sliderAreaRef:
-    | React.RefObject<HTMLDivElement>
-    | React.MutableRefObject<HTMLDivElement>
+  sliderAreaRef: RefObject<HTMLDivElement> | MutableRefObject<HTMLDivElement>
 }) => {
   const setTextChroma = useSetRecoilState(vividTextChromaAtom(shade))
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))
@@ -37,7 +35,7 @@ export const TextColorEditor = ({
 
   return (
     <SliderThumb2D
-      maxXY={[maxPossibleChromaForAnyHue, maxPossibleLuminance]}
+      maxXY={[MAX_POSSIBLE_CHROMA_FOR_ANY_HUE, MAX_POSSIBLE_LUMINANCE]}
       allowFloat
       xy={[color.c, color.l]}
       aria-label={title}

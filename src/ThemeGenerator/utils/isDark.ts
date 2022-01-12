@@ -1,3 +1,3 @@
-import { darkestLightLuminance } from 'ThemeGenerator/config'
+import { DARKEST_LIGHT_LUMINANCE } from 'ThemeGenerator/constants'
 
-export const isDark = (luminance: number) => luminance < darkestLightLuminance
+export const isDark = (luminance: number) => luminance < DARKEST_LIGHT_LUMINANCE

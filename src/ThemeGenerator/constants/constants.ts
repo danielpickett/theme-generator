@@ -1,4 +1,4 @@
-export const shadeNames = [
+export const SHADE_NAMES = [
   '000',
   '050',
   '100',
@@ -12,7 +12,7 @@ export const shadeNames = [
   '900',
 ] as const
 
-export const defaultLuminances = {
+export const DEFAULT_LUMINANCES = {
   '000': 99.99, // white had some bugs when set to 100
   '050': 97.0,
   '100': 92.0,
@@ -26,7 +26,7 @@ export const defaultLuminances = {
   '900': 5.0,
 } as const
 
-export const defaultChromas = {
+export const DEFAULT_CHROMAS = {
   '000': 0.0,
   '050': 3.88,
   '100': 10.84,
@@ -40,14 +40,23 @@ export const defaultChromas = {
   '900': 6.37,
 } as const
 
-export const safeContrast = 4.5
-export const darkestLightLuminance = 50
-export const maxPossibleLuminance = 100
-export const maxPossibleChromaForAnyHue = 135
+export const SAFE_CONTRAST = 4.5
+export const DARKEST_LIGHT_LUMINANCE = 50
+export const MAX_POSSIBLE_LUMINANCE = 100
+export const MAX_POSSIBLE_CHROMA_FOR_ANY_HUE = 135
 
-export const defaultHue = 240
+export const DEFAULT_HUE = 240
 
-export const isExpectedToBeSafe = {
+export const TEXT_KINDS = [
+  'regular',
+  'subdued',
+  'vivid',
+  'vivid-subdued',
+] as const
+
+export type TextKindsUnionType = typeof TEXT_KINDS[number]
+
+export const IS_EXPECTED_TO_BE_SAFE_CONFIG = {
   '000': {
     regular: true,
     subdued: true,

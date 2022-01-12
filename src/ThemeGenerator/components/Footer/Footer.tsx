@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import './Footer.scss'
+import { useRef } from 'react'
 import { useDragHandle } from 'ThemeGenerator/hooks'
 import { Output } from 'ThemeGenerator/components'
-import './Footer.scss'
 
 export const Footer = () => {
   const outputDragHandleRef = useRef<HTMLDivElement>(null)

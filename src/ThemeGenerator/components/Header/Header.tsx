@@ -1,10 +1,7 @@
-import React from 'react'
 import { useRecoilState } from 'recoil'
 import { ColumnDivider, Spacer } from 'ThemeGenerator/component-library'
-import { OutputTestButton } from 'ThemeGenerator/components'
 import {
   canvasSizeAtom,
-  showAllTextColorPlotsAtom,
   showCanvasesAtom,
   showTextColorPlotsAtom,
   textColorsPlotSizeAtom,
@@ -15,14 +12,11 @@ import './Header.scss'
 export const Header = () => {
   const [canvasSize, setCanvasSize] = useRecoilState(canvasSizeAtom)
   const [textColorCanvasSize, setTextColorCanvasSize] = useRecoilState(
-    textColorsPlotSizeAtom
+    textColorsPlotSizeAtom,
   )
   const [showCanvases, setShowCanvases] = useRecoilState(showCanvasesAtom)
   const [showTextColorPlots, setShowTextColorPlots] = useRecoilState(
-    showTextColorPlotsAtom
-  )
-  const [showAllTextColorPlots, setShowAllTextColorPlots] = useRecoilState(
-    showAllTextColorPlotsAtom
+    showTextColorPlotsAtom,
   )
   return (
     <div className="Header">
@@ -72,21 +66,8 @@ export const Header = () => {
             onChange={(e) => setTextColorCanvasSize(+e.target.value)}
           />
           <label htmlFor="text-color-canvas-size">text color canvas size</label>
-          <Spacer />
-          <input
-            id="show-all-text-color-plots"
-            type="checkbox"
-            checked={showAllTextColorPlots}
-            onChange={(e) => setShowAllTextColorPlots(e.target.checked)}
-          />
-          <label htmlFor="show-all-text-color-plots">
-            show all text color canvases
-          </label>
         </>
       )}
-      <div className="Header__right-side-container">
-        <OutputTestButton />
-      </div>
     </div>
   )
 }

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
 import './ChromaSlider.scss'
+import { useState } from 'react'
 import classNames from 'classnames'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Slider } from 'ThemeGenerator/component-library'
-import { maxPossibleChromaForAnyHue } from 'ThemeGenerator/config'
+import { MAX_POSSIBLE_CHROMA_FOR_ANY_HUE } from 'ThemeGenerator/constants'
 import { maxChromaSelector, chromaSelector } from 'ThemeGenerator/state'
 import { ShadeType } from 'ThemeGenerator/types'
 
@@ -27,7 +27,7 @@ export const ChromaSlider = ({ shade }: { shade: ShadeType }) => {
       <Slider
         value={chroma}
         onChange={handleChange}
-        max={maxPossibleChromaForAnyHue}
+        max={MAX_POSSIBLE_CHROMA_FOR_ANY_HUE}
         microStep={0.1}
         macroStep={5}
         onDragStart={() => setIsDragging(true)}
