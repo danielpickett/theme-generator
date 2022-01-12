@@ -37,9 +37,6 @@ export const OutputThemeJSX = () => {
 
 const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
-  const vividTextColorsOnGreyShade = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade),
-  )
 
   const textColorHex = regularTextColors.regular.hex
   const subduedTextColorHex = regularTextColors.subdued.hex

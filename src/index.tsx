@@ -1,14 +1,18 @@
 import './index.scss'
-import { StrictMode } from 'react'
+// import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeGenerator } from './ThemeGenerator'
 import reportWebVitals from './reportWebVitals'
 
-ReactDOM.render(
-  <StrictMode>
-    <ThemeGenerator />
-  </StrictMode>,
-  document.getElementById('root'),
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error('Failed to find the root element')
+const root = ReactDOM.createRoot(rootElement)
+root.render(
+  // https://github.com/facebookexperimental/Recoil/issues/1411
+  // Recoil currently not working in React 18 strict mode
+  // <StrictMode>
+  <ThemeGenerator />,
+  // </StrictMode>,
 )
 
 // If you want to start measuring performance in your app, pass a function
