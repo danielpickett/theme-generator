@@ -3,32 +3,30 @@ import './Shade.scss'
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { ShadeType } from 'ThemeGenerator/types'
 import {
-  showTextColorPlotsAtom,
   regularTextColorsSelector,
   vividTextColorsSelector,
+  vividTextColorsOnGreyShadeSelector,
   hueAtom,
   chromaSelector,
-  vividTextColorsOnGreyShadeSelector,
   defaultScaleShadeAtom,
+  showTextColorPlotsAtom,
 } from 'ThemeGenerator/state'
 import { Spacer } from 'ThemeGenerator/component-library'
 import { DEFAULT_LUMINANCES } from 'ThemeGenerator/constants'
 import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
-import { getColorData } from 'ThemeGenerator/utils'
+import { ColorDataType, getColorData } from 'ThemeGenerator/utils'
+import { DEFAULT_THEME_SCALE_NAMES } from 'ThemeGenerator/themes'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [defaultShade, setDefaultShade] = useRecoilState(
     defaultScaleShadeAtom(shade.scaleName),
   )
+  const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
   const shadeL = DEFAULT_LUMINANCES[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
-  const showTextColorPlots = useRecoilValue(showTextColorPlotsAtom)
-  const vividTextOnGrey = useRecoilValue(
-    vividTextColorsOnGreyShadeSelector(shade),
-  )
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
@@ -67,40 +65,63 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
         textColor={regularTextColors['subdued'].hex}
       />
       <Spacer />
+      {shade.scaleName !== 'grey' && (
+        <>
+          <TextSample
+            kind="vivid"
+            shade={shade}
+            shadeColor={shadeColorData.hex}
+            textColor={vividTextColors['vivid'].hex}
+          />
+          <TextSample
+            kind="vivid-subdued"
+            shade={shade}
+            shadeColor={shadeColorData.hex}
+            textColor={vividTextColors['vivid-subdued'].hex}
+          />
+        </>
+      )}
+      {shade.scaleName === 'grey' &&
+        DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
+          <Fragment key={scaleName}>
+            <Spacer />
+            <TextSamplesOnGrey
+              shade={{ shadeName: shade.shadeName, scaleName }}
+              shadeColorData={shadeColorData}
+            />
+          </Fragment>
+        ))}
+      <Spacer />
+      {showTextColorPlots && <TextColorPlots shade={shade} />}
+    </div>
+  )
+}
+
+const TextSamplesOnGrey = ({
+  shade,
+  shadeColorData,
+}: {
+  shade: ShadeType
+  shadeColorData: ColorDataType
+}) => {
+  const vividTextOnGrey = useRecoilValue(
+    vividTextColorsOnGreyShadeSelector(shade),
+  )
+
+  return (
+    <>
       <TextSample
         kind="vivid"
         shade={shade}
         shadeColor={shadeColorData.hex}
-        textColor={vividTextColors['vivid'].hex}
+        textColor={vividTextOnGrey.vivid.hex}
       />
       <TextSample
         kind="vivid-subdued"
         shade={shade}
         shadeColor={shadeColorData.hex}
-        textColor={vividTextColors['vivid-subdued'].hex}
+        textColor={vividTextOnGrey['vivid-subdued'].hex}
       />
-      {shade.scaleName === 'grey' &&
-        vividTextOnGrey.map((vividTextColor) => {
-          return (
-            <Fragment key={vividTextColor.scaleName}>
-              <Spacer />
-              <TextSample
-                kind="vivid"
-                shade={shade}
-                shadeColor={shadeColorData.hex}
-                textColor={vividTextColor.vivid.hex}
-              />
-              <TextSample
-                kind="vivid-subdued"
-                shade={shade}
-                shadeColor={shadeColorData.hex}
-                textColor={vividTextColor['vivid-subdued'].hex}
-              />
-            </Fragment>
-          )
-        })}
-      <Spacer />
-      {showTextColorPlots && <TextColorPlots shade={shade} />}
-    </div>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 import { atomFamily, selectorFamily } from 'recoil'
-import { defaultTheme } from 'ThemeGenerator/themes'
+import { DEFAULT_THEME } from 'ThemeGenerator/themes'
 import { ColorDataType, getColorData, getMaxChroma } from 'ThemeGenerator/utils'
 import {
   DEFAULT_HUE,
@@ -11,16 +11,15 @@ import { LCHObjType, ScaleNameType, ShadeType } from 'ThemeGenerator/types'
 export const hueAtom = atomFamily<number, ScaleNameType>({
   key: 'hue',
   default: (scaleName) =>
-    defaultTheme.find((scale) => scale.id === scaleName)?.hue || DEFAULT_HUE,
+    DEFAULT_THEME.find((scale) => scale.id === scaleName)?.hue || DEFAULT_HUE,
 })
 
 export const chromaAtom = atomFamily<number, ShadeType>({
   key: 'chroma',
   default: (shade) =>
-    defaultTheme
-      .find((scale) => scale.id === shade.scaleName)
-      ?.shades.find((_shade) => _shade.id === shade.shadeName)?.chroma ||
-    DEFAULT_CHROMAS[shade.shadeName],
+    DEFAULT_THEME.find((scale) => scale.id === shade.scaleName)?.shades.find(
+      (_shade) => _shade.id === shade.shadeName,
+    )?.chroma || DEFAULT_CHROMAS[shade.shadeName],
 })
 
 export const maxChromaSelector = selectorFamily<number, ShadeType>({

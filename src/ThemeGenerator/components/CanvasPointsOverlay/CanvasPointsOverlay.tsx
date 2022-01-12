@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useRecoilValue } from 'recoil'
 import {
   MAX_POSSIBLE_LUMINANCE,

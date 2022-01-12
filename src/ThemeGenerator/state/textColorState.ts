@@ -14,18 +14,12 @@ import {
   isSafe,
 } from 'ThemeGenerator/utils'
 import { hueAtom, chromaSelector } from 'ThemeGenerator/state'
-import { scaleNamesAtom } from './scaleNamesState'
 
-const mixRatio = 0.25
+const MIX_RATIO = 0.25
 
 type RegularTextColorsType = {
   regular: ColorDataType
   subdued: ColorDataType
-}
-
-type VividTextColorsType = {
-  vivid: ColorDataType
-  'vivid-subdued': ColorDataType
 }
 
 export const regularTextColorsSelector = selectorFamily<
@@ -53,7 +47,7 @@ export const regularTextColorsSelector = selectorFamily<
 
       return {
         regular: regularText,
-        subdued: mix(regularText.hex, shadeColor.hex, mixRatio),
+        subdued: mix(regularText.hex, shadeColor.hex, MIX_RATIO),
       }
     },
 })
@@ -67,6 +61,11 @@ export const vividTextLuminanceAtom = atomFamily<number, FirstOrLastShadeType>({
   key: 'vividTextLuminace',
   default: (shade) => DEFAULT_LUMINANCES[shade.shadeName],
 })
+
+type VividTextColorsType = {
+  vivid: ColorDataType
+  'vivid-subdued': ColorDataType
+}
 
 export const vividTextColorsSelector = selectorFamily<
   VividTextColorsType,
@@ -107,7 +106,7 @@ export const vividTextColorsSelector = selectorFamily<
       const vividSubduedText = mix(
         vividText.hex,
         getColorData(shadeColor).hex,
-        mixRatio,
+        MIX_RATIO,
       )
 
       return {
@@ -124,50 +123,39 @@ type VividTextColorsOnGreyType = {
 }
 
 export const vividTextColorsOnGreyShadeSelector = selectorFamily<
-  VividTextColorsOnGreyType[],
+  VividTextColorsOnGreyType,
   ShadeType
 >({
-  key: 'vividTextColorsOnGrey',
+  key: 'vividTextColorsOnGrey2',
   get:
-    (shade) =>
+    ({ shadeName, scaleName }) =>
     ({ get }) => {
-      return get(scaleNamesAtom)
-        .filter((shadeName) => shadeName !== 'grey')
-        .map((scaleName) => {
-          const greyShadeColor = getColorData({
-            l: DEFAULT_LUMINANCES[shade.shadeName],
-            c: get(
-              chromaSelector({ scaleName: 'grey', shadeName: shade.shadeName }),
+      const greyShadeColor = getColorData({
+        l: DEFAULT_LUMINANCES[shadeName],
+        c: get(chromaSelector({ scaleName: 'grey', shadeName: shadeName })),
+        h: get(hueAtom('grey')),
+      })
+
+      const vividTextColors = get(
+        vividTextColorsSelector({ shadeName, scaleName }),
+      )
+
+      const vivid = isSafe(vividTextColors.vivid.hex, greyShadeColor.hex)
+        ? vividTextColors.vivid
+        : getColorData(
+            getNearestSafeColor(
+              greyShadeColor.lch,
+              vividTextColors.vivid.lch.c,
+              vividTextColors.vivid.lch.h,
             ),
-            h: get(hueAtom('grey')),
-          })
-
-          const vividTextColors = get(
-            vividTextColorsSelector({ shadeName: shade.shadeName, scaleName }),
           )
 
-          const vivid = isSafe(vividTextColors.vivid.hex, greyShadeColor.hex)
-            ? vividTextColors.vivid
-            : getColorData(
-                getNearestSafeColor(
-                  greyShadeColor.lch,
-                  vividTextColors.vivid.lch.c,
-                  vividTextColors.vivid.lch.h,
-                ),
-              )
+      const vividSubdued = mix(vivid.hex, greyShadeColor.hex, MIX_RATIO, 'rgb')
 
-          const vividSubdued = mix(
-            vivid.hex,
-            greyShadeColor.hex,
-            mixRatio,
-            'rgb',
-          )
-
-          return {
-            scaleName,
-            vivid: vivid,
-            'vivid-subdued': vividSubdued,
-          }
-        })
+      return {
+        scaleName,
+        vivid: vivid,
+        'vivid-subdued': vividSubdued,
+      }
     },
 })

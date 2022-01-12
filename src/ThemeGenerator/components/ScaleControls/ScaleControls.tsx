@@ -1,4 +1,3 @@
-import React from 'react'
 import './ScaleControls.scss'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { canvasSizeAtom, hueAtom } from 'ThemeGenerator/state'

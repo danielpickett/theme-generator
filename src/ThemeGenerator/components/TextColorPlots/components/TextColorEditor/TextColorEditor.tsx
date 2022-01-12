@@ -1,3 +1,4 @@
+import './TextColorEditor.scss'
 import React from 'react'
 import { useSetRecoilState } from 'recoil'
 import {
@@ -5,7 +6,6 @@ import {
   vividTextLuminanceAtom,
 } from 'ThemeGenerator/state'
 import { FirstOrLastShadeType, LCHObjType } from 'ThemeGenerator/types'
-import './TextColorEditor.scss'
 import { SliderThumb2D } from 'ThemeGenerator/component-library'
 import {
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react'
 import './Canvas.scss'
+import { useEffect, useRef } from 'react'
 import {
   MAX_POSSIBLE_LUMINANCE,
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,

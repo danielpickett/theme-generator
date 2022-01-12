@@ -1,4 +1,3 @@
-import React from 'react'
 import './Scale.scss'
 import { useRecoilValue } from 'recoil'
 import { SHADE_NAMES } from 'ThemeGenerator/constants'

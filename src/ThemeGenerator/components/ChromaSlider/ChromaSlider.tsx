@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import './ChromaSlider.scss'
+import { useState } from 'react'
 import classNames from 'classnames'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Slider } from 'ThemeGenerator/component-library'
