@@ -1,5 +1,5 @@
 import './TextColorEditor.scss'
-import React from 'react'
+import { MutableRefObject, RefObject } from 'react'
 import { useSetRecoilState } from 'recoil'
 import {
   vividTextChromaAtom,
@@ -21,9 +21,7 @@ export const TextColorEditor = ({
   shade: FirstOrLastShadeType
   title: string
   color: LCHObjType
-  sliderAreaRef:
-    | React.RefObject<HTMLDivElement>
-    | React.MutableRefObject<HTMLDivElement>
+  sliderAreaRef: RefObject<HTMLDivElement> | MutableRefObject<HTMLDivElement>
 }) => {
   const setTextChroma = useSetRecoilState(vividTextChromaAtom(shade))
   const setTextLuminance = useSetRecoilState(vividTextLuminanceAtom(shade))

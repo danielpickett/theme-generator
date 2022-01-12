@@ -1,9 +1,8 @@
 import './Output.scss'
-import React from 'react'
 import ReactDOM from 'react-dom'
 import { OutputThemeJSX, OutputThemeString } from 'ThemeGenerator/components'
 
-export const Output = React.memo(() => {
+export const Output = () => {
   return (
     <div className="Output">
       <div className="Output__column">
@@ -23,4 +22,4 @@ export const Output = React.memo(() => {
       )}
     </div>
   )
-})
+}
