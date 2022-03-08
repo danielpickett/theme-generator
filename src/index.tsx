@@ -7,11 +7,19 @@ import reportWebVitals from './reportWebVitals'
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 const root = ReactDOM.createRoot(rootElement)
+
+// I can't get Web Worker working in React 18 in Strict Mode.
+// I thought it was relate to ths issue:
+// https://github.com/facebookexperimental/Recoil/issues/1411
+// But they have released their fix now and it still doesn't work.
+// Custom Webpack loaders, such as 'worker-loader', are not officially
+// supported by CRA, so I'm not too surprised. Maybe moving to Vite in the
+// future will take care of this.
+
 root.render(
-  // https://github.com/facebookexperimental/Recoil/issues/1411
-  // Recoil currently not working in React 18 strict mode
   // <StrictMode>
   <ThemeGenerator />,
+
   // </StrictMode>,
 )
 

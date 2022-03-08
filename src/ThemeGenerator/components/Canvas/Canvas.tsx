@@ -4,7 +4,6 @@ import {
   MAX_POSSIBLE_LUMINANCE,
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
 } from 'ThemeGenerator/constants'
-import Worker from 'worker-loader!./worker' // eslint-disable-line import/no-webpack-loader-syntax
 
 const sizeDivisor = 2
 
@@ -14,7 +13,8 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
   const initChromaWorker = (canvas: HTMLCanvasElement) => {
     if (!chromaWorkerRef.current) {
       const offscreen = canvas.transferControlToOffscreen()
-      chromaWorkerRef.current = new Worker()
+      const worker = new Worker(new URL('./worker', import.meta.url))
+      chromaWorkerRef.current = worker
       chromaWorkerRef.current.postMessage(
         {
           type: 'initCanvas', // chroma
@@ -31,7 +31,8 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
   const initMaskWorker = (canvas: HTMLCanvasElement) => {
     if (!maskWorkerRef.current) {
       const offscreen = canvas.transferControlToOffscreen()
-      maskWorkerRef.current = new Worker()
+      const worker = new Worker(new URL('./worker', import.meta.url))
+      maskWorkerRef.current = worker
       maskWorkerRef.current.postMessage(
         {
           type: 'initCanvas', // mask

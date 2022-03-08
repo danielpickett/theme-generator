@@ -52,7 +52,6 @@ const renderChroma = (size: number) => {
       }
     }
   }
-
   state.hasRenderPending = false
 }
 

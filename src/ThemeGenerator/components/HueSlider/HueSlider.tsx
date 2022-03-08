@@ -11,14 +11,19 @@ export const HueSlider = ({
   hue: number
   onHueChange: (newHue: number) => void
 }) => {
+  const [localHue, setLocalHue] = useState(hue)
+
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [hasKeyboardFocus, setHasKeyboardFocus] = useState(false)
   return (
     <div className="HueSlider">
       <Slider
-        value={hue}
-        onChange={onHueChange}
+        value={localHue}
+        onChange={(value) => {
+          setLocalHue(value)
+          onHueChange(value)
+        }}
         max={360}
         microStep={0.1}
         macroStep={5}

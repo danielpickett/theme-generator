@@ -42,6 +42,7 @@ export const Slider = ({
     onKeyboardBlur,
   })
   const originalUserSelectSetting = useRef<string>('')
+  const originalCursorSetting = useRef<string>('')
   const clickOffsetRef = useRef(0)
   const range = max - min
   const clamp = (n: number) => Math.max(Math.min(n, max), min)
@@ -63,6 +64,7 @@ export const Slider = ({
       setIsDragging(false)
       if (onDragEnd) onDragEnd()
       document.body.style.userSelect = originalUserSelectSetting.current
+      document.body.style.cursor = originalCursorSetting.current
     }
 
     const addListeners = () => {
@@ -97,6 +99,9 @@ export const Slider = ({
       // This is reset in handleMouseUp.
       originalUserSelectSetting.current = document.body.style.userSelect
       document.body.style.userSelect = 'none'
+
+      originalCursorSetting.current = document.body.style.cursor
+      document.body.style.cursor = 'ew-resize'
     }
   }
 
@@ -124,6 +129,9 @@ export const Slider = ({
       // This is reset in handleMouseUp.
       originalUserSelectSetting.current = document.body.style.userSelect
       document.body.style.userSelect = 'none'
+
+      originalCursorSetting.current = document.body.style.cursor
+      document.body.style.cursor = 'ew-resize'
     }
   }
 
