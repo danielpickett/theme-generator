@@ -14,7 +14,7 @@ import {
 import { Spacer } from 'ThemeGenerator/component-library'
 import { DEFAULT_LUMINANCES } from 'ThemeGenerator/constants'
 import { TextSample, TextColorPlots } from 'ThemeGenerator/components'
-import { ColorDataType, getColorData } from 'ThemeGenerator/utils'
+import { getColorData } from 'ThemeGenerator/utils'
 import { DEFAULT_THEME_SCALE_NAMES } from 'ThemeGenerator/themes'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
@@ -53,13 +53,13 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       </div>
       <TextSamplesRegular
         shade={{ shadeName: shade.shadeName, scaleName: shade.scaleName }}
-        shadeColorData={shadeColorData}
+        shadeColor={shadeColorData.hex}
       />
       <Spacer />
       {shade.scaleName !== 'grey' && (
         <TextSamplesVivid
           shade={{ shadeName: shade.shadeName, scaleName: shade.scaleName }}
-          shadeColorData={shadeColorData}
+          shadeColor={shadeColorData.hex}
         />
       )}
       {shade.scaleName === 'grey' &&
@@ -68,7 +68,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
             <Spacer />
             <TextSamplesOnGrey
               shade={{ shadeName: shade.shadeName, scaleName }}
-              shadeColorData={shadeColorData}
+              shadeColor={shadeColorData.hex}
             />
           </Fragment>
         ))}
@@ -80,19 +80,20 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
 
 type SampleTextPropsType = {
   shade: ShadeType
-  shadeColorData: ColorDataType
+  shadeColor: string
 }
 
-const TextSamplesRegular = ({ shade, shadeColorData }: SampleTextPropsType) => {
+const TextSamplesRegular = ({ shade, shadeColor }: SampleTextPropsType) => {
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
 
   return (
     <>
       {(['regular', 'subdued'] as const).map((kind) => (
         <TextSample
+          key={kind}
           kind={kind}
           shade={shade}
-          shadeColor={shadeColorData.hex}
+          shadeColor={shadeColor}
           textColor={regularTextColors[kind].hex}
         />
       ))}
@@ -100,16 +101,17 @@ const TextSamplesRegular = ({ shade, shadeColorData }: SampleTextPropsType) => {
   )
 }
 
-const TextSamplesVivid = ({ shade, shadeColorData }: SampleTextPropsType) => {
+const TextSamplesVivid = ({ shade, shadeColor }: SampleTextPropsType) => {
   const regularTextColors = useRecoilValue(vividTextColorsSelector(shade))
 
   return (
     <>
       {(['vivid', 'vivid-subdued'] as const).map((kind) => (
         <TextSample
+          key={kind}
           kind={kind}
           shade={shade}
-          shadeColor={shadeColorData.hex}
+          shadeColor={shadeColor}
           textColor={regularTextColors[kind].hex}
         />
       ))}
@@ -117,7 +119,7 @@ const TextSamplesVivid = ({ shade, shadeColorData }: SampleTextPropsType) => {
   )
 }
 
-const TextSamplesOnGrey = ({ shade, shadeColorData }: SampleTextPropsType) => {
+const TextSamplesOnGrey = ({ shade, shadeColor }: SampleTextPropsType) => {
   const vividTextOnGrey = useRecoilValue(
     vividTextColorsOnGreyShadeSelector(shade),
   )
@@ -126,9 +128,10 @@ const TextSamplesOnGrey = ({ shade, shadeColorData }: SampleTextPropsType) => {
     <>
       {(['vivid', 'vivid-subdued'] as const).map((kind) => (
         <TextSample
+          key={kind}
           kind={kind}
           shade={shade}
-          shadeColor={shadeColorData.hex}
+          shadeColor={shadeColor}
           textColor={vividTextOnGrey[kind].hex}
         />
       ))}
