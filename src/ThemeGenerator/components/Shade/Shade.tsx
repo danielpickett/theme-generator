@@ -25,8 +25,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   const shadeL = DEFAULT_LUMINANCES[shade.shadeName]
   const shadeC = useRecoilValue(chromaSelector(shade))
   const shadeH = useRecoilValue(hueAtom(shade.scaleName))
-  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
-  const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
+
   const shadeColorData = getColorData([shadeL, shadeC, shadeH])
   const backgroundColor = shadeColorData.isClipped
     ? 'black'
@@ -37,7 +36,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
       className="Shade"
       style={{
         backgroundColor,
-        color: regularTextColors['regular'].hex,
+        color: parseInt(shade.shadeName) < 500 ? 'black' : 'white',
       }}
     >
       <div className="Shade__header">
@@ -52,34 +51,16 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
           checked={defaultShade === shade.shadeName}
         />
       </div>
-      <TextSample
-        kind="regular"
-        shade={shade}
-        shadeColor={shadeColorData.hex}
-        textColor={regularTextColors['regular'].hex}
-      />
-      <TextSample
-        kind="subdued"
-        shade={shade}
-        shadeColor={shadeColorData.hex}
-        textColor={regularTextColors['subdued'].hex}
+      <TextSamplesRegular
+        shade={{ shadeName: shade.shadeName, scaleName: shade.scaleName }}
+        shadeColorData={shadeColorData}
       />
       <Spacer />
       {shade.scaleName !== 'grey' && (
-        <>
-          <TextSample
-            kind="vivid"
-            shade={shade}
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors['vivid'].hex}
-          />
-          <TextSample
-            kind="vivid-subdued"
-            shade={shade}
-            shadeColor={shadeColorData.hex}
-            textColor={vividTextColors['vivid-subdued'].hex}
-          />
-        </>
+        <TextSamplesVivid
+          shade={{ shadeName: shade.shadeName, scaleName: shade.scaleName }}
+          shadeColorData={shadeColorData}
+        />
       )}
       {shade.scaleName === 'grey' &&
         DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
@@ -97,31 +78,60 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
   )
 }
 
-const TextSamplesOnGrey = ({
-  shade,
-  shadeColorData,
-}: {
+type SampleTextPropsType = {
   shade: ShadeType
   shadeColorData: ColorDataType
-}) => {
+}
+
+const TextSamplesRegular = ({ shade, shadeColorData }: SampleTextPropsType) => {
+  const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
+
+  return (
+    <>
+      {(['regular', 'subdued'] as const).map((kind) => (
+        <TextSample
+          kind={kind}
+          shade={shade}
+          shadeColor={shadeColorData.hex}
+          textColor={regularTextColors[kind].hex}
+        />
+      ))}
+    </>
+  )
+}
+
+const TextSamplesVivid = ({ shade, shadeColorData }: SampleTextPropsType) => {
+  const regularTextColors = useRecoilValue(vividTextColorsSelector(shade))
+
+  return (
+    <>
+      {(['vivid', 'vivid-subdued'] as const).map((kind) => (
+        <TextSample
+          kind={kind}
+          shade={shade}
+          shadeColor={shadeColorData.hex}
+          textColor={regularTextColors[kind].hex}
+        />
+      ))}
+    </>
+  )
+}
+
+const TextSamplesOnGrey = ({ shade, shadeColorData }: SampleTextPropsType) => {
   const vividTextOnGrey = useRecoilValue(
     vividTextColorsOnGreyShadeSelector(shade),
   )
 
   return (
     <>
-      <TextSample
-        kind="vivid"
-        shade={shade}
-        shadeColor={shadeColorData.hex}
-        textColor={vividTextOnGrey.vivid.hex}
-      />
-      <TextSample
-        kind="vivid-subdued"
-        shade={shade}
-        shadeColor={shadeColorData.hex}
-        textColor={vividTextOnGrey['vivid-subdued'].hex}
-      />
+      {(['vivid', 'vivid-subdued'] as const).map((kind) => (
+        <TextSample
+          kind={kind}
+          shade={shade}
+          shadeColor={shadeColorData.hex}
+          textColor={vividTextOnGrey[kind].hex}
+        />
+      ))}
     </>
   )
 }
