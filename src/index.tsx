@@ -2,6 +2,7 @@ import './index.scss'
 // import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeGenerator } from './ThemeGenerator'
+import { CanvasTest } from 'ThemeGenerator/components/CanvasTest'
 import reportWebVitals from './reportWebVitals'
 
 const rootElement = document.getElementById('root')
@@ -18,7 +19,8 @@ const root = ReactDOM.createRoot(rootElement)
 
 root.render(
   // <StrictMode>
-  <ThemeGenerator />,
+  // <ThemeGenerator />,
+  <CanvasTest />,
 
   // </StrictMode>,
 )
