@@ -5,7 +5,7 @@ import {
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
 } from 'ThemeGenerator/constants'
 
-const sizeDivisor = 2
+const CHROMA_CANVAS_SIZE_DIVISOR = 2
 
 export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
   // CHROMA
@@ -19,7 +19,7 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
         {
           type: 'initCanvas', // chroma
           canvas: offscreen,
-          size: size / sizeDivisor,
+          size: size / CHROMA_CANVAS_SIZE_DIVISOR,
         },
         [offscreen],
       )
@@ -55,7 +55,7 @@ export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
     chromaWorkerRef.current?.postMessage({
       type: 'paintChroma',
       hue,
-      size: size / sizeDivisor,
+      size: size / CHROMA_CANVAS_SIZE_DIVISOR,
     })
     maskWorkerRef.current?.postMessage({
       type: 'paintMask',

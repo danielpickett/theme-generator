@@ -1,8 +1,9 @@
 import { atom } from 'recoil'
+import { DEFAULT_CANVAS_SIZE } from 'ThemeGenerator/constants'
 
 export const canvasSizeAtom = atom({
   key: 'canvasSize',
-  default: 2,
+  default: DEFAULT_CANVAS_SIZE,
 })
 
 export const showCanvasesAtom = atom({

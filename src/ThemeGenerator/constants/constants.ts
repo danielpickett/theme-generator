@@ -13,7 +13,7 @@ export const SHADE_NAMES = [
 ] as const
 
 export const DEFAULT_LUMINANCES = {
-  '000': 99.99, // white had some bugs when set to 100
+  '000': 99.99, // white had some bugs related to chromajs when set to 100
   '050': 97.0,
   '100': 92.0,
   '200': 85.0,
@@ -39,6 +39,9 @@ export const DEFAULT_CHROMAS = {
   '800': 13.84,
   '900': 6.37,
 } as const
+
+export const DEFAULT_CANVAS_SIZE = 2
+export const CHROMA_CANVAS_SIZE_DIVISOR = 2
 
 export const SAFE_CONTRAST = 4.5
 export const DARKEST_LIGHT_LUMINANCE = 50

@@ -4,21 +4,26 @@ import '../../../theme.css'
 import {
   MAX_POSSIBLE_LUMINANCE,
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
+  DEFAULT_CANVAS_SIZE,
 } from 'ThemeGenerator/constants'
 import { HueSlider } from '..'
-import { ResponseMessageEvent } from './worker-types'
+import { ResponseMessageEvent } from './web-workers/types'
 
-const maskWorker = new Worker(new URL('./worker-mask', import.meta.url))
+const maskWorker = new Worker(
+  new URL('./web-workers/mask.worker', import.meta.url),
+)
 const requestMaskBitmap = (hue: number, size: number) => {
   maskWorker.postMessage({ hue, size })
 }
 
-const chromaWorker = new Worker(new URL('./worker-chroma', import.meta.url))
+const chromaWorker = new Worker(
+  new URL('./web-workers/chroma.worker', import.meta.url),
+)
 const requestChromaBitmap = (hue: number, size: number) => {
   chromaWorker.postMessage({ hue, size })
 }
 
-const size = 2
+const size = DEFAULT_CANVAS_SIZE
 
 export const CanvasTest = () => {
   const [hue, setHue] = useState(0)
@@ -29,14 +34,12 @@ export const CanvasTest = () => {
     useState<ImageBitmapRenderingContext>()
 
   useEffect(() => {
-    const handleMessageMask = ({ data: bitmap }: ResponseMessageEvent) => {
-      canvasContextMask?.transferFromImageBitmap(bitmap)
-    }
+    const handleMessageMask = ({ data }: ResponseMessageEvent) =>
+      canvasContextMask?.transferFromImageBitmap(data.bitmap)
     maskWorker.addEventListener('message', handleMessageMask)
 
-    const handleMessageChroma = ({ data: bitmap }: ResponseMessageEvent) => {
-      canvasContextChroma?.transferFromImageBitmap(bitmap)
-    }
+    const handleMessageChroma = ({ data }: ResponseMessageEvent) =>
+      canvasContextChroma?.transferFromImageBitmap(data.bitmap)
     chromaWorker.addEventListener('message', handleMessageChroma)
 
     return () => {
