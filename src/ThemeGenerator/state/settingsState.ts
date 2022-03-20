@@ -18,5 +18,5 @@ export const textColorsPlotSizeAtom = atom({
 
 export const showTextColorPlotsAtom = atom({
   key: 'showTextColorPlots',
-  default: true,
+  default: false,
 })

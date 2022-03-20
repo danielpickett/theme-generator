@@ -2,13 +2,14 @@ import { useMemo, useRef } from 'react'
 import './TextColorPlots.scss'
 import { useRecoilValue } from 'recoil'
 import {
-  textColorsPlotSizeAtom,
+  // textColorsPlotSizeAtom,
   colorDataSelector,
   regularTextColorsSelector,
   vividTextColorsSelector,
+  canvasSizeAtom,
 } from 'ThemeGenerator/state'
 import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
-import { CanvasOld } from 'ThemeGenerator/components'
+import { Canvas } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
 import {
@@ -19,7 +20,8 @@ import { TextColorEditor } from './components'
 import classNames from 'classnames'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
-  const size = useRecoilValue(textColorsPlotSizeAtom)
+  // const size = useRecoilValue(textColorsPlotSizeAtom)
+  const size = useRecoilValue(canvasSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
@@ -47,7 +49,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
       }}
     >
-      <CanvasOld hue={shadeColor.h} size={size} />
+      <Canvas hue={shadeColor.h} />
       <div
         className="TextColorPlots__line"
         style={{ bottom: nearestSafeColor.l * size }}

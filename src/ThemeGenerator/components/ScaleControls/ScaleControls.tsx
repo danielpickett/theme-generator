@@ -22,7 +22,7 @@ export const ScaleControls = ({ scaleName }: { scaleName: string }) => {
   return (
     <div className="ScaleControls">
       <div className="ScaleControls__canvas">
-        <Canvas hue={hue} size={size} />
+        <Canvas hue={hue} />
 
         <div className="ScaleControls__canvas-points-overlay">
           <CanvasPointsOverlay scaleName={scaleName} size={size} />

@@ -17,9 +17,3 @@ export type WorkerState = {
   hue: number
   hasRenderPending: boolean
 }
-
-export type OnBitmapResponseData = {
-  type: 'chroma' | 'mask'
-  hue: number
-  size: number
-}

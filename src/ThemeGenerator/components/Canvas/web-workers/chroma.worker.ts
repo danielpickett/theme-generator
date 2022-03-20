@@ -19,7 +19,7 @@ const { canvas, canvasContext } = createCanvas(state.size)
 self.onmessage = ({ data }) => {
   const reducedSize = data.size / CHROMA_CANVAS_SIZE_DIVISOR
   if (reducedSize !== state.size) {
-    console.log('resize', reducedSize, state.size)
+    // console.log('resize', reducedSize, state.size)
     resize(canvas, reducedSize)
     cache = {}
   }
@@ -35,7 +35,6 @@ self.onmessage = ({ data }) => {
         console.log(`miss ${data.hue}`)
       } else {
         console.log(`hit ${data.hue}`)
-        // WHY IS IT NEVER HITTING?
       }
 
       self.postMessage({
