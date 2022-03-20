@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { startTransition } from 'react'
 import { canvasSizeAtom, hueAtom } from 'ThemeGenerator/state'
 import {
+  // CanvasOld,
   Canvas,
   CanvasPointsOverlay,
   HueSlider,
@@ -22,6 +23,7 @@ export const ScaleControls = ({ scaleName }: { scaleName: string }) => {
     <div className="ScaleControls">
       <div className="ScaleControls__canvas">
         <Canvas hue={hue} size={size} />
+
         <div className="ScaleControls__canvas-points-overlay">
           <CanvasPointsOverlay scaleName={scaleName} size={size} />
         </div>

@@ -1,3 +1,4 @@
+export * from './CanvasOld'
 export * from './Canvas'
 export * from './CanvasPointsOverlay'
 export * from './ChromaSlider'

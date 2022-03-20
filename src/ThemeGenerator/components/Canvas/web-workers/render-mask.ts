@@ -3,7 +3,7 @@ import {
   MAX_POSSIBLE_LUMINANCE,
 } from 'ThemeGenerator/constants'
 import { getMaxChroma } from 'ThemeGenerator/utils'
-import { WorkerState } from './types'
+import { WorkerState } from '../types'
 
 export const renderMask = (
   state: WorkerState,

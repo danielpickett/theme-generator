@@ -1,85 +1,101 @@
+import { useEffect, useState } from 'react'
 import './Canvas.scss'
-import { useEffect, useRef } from 'react'
+import '../../../theme.css'
 import {
   MAX_POSSIBLE_LUMINANCE,
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
 } from 'ThemeGenerator/constants'
+import { OnBitmapResponseData, ResponseMessageEvent } from './types'
 
-const CHROMA_CANVAS_SIZE_DIVISOR = 2
+const maskWorker = new Worker(
+  new URL('./web-workers/mask.worker', import.meta.url),
+)
+const requestMaskBitmap = (hue: number, size: number) => {
+  maskWorker.postMessage({ hue, size })
+}
 
-export const Canvas = ({ hue, size }: { hue: number; size: number }) => {
-  // CHROMA
-  const chromaWorkerRef = useRef<Worker | null>(null)
-  const initChromaWorker = (canvas: HTMLCanvasElement) => {
-    if (!chromaWorkerRef.current) {
-      const offscreen = canvas.transferControlToOffscreen()
-      const worker = new Worker(new URL('./worker', import.meta.url))
-      chromaWorkerRef.current = worker
-      chromaWorkerRef.current.postMessage(
-        {
-          type: 'initCanvas', // chroma
-          canvas: offscreen,
-          size: size / CHROMA_CANVAS_SIZE_DIVISOR,
-        },
-        [offscreen],
-      )
-    }
-  }
+const chromaWorker = new Worker(
+  new URL('./web-workers/chroma.worker', import.meta.url),
+)
+const requestChromaBitmap = (hue: number, size: number) => {
+  chromaWorker.postMessage({ hue, size })
+}
 
-  // MASK
-  const maskWorkerRef = useRef<Worker | null>(null)
-  const initMaskWorker = (canvas: HTMLCanvasElement) => {
-    if (!maskWorkerRef.current) {
-      const offscreen = canvas.transferControlToOffscreen()
-      const worker = new Worker(new URL('./worker', import.meta.url))
-      maskWorkerRef.current = worker
-      maskWorkerRef.current.postMessage(
-        {
-          type: 'initCanvas', // mask
-          canvas: offscreen,
-          size: size,
-        },
-        [offscreen],
-      )
-    }
-  }
+export const Canvas = ({
+  hue,
+  size,
+  onBitmapResponse,
+}: {
+  hue: number
+  size: number
+  onBitmapResponse?: ({ type, hue, size }: OnBitmapResponseData) => void
+}) => {
+  const [canvasContextMask, setCanvasContextMask] =
+    useState<ImageBitmapRenderingContext>()
 
+  const [canvasContextChroma, setCanvasContextChroma] =
+    useState<ImageBitmapRenderingContext>()
+
+  // onMessage
   useEffect(() => {
+    const handleMessageMask = ({ data }: ResponseMessageEvent) => {
+      canvasContextMask?.transferFromImageBitmap(data.bitmap)
+      onBitmapResponse?.({ type: 'mask', hue: data.hue, size: data.size })
+    }
+    maskWorker.addEventListener('message', handleMessageMask)
+
+    const handleMessageChroma = ({ data }: ResponseMessageEvent) => {
+      canvasContextChroma?.transferFromImageBitmap(data.bitmap)
+      onBitmapResponse?.({ type: 'chroma', hue: data.hue, size: data.size })
+    }
+    chromaWorker.addEventListener('message', handleMessageChroma)
+
     return () => {
-      chromaWorkerRef.current?.terminate()
-      maskWorkerRef.current?.terminate()
+      maskWorker.removeEventListener('message', handleMessageMask)
+      chromaWorker.removeEventListener('message', handleMessageChroma)
     }
-  }, [])
+  }, [canvasContextChroma, canvasContextMask, onBitmapResponse])
 
+  // postMessage
   useEffect(() => {
-    chromaWorkerRef.current?.postMessage({
-      type: 'paintChroma',
-      hue,
-      size: size / CHROMA_CANVAS_SIZE_DIVISOR,
-    })
-    maskWorkerRef.current?.postMessage({
-      type: 'paintMask',
-      hue,
-      size: size,
-    })
-  })
+    requestMaskBitmap(hue, size)
+    requestChromaBitmap(hue, size)
+  }, [hue, size, onBitmapResponse])
+
+  const height = MAX_POSSIBLE_LUMINANCE * size
+  const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
 
   return (
-    <>
-      <div
-        className="Canvas"
-        style={{
-          height: `${MAX_POSSIBLE_LUMINANCE * size}px`,
-          width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
-        }}
-      >
-        <canvas className="Canvas__canvas" ref={initChromaWorker}>
+    <div className="Canvas" style={{ height, width }}>
+      <div>
+        {/* Chroma Convas */}
+        <canvas
+          className="Canvas__canvas"
+          height={height}
+          width={width}
+          ref={(canvasElement) => {
+            if (canvasContextChroma) return
+            const ctx = canvasElement?.getContext('bitmaprenderer')
+            if (ctx) setCanvasContextChroma(ctx)
+          }}
+        >
           Your browser is not supported
         </canvas>
-        <canvas className="Canvas__canvas" ref={initMaskWorker}>
+
+        {/* Mask Convas */}
+        <canvas
+          className="Canvas__canvas"
+          height={height}
+          width={width}
+          ref={(canvasElement) => {
+            if (canvasContextMask) return
+            const ctx = canvasElement?.getContext('bitmaprenderer')
+            if (ctx) setCanvasContextMask(ctx)
+          }}
+        >
           Your browser is not supported
         </canvas>
       </div>
-    </>
+    </div>
   )
 }

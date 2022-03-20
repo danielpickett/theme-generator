@@ -2,7 +2,7 @@ import {
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
   MAX_POSSIBLE_LUMINANCE,
 } from 'ThemeGenerator/constants'
-import { WorkerState } from './types'
+import { WorkerState } from '../types'
 
 export const getInitialState = (size: number): WorkerState => ({
   size,

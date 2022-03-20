@@ -3,7 +3,7 @@ export type RequestMessageEvent = MessageEvent<{
   size: number
 }>
 
-type ResponseData = { hue: number; bitmap: ImageBitmap }
+type ResponseData = { hue: number; size: number; bitmap: ImageBitmap }
 
 export type ResponseMessageEvent = MessageEvent<ResponseData>
 
@@ -16,4 +16,10 @@ export type WorkerState = {
   size: number
   hue: number
   hasRenderPending: boolean
+}
+
+export type OnBitmapResponseData = {
+  type: 'chroma' | 'mask'
+  hue: number
+  size: number
 }

@@ -3,7 +3,7 @@ import {
   MAX_POSSIBLE_LUMINANCE,
 } from 'ThemeGenerator/constants'
 import { getColorData, parseYellowProblem } from 'ThemeGenerator/utils'
-import { WorkerState } from './types'
+import { WorkerState } from '../types'
 
 export const renderChroma = (
   state: WorkerState,

@@ -41,7 +41,6 @@ export const DEFAULT_CHROMAS = {
 } as const
 
 export const DEFAULT_CANVAS_SIZE = 2
-export const CHROMA_CANVAS_SIZE_DIVISOR = 2
 
 export const SAFE_CONTRAST = 4.5
 export const DARKEST_LIGHT_LUMINANCE = 50

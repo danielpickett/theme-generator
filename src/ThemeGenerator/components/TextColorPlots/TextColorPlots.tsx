@@ -8,7 +8,7 @@ import {
   vividTextColorsSelector,
 } from 'ThemeGenerator/state'
 import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
-import { Canvas } from 'ThemeGenerator/components'
+import { CanvasOld } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
 import {
@@ -26,10 +26,8 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
 
   const nearestSafeColor = useMemo(
     () =>
-      // passing each value individual so the dependency array can watch each
-      // value instead of just watching the reference value of the object itself.
-      // I'm not 100% sure this is necessary, but I did confirm that the useMemo
-      // is impactful
+      // I'm not 100% sure this is necessary, but I
+      // did confirm that the useMemo is impactful
       getNearestSafeColor({
         l: shadeColor.l,
         c: shadeColor.c,
@@ -49,7 +47,7 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
       }}
     >
-      <Canvas hue={shadeColor.h} size={size} />
+      <CanvasOld hue={shadeColor.h} size={size} />
       <div
         className="TextColorPlots__line"
         style={{ bottom: nearestSafeColor.l * size }}
