@@ -1,28 +1,11 @@
 import { useEffect, useState } from 'react'
 import './Canvas.scss'
 import '../../../theme.css'
-import {
-  MAX_POSSIBLE_LUMINANCE,
-  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
-} from 'ThemeGenerator/constants'
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from 'ThemeGenerator/constants'
 import { ResponseMessageEvent } from './types'
-import { useRecoilValue } from 'recoil'
-import { canvasSizeAtom } from 'ThemeGenerator/state'
 
 let maskCache: Record<number, ImageBitmap> = {}
 let chromaCache: Record<number, ImageBitmap> = {}
-let cacheBitmapSize: number | null = null
-
-const invalidateCacheOnSizeChange = (size: number) => {
-  if (size !== cacheBitmapSize) {
-    console.log('invalidating caches')
-
-    maskCache = {}
-    chromaCache = {}
-  }
-
-  cacheBitmapSize = size
-}
 
 // @ts-ignore
 window.maskCache = maskCache
@@ -32,10 +15,13 @@ window.chromaCache = chromaCache
 const maskWorker = new Worker(
   new URL('./web-workers/mask.worker', import.meta.url),
 )
-// maskWorker.onmessage = ({ data }: ResponseMessageEvent) => {
-//   console.log('onmessage')
-//   maskCache[data.hue] = data.bitmap
-// }
+const updateMaskCache = (hue: number, bitmap: ImageBitmap) => {
+  maskCache[hue] = bitmap
+}
+maskWorker.onmessage = ({ data }: ResponseMessageEvent) => {
+  console.log('onmessage')
+  maskCache[data.hue] = data.bitmap
+}
 const requestMaskBitmap = (hue: number, size: number) => {
   maskWorker.postMessage({ hue, size })
 }
@@ -51,77 +37,23 @@ const requestChromaBitmap = (hue: number, size: number) => {
 }
 
 export const Canvas = ({ hue }: { hue: number }) => {
-  const size = useRecoilValue(canvasSizeAtom)
-  invalidateCacheOnSizeChange(size)
-
   const [canvasContextMask, setCanvasContextMask] =
     useState<ImageBitmapRenderingContext>()
 
   const [canvasContextChroma, setCanvasContextChroma] =
     useState<ImageBitmapRenderingContext>()
 
-  // onMessage
-  useEffect(() => {
-    // const handleMessageMask = ({ data }: ResponseMessageEvent) => {
-    //   if (!maskCache[data.hue]) {
-    //     maskCache[data.hue] = data.bitmap
-    //   }
-    //   const bitmap = maskCache[data.hue]
-    //   console.log('bitmap', bitmap)
-    //   canvasContextMask?.transferFromImageBitmap(bitmap)
-    // }
-    // maskWorker.addEventListener('message', handleMessageMask)
-
-    const handleMessageMask = ({ data }: ResponseMessageEvent) => {
-      if (!maskCache[data.hue]) {
-        maskCache[data.hue] = data.bitmap
-      }
-
-      if (data.hue !== hue) return
-
-      const bitmap = maskCache[data.hue]
-      console.log({ bitmap })
-
-      canvasContextMask?.transferFromImageBitmap(bitmap)
-    }
-    maskWorker.addEventListener('message', handleMessageMask)
-
-    const handleMessageChroma = ({ data }: ResponseMessageEvent) => {
-      if (!chromaCache[data.hue]) {
-        chromaCache[data.hue] = data.bitmap
-      }
-
-      if (data.hue !== hue) return
-
-      const bitmap = chromaCache[data.hue]
-      console.log({ bitmap })
-
-      canvasContextChroma?.transferFromImageBitmap(bitmap)
-    }
-    chromaWorker.addEventListener('message', handleMessageChroma)
-
-    return () => {
-      // maskWorker.removeEventListener('message', handleMessageMask)
-      chromaWorker.removeEventListener('message', handleMessageChroma)
-    }
-  }, [canvasContextChroma, canvasContextMask, hue])
-
-  useEffect(() => {
-    requestMaskBitmap(hue, size)
-    requestChromaBitmap(hue, size)
-  }, [hue, size])
-
-  const height = MAX_POSSIBLE_LUMINANCE * size
-  const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
-
   return (
-    <div className="Canvas" style={{ height, width }}>
+    <div
+      className="Canvas"
+      style={{ height: CANVAS_HEIGHT, width: CANVAS_WIDTH }}
+    >
       <div>
         {/* Chroma Convas */}
         <canvas
           className="Canvas__canvas"
-          height={height}
-          width={width}
+          height={CANVAS_HEIGHT}
+          width={CANVAS_WIDTH}
           ref={(canvasElement) => {
             if (canvasContextChroma) return
             const ctx = canvasElement?.getContext('bitmaprenderer')
@@ -134,8 +66,8 @@ export const Canvas = ({ hue }: { hue: number }) => {
         {/* Mask Convas */}
         <canvas
           className="Canvas__canvas"
-          height={height}
-          width={width}
+          height={CANVAS_HEIGHT}
+          width={CANVAS_WIDTH}
           ref={(canvasElement) => {
             if (canvasContextMask) return
             const ctx = canvasElement?.getContext('bitmaprenderer')

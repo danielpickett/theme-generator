@@ -1,6 +1,7 @@
 import {
-  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
-  MAX_POSSIBLE_LUMINANCE,
+  DEFAULT_CANVAS_SIZE,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
 } from 'ThemeGenerator/constants'
 import { getMaxChroma } from 'ThemeGenerator/utils'
 import { WorkerState } from '../types'
@@ -10,26 +11,23 @@ export const renderMask = (
   canvas: OffscreenCanvas,
   canvasContext: OffscreenCanvasRenderingContext2D,
 ) => {
-  const { hue, size } = state
-  const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
-  const height = MAX_POSSIBLE_LUMINANCE * size
+  const { hue } = state
 
-  canvasContext.clearRect(0, 0, width, height)
+  canvasContext.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
-  for (let L = height; L >= 0; L--) {
-    const maxChroma = getMaxChroma(L / size, hue)
+  for (let L = CANVAS_HEIGHT; L >= 0; L--) {
+    const maxChroma = getMaxChroma(L / DEFAULT_CANVAS_SIZE, hue)
 
     canvasContext.fillStyle = 'rgba(255, 255, 255, 1)'
     canvasContext.fillRect(
-      maxChroma * size,
-      MAX_POSSIBLE_LUMINANCE * size - L,
-      MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size - maxChroma,
+      maxChroma * DEFAULT_CANVAS_SIZE,
+      CANVAS_HEIGHT - L,
+      CANVAS_WIDTH - maxChroma,
       1,
     )
   }
 
   state.hasRenderPending = false
   const bitmap = canvas.transferToImageBitmap()
-  // console.log({ bitmap })
   return bitmap
 }

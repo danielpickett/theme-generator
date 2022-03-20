@@ -1,6 +1,9 @@
 import {
   MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
   MAX_POSSIBLE_LUMINANCE,
+  DEFAULT_CANVAS_SIZE,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
 } from 'ThemeGenerator/constants'
 import { getColorData, parseYellowProblem } from 'ThemeGenerator/utils'
 import { WorkerState } from '../types'
@@ -10,32 +13,41 @@ export const renderChroma = (
   canvas: OffscreenCanvas,
   canvasContext: OffscreenCanvasRenderingContext2D,
 ) => {
-  const { size, hue } = state
-  const width = MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size
-  const height = MAX_POSSIBLE_LUMINANCE * size
+  const { hue } = state
 
-  canvasContext.clearRect(0, 0, width, height)
+  canvasContext.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
-  for (let luminance = height; luminance >= 0; luminance--) {
-    const yellowException = parseYellowProblem(luminance / size, hue)
-    for (let chroma = 0; chroma < width; chroma++) {
+  for (let luminance = CANVAS_HEIGHT; luminance >= 0; luminance--) {
+    const yellowException = parseYellowProblem(
+      luminance / DEFAULT_CANVAS_SIZE,
+      hue,
+    )
+    for (let chroma = 0; chroma < CANVAS_WIDTH; chroma++) {
       const color = getColorData({
-        l: luminance / size,
-        c: chroma / size,
+        l: luminance / DEFAULT_CANVAS_SIZE,
+        c: chroma / DEFAULT_CANVAS_SIZE,
         h: hue,
       })
 
       canvasContext.fillStyle = color.hex
       if (!color.isClipped) {
-        canvasContext.fillRect(chroma, height - luminance, 1, 1)
+        canvasContext.fillRect(chroma, CANVAS_HEIGHT - luminance, 1, 1)
       } else {
         // uncomment to see the yellow dip
         // canvasContext.fillStyle = 'black'
         // canvasContext.fillRect(C, height - L, 1, 1)
-        if (yellowException !== null && chroma < yellowException * size) {
-          canvasContext.fillRect(chroma, height - luminance, 1, 1)
+        if (
+          yellowException !== null &&
+          chroma < yellowException * DEFAULT_CANVAS_SIZE
+        ) {
+          canvasContext.fillRect(chroma, CANVAS_HEIGHT - luminance, 1, 1)
         } else {
-          canvasContext.fillRect(chroma, height - luminance, width - chroma, 1)
+          canvasContext.fillRect(
+            chroma,
+            CANVAS_HEIGHT - luminance,
+            CANVAS_WIDTH - chroma,
+            1,
+          )
           break
         }
       }

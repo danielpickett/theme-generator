@@ -2,26 +2,23 @@ import { useMemo, useRef } from 'react'
 import './TextColorPlots.scss'
 import { useRecoilValue } from 'recoil'
 import {
-  // textColorsPlotSizeAtom,
   colorDataSelector,
   regularTextColorsSelector,
   vividTextColorsSelector,
-  canvasSizeAtom,
 } from 'ThemeGenerator/state'
 import { FirstOrLastShadeType, ShadeType } from 'ThemeGenerator/types'
 import { Canvas } from 'ThemeGenerator/components'
 
 import { getNearestSafeColor } from 'ThemeGenerator/utils'
 import {
-  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
-  MAX_POSSIBLE_LUMINANCE,
+  DEFAULT_CANVAS_SIZE,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
 } from 'ThemeGenerator/constants'
 import { TextColorEditor } from './components'
 import classNames from 'classnames'
 
 export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
-  // const size = useRecoilValue(textColorsPlotSizeAtom)
-  const size = useRecoilValue(canvasSizeAtom)
   const { lch: shadeColor } = useRecoilValue(colorDataSelector(shade))
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
   const vividTextColors = useRecoilValue(vividTextColorsSelector(shade))
@@ -45,33 +42,26 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
       className="TextColorPlots"
       ref={ref}
       style={{
-        height: `${MAX_POSSIBLE_LUMINANCE * size}px`,
-        width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
+        height: `${CANVAS_HEIGHT}px`,
+        width: `${CANVAS_WIDTH}px`,
       }}
     >
       <Canvas hue={shadeColor.h} />
       <div
         className="TextColorPlots__line"
-        style={{ bottom: nearestSafeColor.l * size }}
+        style={{ bottom: nearestSafeColor.l * DEFAULT_CANVAS_SIZE }}
       />
 
-      <ColorPoint
-        color={shadeColor}
-        title="background color"
-        size={size}
-        diamond
-      />
+      <ColorPoint color={shadeColor} title="background color" diamond />
       <ColorPoint
         color={regularTextColors.regular.lch}
         title="regular text color"
-        size={size}
         large
       />
 
       <ColorPoint
         color={regularTextColors.subdued.lch}
         title="subdued text color"
-        size={size}
       />
 
       {shade.shadeName === '000' || shade.shadeName === '900' ? (
@@ -85,14 +75,12 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
         <ColorPoint
           color={vividTextColors.vivid.lch}
           title="vivid text color"
-          size={size}
         />
       )}
 
       <ColorPoint
         color={vividTextColors['vivid-subdued'].lch}
         title="vivid-subdued text color"
-        size={size}
       />
     </div>
   )
@@ -100,13 +88,13 @@ export const TextColorPlots = ({ shade }: { shade: ShadeType }) => {
 
 const ColorPoint = ({
   color,
-  size,
+
   title,
   large = false,
   diamond = false,
 }: {
   color: { l: number; c: number; h?: number }
-  size: number
+
   title?: string
   large?: boolean
   diamond?: boolean
@@ -119,8 +107,8 @@ const ColorPoint = ({
       })}
       title={title}
       style={{
-        left: color.c * size,
-        bottom: color.l * size,
+        left: color.c * DEFAULT_CANVAS_SIZE,
+        bottom: color.l * DEFAULT_CANVAS_SIZE,
       }}
     />
   )
