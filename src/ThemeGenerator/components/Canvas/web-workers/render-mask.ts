@@ -8,7 +8,6 @@ import { WorkerState } from '../types'
 
 export const renderMask = (
   state: WorkerState,
-  canvas: OffscreenCanvas,
   canvasContext: OffscreenCanvasRenderingContext2D,
 ) => {
   const { hue } = state
@@ -28,6 +27,6 @@ export const renderMask = (
   }
 
   state.hasRenderPending = false
-  const bitmap = canvas.transferToImageBitmap()
+  const bitmap = canvasContext.canvas.transferToImageBitmap()
   return bitmap
 }

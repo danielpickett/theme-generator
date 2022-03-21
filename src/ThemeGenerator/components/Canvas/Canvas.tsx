@@ -1,47 +1,71 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Canvas.scss'
 import '../../../theme.css'
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from 'ThemeGenerator/constants'
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  CHROMA_CANVAS_SIZE_DIVISOR,
+} from 'ThemeGenerator/constants'
 import { ResponseMessageEvent } from './types'
 
-let maskCache: Record<number, ImageBitmap> = {}
-let chromaCache: Record<number, ImageBitmap> = {}
-
-// @ts-ignore
-window.maskCache = maskCache
-// @ts-ignore
-window.chromaCache = chromaCache
+let maskCache: Record<number, ImageBitmap | undefined> = {}
+let chromaCache: Record<number, ImageBitmap | undefined> = {}
 
 const maskWorker = new Worker(
   new URL('./web-workers/mask.worker', import.meta.url),
 )
-const updateMaskCache = (hue: number, bitmap: ImageBitmap) => {
-  maskCache[hue] = bitmap
-}
+
 maskWorker.onmessage = ({ data }: ResponseMessageEvent) => {
-  console.log('onmessage')
-  maskCache[data.hue] = data.bitmap
-}
-const requestMaskBitmap = (hue: number, size: number) => {
-  maskWorker.postMessage({ hue, size })
+  if (!maskCache[data.hue]) maskCache[data.hue] = data.bitmap
 }
 
 const chromaWorker = new Worker(
   new URL('./web-workers/chroma.worker', import.meta.url),
 )
-// chromaWorker.onmessage = ({ data }: ResponseMessageEvent) => {
-//   chromaCache[data.hue] = data.bitmap
-// }
-const requestChromaBitmap = (hue: number, size: number) => {
-  chromaWorker.postMessage({ hue, size })
+chromaWorker.onmessage = ({ data }: ResponseMessageEvent) => {
+  if (!chromaCache[data.hue]) chromaCache[data.hue] = data.bitmap
 }
 
 export const Canvas = ({ hue }: { hue: number }) => {
+  const hueRef = useRef(hue)
+  hueRef.current = hue
   const [canvasContextMask, setCanvasContextMask] =
     useState<ImageBitmapRenderingContext>()
 
   const [canvasContextChroma, setCanvasContextChroma] =
     useState<ImageBitmapRenderingContext>()
+
+  useEffect(() => {
+    const requestMask = () => {
+      if (hue !== hueRef.current) return
+
+      const bitmap = maskCache[hue]
+      if (!bitmap) {
+        maskWorker.postMessage({ hue })
+        requestAnimationFrame(requestMask)
+      } else {
+        createImageBitmap(bitmap).then((image) => {
+          canvasContextMask?.transferFromImageBitmap(image)
+        })
+      }
+    }
+    requestMask()
+
+    const requestChroma = () => {
+      if (hue !== hueRef.current) return
+
+      const bitmap = chromaCache[hue]
+      if (!bitmap) {
+        chromaWorker.postMessage({ hue })
+        requestAnimationFrame(requestChroma)
+      } else {
+        createImageBitmap(bitmap).then((image) => {
+          canvasContextChroma?.transferFromImageBitmap(image)
+        })
+      }
+    }
+    requestChroma()
+  }, [canvasContextChroma, canvasContextMask, hue])
 
   return (
     <div
@@ -52,8 +76,8 @@ export const Canvas = ({ hue }: { hue: number }) => {
         {/* Chroma Convas */}
         <canvas
           className="Canvas__canvas"
-          height={CANVAS_HEIGHT}
-          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT / CHROMA_CANVAS_SIZE_DIVISOR}
+          width={CANVAS_WIDTH / CHROMA_CANVAS_SIZE_DIVISOR}
           ref={(canvasElement) => {
             if (canvasContextChroma) return
             const ctx = canvasElement?.getContext('bitmaprenderer')
@@ -76,15 +100,6 @@ export const Canvas = ({ hue }: { hue: number }) => {
         >
           Your browser is not supported
         </canvas>
-        <button
-          style={{ zIndex: 1, position: 'relative' }}
-          onClick={() => {
-            console.log('maskCache', maskCache)
-            console.log('chromaCache', chromaCache)
-          }}
-        >
-          cache
-        </button>
       </div>
     </div>
   )

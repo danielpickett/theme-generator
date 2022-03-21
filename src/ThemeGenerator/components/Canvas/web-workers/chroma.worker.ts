@@ -1,6 +1,11 @@
 import { WorkerContext } from '../types'
 import { createCanvas, getInitialState } from './utils'
 import { renderChroma } from './render-chroma'
+import {
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  CHROMA_CANVAS_SIZE_DIVISOR,
+} from 'ThemeGenerator/constants'
 
 /**
  * Chroma canvas is painted at a reduced size to make it faster,
@@ -8,12 +13,13 @@ import { renderChroma } from './render-chroma'
  * This results in a 'blurry' final onscreen image, which is
  * unnoticeable since it's a soft gradient anyway.
  */
-export const CHROMA_CANVAS_SIZE_DIVISOR = 2
+const REDUCED_CANVAS_WIDTH = CANVAS_WIDTH / CHROMA_CANVAS_SIZE_DIVISOR
+const REDUCED_CANVAS_HEIGHT = CANVAS_HEIGHT / CHROMA_CANVAS_SIZE_DIVISOR
 
 declare const self: WorkerContext
 let state = getInitialState()
 let cache: Record<number, ImageBitmap> = {}
-const { canvas, canvasContext } = createCanvas()
+const canvasContext = createCanvas(REDUCED_CANVAS_WIDTH, REDUCED_CANVAS_HEIGHT)
 
 self.onmessage = ({ data }) => {
   state.hue = data.hue
@@ -22,10 +28,7 @@ self.onmessage = ({ data }) => {
     state.hasRenderPending = true
     requestAnimationFrame(() => {
       if (!cache[state.hue]) {
-        cache[state.hue] = renderChroma(state, canvas, canvasContext) // expensive
-        console.log(`miss ${data.hue}`)
-      } else {
-        console.log(`hit ${data.hue}`)
+        cache[state.hue] = renderChroma(state, canvasContext) // expensive
       }
 
       self.postMessage({
@@ -35,7 +38,5 @@ self.onmessage = ({ data }) => {
       })
       state.hasRenderPending = false
     })
-  } else {
-    console.log(`skip ${data.hue}`)
   }
 }

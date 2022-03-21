@@ -6,11 +6,11 @@ export const getInitialState = (): WorkerState => ({
   hasRenderPending: false,
 })
 
-export const createCanvas = () => {
-  const canvas = new OffscreenCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+export const createCanvas = (height: number, width: number) => {
+  const canvas = new OffscreenCanvas(height, width)
 
   const canvasContext = canvas.getContext('2d')
   if (!canvasContext) throw new Error('Could not get canvas context')
 
-  return { canvas, canvasContext }
+  return canvasContext
 }
