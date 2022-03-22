@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import './Canvas.scss'
-import '../../../theme.css'
 import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
