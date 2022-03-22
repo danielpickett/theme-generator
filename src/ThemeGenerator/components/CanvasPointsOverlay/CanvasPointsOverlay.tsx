@@ -1,10 +1,11 @@
 import { useRef } from 'react'
 import { useRecoilValue } from 'recoil'
 import {
-  MAX_POSSIBLE_LUMINANCE,
-  MAX_POSSIBLE_CHROMA_FOR_ANY_HUE,
   SHADE_NAMES,
   DEFAULT_LUMINANCES,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  DEFAULT_CANVAS_SIZE,
 } from 'ThemeGenerator/constants'
 import { ChromaSlider } from 'ThemeGenerator/components'
 
@@ -12,13 +13,7 @@ import './CanvasPointsOverlay.scss'
 import { ShadeType } from 'ThemeGenerator/types'
 import { chromaAtom } from 'ThemeGenerator/state'
 
-export const CanvasPointsOverlay = ({
-  scaleName,
-  size,
-}: {
-  scaleName: string
-  size: number
-}) => {
+export const CanvasPointsOverlay = ({ scaleName }: { scaleName: string }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
@@ -26,17 +21,19 @@ export const CanvasPointsOverlay = ({
       ref={ref}
       className="CanvasPointsOverlay"
       style={{
-        height: `${MAX_POSSIBLE_LUMINANCE * size}px`,
-        width: `${MAX_POSSIBLE_CHROMA_FOR_ANY_HUE * size}px`,
+        height: `${CANVAS_HEIGHT}px`,
+        width: `${CANVAS_WIDTH}px`,
       }}
     >
       {SHADE_NAMES.slice(1).map((shadeName) => (
         <div
           key={shadeName}
           className="CanvasPointsOverlay__chroma-slider"
-          style={{ bottom: DEFAULT_LUMINANCES[shadeName] * size }}
+          style={{
+            bottom: DEFAULT_LUMINANCES[shadeName] * DEFAULT_CANVAS_SIZE,
+          }}
         >
-          <TargetChromaDot shade={{ shadeName, scaleName }} size={size} />
+          <TargetChromaDot shade={{ shadeName, scaleName }} />
           <ChromaSlider shade={{ scaleName, shadeName }} />
         </div>
       ))}
@@ -44,18 +41,12 @@ export const CanvasPointsOverlay = ({
   )
 }
 
-const TargetChromaDot = ({
-  shade,
-  size,
-}: {
-  shade: ShadeType
-  size: number
-}) => {
+const TargetChromaDot = ({ shade }: { shade: ShadeType }) => {
   const targetChroma = useRecoilValue(chromaAtom(shade))
   return (
     <div
       className="CanvasPointsOverlay__target-chroma"
-      style={{ left: targetChroma * size }}
+      style={{ left: targetChroma * DEFAULT_CANVAS_SIZE }}
     />
   )
 }
