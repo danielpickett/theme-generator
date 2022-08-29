@@ -1,11 +1,7 @@
 import './ThemeGenerator.scss'
 import '../theme.css'
 import { RecoilRoot } from 'recoil'
-import {
-  // Footer,
-  Header,
-  Scale,
-} from './components'
+import { Footer, Header, Scale } from './components'
 import { DEFAULT_THEME_SCALE_NAMES } from './themes'
 
 export const ThemeGenerator = () => (
@@ -27,7 +23,9 @@ const ThemeGeneratorBase = () => {
           ))}
         </div>
       </div>
-      {/* <div className="ThemeGenerator__footer"><Footer /></div> */}
+      <div className="ThemeGenerator__footer">
+        <Footer />
+      </div>
     </div>
   )
 }

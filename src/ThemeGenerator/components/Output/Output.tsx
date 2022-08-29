@@ -14,12 +14,10 @@ export const Output = () => {
         <OutputThemeString />
       </div>
 
-      {ReactDOM.createPortal(
-        <style className="color-tokens">
-          <OutputThemeJSX />
-        </style>,
+      {/* {ReactDOM.createPortal(
+        <style className="color-tokens"><OutputThemeJSX /></style>,
         document.head,
-      )}
+      )} */}
     </div>
   )
 }
