@@ -2,7 +2,7 @@ import './index.scss'
 // import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeGenerator } from './ThemeGenerator'
-// import { CanvasTester } from 'ThemeGenerator/components/Canvas/CanvasTester'
+// import { CanvasTester } from 'src/components/Canvas/CanvasTester'
 import reportWebVitals from './reportWebVitals'
 
 const rootElement = document.getElementById('root')
