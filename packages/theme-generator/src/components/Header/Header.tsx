@@ -1,16 +1,21 @@
+import { RefObject } from 'react'
 import { useRecoilState } from 'recoil'
 import { Spacer } from 'src/components'
 import { showCanvasesAtom, showTextColorPlotsAtom } from 'src/state'
 
 import './Header.scss'
 
-export const Header = () => {
+export const Header = ({
+  dragHandleRef,
+}: {
+  dragHandleRef: RefObject<HTMLDivElement>
+}) => {
   const [showCanvases, setShowCanvases] = useRecoilState(showCanvasesAtom)
   const [showTextColorPlots, setShowTextColorPlots] = useRecoilState(
     showTextColorPlotsAtom,
   )
   return (
-    <div className="Header">
+    <div className="Header" ref={dragHandleRef}>
       <input
         id="show-canvases"
         type="checkbox"
@@ -20,6 +25,7 @@ export const Header = () => {
       <label htmlFor="show-canvases">show canvases</label>
 
       <Spacer width="2rem" />
+
       <input
         id="show-text-color-plots"
         type="checkbox"

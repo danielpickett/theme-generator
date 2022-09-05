@@ -1,0 +1,26 @@
+.ResizablePopover {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0.5rem 1rem rgba(0, 0, 0, 0.25), 0px 0 1rem rgba(0, 0, 0, 0.1);
+  position: fixed;
+
+  &__resize-handle {
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: nwse-resize;
+  }
+
+  &__grip-lines {
+    transform: rotate(-45deg);
+    background-color: silver;
+    height: 0.125rem;
+    width: 75%;
+  }
+}

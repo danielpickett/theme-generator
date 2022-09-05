@@ -32,10 +32,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@danielpickett/components@0.0.0, @danielpickett/components@workspace:packages/components":
+  version: 0.0.0-use.local
+  resolution: "@danielpickett/components@workspace:packages/components"
+  dependencies:
+    "@danielpickett/hooks": 0.0.0
+    "@danielpickett/types": 0.0.0
+    "@parcel/transformer-typescript-tsc": ^2.7.0
+    "@types/react": ^18.0.18
+    "@types/react-dom": ^18.0.6
+    classnames: ^2.3.1
+    parcel: ^2.7.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ">=3.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@danielpickett/hooks@0.0.0, @danielpickett/hooks@workspace:packages/hooks":
+  version: 0.0.0-use.local
+  resolution: "@danielpickett/hooks@workspace:packages/hooks"
+  dependencies:
+    "@parcel/transformer-typescript-tsc": ^2.7.0
+    "@react-hook/resize-observer": ^1.2.6
+    "@types/react": ^18.0.18
+    "@types/react-dom": ^18.0.6
+    classnames: ^2.3.1
+    parcel: ^2.7.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    typescript: ">=3.0.0"
+  languageName: unknown
+  linkType: soft
+
 "@danielpickett/theme-generator@0.0.0, @danielpickett/theme-generator@workspace:packages/theme-generator":
   version: 0.0.0-use.local
   resolution: "@danielpickett/theme-generator@workspace:packages/theme-generator"
   dependencies:
+    "@danielpickett/components": 0.0.0
     "@danielpickett/types": 0.0.0
     "@parcel/transformer-typescript-tsc": ^2.7.0
     "@types/chroma-js": ^2.1.4
@@ -113,6 +147,13 @@ __metadata:
     "@jridgewell/resolve-uri": ^3.0.3
     "@jridgewell/sourcemap-codec": ^1.4.10
   checksum: 38917e9c2b014d469a9f51c016ed506acbe44dd16ec2f6f99b553ebf3764d22abadbf992f2367b6d2b3511f3eae8ed3a8963f6c1030093fda23efd35ecab2bae
+  languageName: node
+  linkType: hard
+
+"@juggle/resize-observer@npm:^3.3.1":
+  version: 3.4.0
+  resolution: "@juggle/resize-observer@npm:3.4.0"
+  checksum: 2505028c05cc2e17639fcad06218b1c4b60f932a4ebb4b41ab546ef8c157031ae377e3f560903801f6d01706dbefd4943b6c4704bf19ed86dfa1c62f1473a570
   languageName: node
   linkType: hard
 
@@ -1073,6 +1114,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-hook/latest@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "@react-hook/latest@npm:1.0.3"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 2408c9cd35c5cfa7697b6da3bc5eebef254a932ade70955074c474f23be7dd3e2f81bbba12edcc9208bd0f89c6ed366d6b11d4f6d7b1052877a0bac8f74afad4
+  languageName: node
+  linkType: hard
+
+"@react-hook/passive-layout-effect@npm:^1.2.0":
+  version: 1.2.1
+  resolution: "@react-hook/passive-layout-effect@npm:1.2.1"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 217cb8aa90fb8e677672319a9a466d7752890cf4357c76df000b207696e9cc717cf2ee88080671cc9dae238a82f92093ab4f61ab2f6032d2a8db958fc7d99b5d
+  languageName: node
+  linkType: hard
+
+"@react-hook/resize-observer@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "@react-hook/resize-observer@npm:1.2.6"
+  dependencies:
+    "@juggle/resize-observer": ^3.3.1
+    "@react-hook/latest": ^1.0.2
+    "@react-hook/passive-layout-effect": ^1.2.0
+  peerDependencies:
+    react: ">=16.8"
+  checksum: d2ff6c50e847514acad774f2a4010fb1e6782a231ae00c9507c1a98028b3a26399e35f094170918f11b1eeafc581d60da7641bc178d496abf00c56eee8a6b36b
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:^0.4.2":
   version: 0.4.11
   resolution: "@swc/helpers@npm:0.4.11"
@@ -1739,19 +1811,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"example@workspace:apps/example":
-  version: 0.0.0-use.local
-  resolution: "example@workspace:apps/example"
-  dependencies:
-    "@danielpickett/theme-generator": 0.0.0
-    "@types/react": ^18.0.18
-    "@types/react-dom": ^18.0.6
-    parcel: ^2.7.0
-    react: ^18.2.0
-    react-dom: ^18.2.0
-  languageName: unknown
-  linkType: soft
-
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -2152,6 +2211,20 @@ __metadata:
   checksum: 0c37f9f7fa212b38912b7145e1cd16a5f3cd34d782441c3e6ca653485d326f58b3caccda66efce1c5812bde4961bbde3374fae4b0d11bf1226152337f3894aa5
   languageName: node
   linkType: hard
+
+"live-theming-example-78a6f9@workspace:apps/live-theming-example":
+  version: 0.0.0-use.local
+  resolution: "live-theming-example-78a6f9@workspace:apps/live-theming-example"
+  dependencies:
+    "@danielpickett/components": 0.0.0
+    "@danielpickett/theme-generator": 0.0.0
+    "@types/react": ^18.0.18
+    "@types/react-dom": ^18.0.6
+    parcel: ^2.7.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  languageName: unknown
+  linkType: soft
 
 "lmdb@npm:2.5.2":
   version: 2.5.2
@@ -2813,6 +2886,20 @@ __metadata:
   checksum: cab8f25ae6f1434abee8d80023d7e72b598cf1327164ddab31003c51215526801e40b66c5e65d658a0af1e9d6478cadcb4c745f4bd6751f97d8644786c0978b0
   languageName: node
   linkType: hard
+
+"sandbox-648722@workspace:apps/sandbox":
+  version: 0.0.0-use.local
+  resolution: "sandbox-648722@workspace:apps/sandbox"
+  dependencies:
+    "@danielpickett/components": 0.0.0
+    "@danielpickett/theme-generator": 0.0.0
+    "@types/react": ^18.0.18
+    "@types/react-dom": ^18.0.6
+    parcel: ^2.7.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  languageName: unknown
+  linkType: soft
 
 "sass@npm:^1.38.0":
   version: 1.54.8

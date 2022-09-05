@@ -48,7 +48,6 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   } ${'*'.repeat(
     columnWidth - 13 - shade.scaleName.length + shade.shadeName.length,
   )} */`
-  // {`  /* ${shade.scaleName.toUpperCase()} ${shade.shadeName} */\n\n`}
 
   /* prettier-ignore */
   return (

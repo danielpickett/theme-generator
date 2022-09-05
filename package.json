@@ -9,6 +9,18 @@
     "process": "^0.11.10",
     "typescript": "4.7.4"
   },
+  "scripts": {
+    "start-components": "cd packages/components && yarn start",
+    "build-components": "cd packages/components && yarn build",
+    "start-hooks": "cd packages/hooks && yarn start",
+    "build-hooks": "cd packages/hooks && yarn build",
+    "start-theme-generator": "cd packages/theme-generator && yarn start",
+    "build-theme-generator": "cd packages/theme-generator && yarn build",
+    "start-sandbox": "cd apps/sandbox && yarn start",
+    "build-sandbox": "cd apps/sandbox && yarn build",
+    "start-live-theming-example": "cd apps/live-theming-example && yarn start",
+    "build-live-theming-example": "cd apps/live-theming-example && yarn build"
+  },
   "workspaces": [
     "packages/*",
     "apps/*"

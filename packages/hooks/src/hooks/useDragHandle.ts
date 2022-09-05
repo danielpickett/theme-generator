@@ -1,29 +1,36 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useWindowSize } from './useWindowSize'
 
 export const useDragHandle = (
   dragHandleRef: React.RefObject<HTMLDivElement>,
-  initialHeight: number,
-  minHeight: number,
+  initialValues: { x: number; y: number },
 ) => {
-  const [handleIsDragging, setHandleIsDragging] = useState(false)
-  const [outputHeightPx, setOutputHeightPx] = useState(initialHeight)
+  const winSize = useWindowSize()
+  const [isDragging, setIsDragging] = useState(false)
+  const [position, setPosition] = useState(initialValues)
 
-  const handleMouseUp = useCallback(
-    () => setHandleIsDragging(false),
-    [setHandleIsDragging],
-  )
+  const handleMouseUp = useCallback(() => setIsDragging(false), [setIsDragging])
+
   const handleMouseMove = useCallback(
-    (e: globalThis.MouseEvent) => {
-      setOutputHeightPx((prev) =>
-        prev - e.movementY >= minHeight ? prev - e.movementY : minHeight,
-      )
+    (event: globalThis.MouseEvent) => {
+      setPosition((prev) => {
+        const next = {
+          x: prev.x + event.movementX,
+          y: prev.y + event.movementY,
+        }
+
+        return {
+          x: next.x > winSize.width || next.x < 0 ? prev.x : next.x,
+          y: next.y > winSize.height || next.y < 0 ? prev.y : next.y,
+        }
+      })
     },
-    [minHeight],
+    [winSize],
   )
 
   useEffect(() => {
     const dragHandle = dragHandleRef.current
-    const handleMouseDown = () => setHandleIsDragging(true)
+    const handleMouseDown = () => setIsDragging(true)
     if (dragHandle) dragHandle.addEventListener('mousedown', handleMouseDown)
 
     return () => {
@@ -33,7 +40,7 @@ export const useDragHandle = (
   }, [dragHandleRef])
 
   useEffect(() => {
-    if (handleIsDragging) {
+    if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove)
       window.addEventListener('mouseup', handleMouseUp)
       document.body.style.userSelect = 'none'
@@ -46,6 +53,6 @@ export const useDragHandle = (
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [handleIsDragging, handleMouseUp, handleMouseMove])
-  return outputHeightPx
+  }, [isDragging, handleMouseUp, handleMouseMove])
+  return position
 }
