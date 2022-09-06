@@ -4,11 +4,18 @@ import {
   regularTextColorsSelector,
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
+  chromaSelector,
+  hueAtom,
 } from 'src/state'
-import { IS_EXPECTED_TO_BE_SAFE_CONFIG, SHADE_NAMES } from 'src/constants'
+import {
+  DEFAULT_LUMINANCES,
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'src/constants'
 import { ScaleNameType, ShadeType } from 'src/types'
 import { staticTokens } from 'src/constants/staticTokens'
 import { DEFAULT_THEME_SCALE_NAMES } from 'src/themes'
+import { getColorData } from 'src/utils'
 
 const columnWidth = 82
 
@@ -33,6 +40,11 @@ export const OutputThemeJSX = () => {
 }
 
 const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
+  const shadeL = DEFAULT_LUMINANCES[shade.shadeName]
+  const shadeC = useRecoilValue(chromaSelector(shade))
+  const shadeH = useRecoilValue(hueAtom(shade.scaleName))
+  const shadeColorData = getColorData([shadeL, shadeC, shadeH])
+
   const regularTextColors = useRecoilValue(regularTextColorsSelector(shade))
 
   const textColorHex = regularTextColors.regular.hex
@@ -53,16 +65,26 @@ const ShadeColorTokens = ({ shade }: { shade: ShadeType }) => {
   return (
     <>
       {`${nameComment}\n`}
-      {getTokenString('color', shade, '', vividSubduedTextColorHex)}
+      {getTokenString('color', shade, '', shadeColorData.hex)}
       {'\n'}
       {getTokenString('text-on', shade, '', textColorHex)}
       {getTokenString('text-on', shade, 'subdued', subduedTextColorHex)}
       {getTokenString('text-on', shade, 'vivid', vividTextColorHex)}
-      {getTokenString('text-on', shade, `vivid-subdued`, vividSubduedTextColorHex)}
+      {getTokenString(
+        'text-on',
+        shade,
+        `vivid-subdued`,
+        vividSubduedTextColorHex,
+      )}
       {'\n'}
-      {shade.scaleName === 'grey' && DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
-        <TextOnGreyTokens shade={shade} scaleName={scaleName} key={`${scaleName}`} />
-      ))}
+      {shade.scaleName === 'grey' &&
+        DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
+          <TextOnGreyTokens
+            shade={shade}
+            scaleName={scaleName}
+            key={`${scaleName}`}
+          />
+        ))}
       {'\n'}
     </>
   )

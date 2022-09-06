@@ -1,8 +1,7 @@
 {
-  "name": "@danielpickett/theme-generator",
+  "name": "@danielpickett/icons",
   "version": "0.0.0",
   "private": true,
-  "homepage": "http://danielpickett.github.io/theme-generator",
   "types": "dist/types.d.ts",
   "source": "src/index.ts",
   "alias": {
@@ -23,16 +22,8 @@
     "build": "rm -rf dist && parcel build --no-cache"
   },
   "dependencies": {
-    "@danielpickett/components": "0.0.0",
-    "@danielpickett/types": "0.0.0",
-    "@types/chroma-js": "^2.1.4",
     "@types/react": "^18.0.18",
-    "@types/react-dom": "^18.0.6",
-    "chroma-js": "^2.4.2",
-    "classnames": "^2.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "recoil": "0.7.5"
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@parcel/transformer-typescript-tsc": "^2.7.0",

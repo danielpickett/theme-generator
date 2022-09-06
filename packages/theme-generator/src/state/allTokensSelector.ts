@@ -1,5 +1,9 @@
-import { selector } from 'recoil'
-import { IS_EXPECTED_TO_BE_SAFE_CONFIG, SHADE_NAMES } from 'src/constants'
+import { selector, useRecoilValue } from 'recoil'
+import {
+  DEFAULT_LUMINANCES,
+  IS_EXPECTED_TO_BE_SAFE_CONFIG,
+  SHADE_NAMES,
+} from 'src/constants'
 import { ShadeType } from 'src/types'
 
 import {
@@ -7,9 +11,12 @@ import {
   vividTextColorsOnGreyShadeSelector,
   vividTextColorsSelector,
   defaultScaleShadeAtom,
+  chromaSelector,
+  hueAtom,
 } from 'src/state'
 import { staticTokens } from 'src/constants/staticTokens'
 import { DEFAULT_THEME_SCALE_NAMES } from 'src/themes'
+import { getColorData } from 'src/utils'
 
 const columnWidth = 82
 
@@ -17,6 +24,11 @@ export const allTokensSelector = selector({
   key: 'allTokens',
   get: ({ get }) => {
     const getShadeColorTokens = (shade: ShadeType) => {
+      const shadeL = DEFAULT_LUMINANCES[shade.shadeName]
+      const shadeC = get(chromaSelector(shade))
+      const shadeH = get(hueAtom(shade.scaleName))
+      const shadeColorData = getColorData([shadeL, shadeC, shadeH])
+
       const regularTextColors = get(regularTextColorsSelector(shade))
 
       const textColorHex = regularTextColors.regular.hex
@@ -41,7 +53,7 @@ export const allTokensSelector = selector({
 
       return (
         `${nameComment}\n` +
-        getTokenString('color', shade, '', vividSubduedTextColorHex) +
+        getTokenString('color', shade, '', shadeColorData.hex) +
         '\n' +
         getTokenString('text-on', shade, '', textColorHex) +
         getTokenString('text-on', shade, 'subdued', subduedTextColorHex) +

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@danielpickett/hooks": "0.0.0",
+    "@danielpickett/icons": "0.0.0",
     "@danielpickett/types": "0.0.0",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
@@ -33,6 +34,6 @@
   "devDependencies": {
     "@parcel/transformer-typescript-tsc": "^2.7.0",
     "parcel": "^2.7.0",
-    "typescript": ">=3.0.0"
+    "typescript": "4.7.4"
   }
 }

@@ -9,3 +9,8 @@ export const showTextColorPlotsAtom = atom({
   key: 'showTextColorPlots',
   default: false,
 })
+
+export const isFullscreenAtom = atom({
+  key: 'isFullscreen',
+  default: false,
+})

@@ -12,6 +12,8 @@
   "scripts": {
     "start-components": "cd packages/components && yarn start",
     "build-components": "cd packages/components && yarn build",
+    "start-icons": "cd packages/icons && yarn start",
+    "build-icons": "cd packages/icons && yarn build",
     "start-hooks": "cd packages/hooks && yarn start",
     "build-hooks": "cd packages/hooks && yarn build",
     "start-theme-generator": "cd packages/theme-generator && yarn start",
