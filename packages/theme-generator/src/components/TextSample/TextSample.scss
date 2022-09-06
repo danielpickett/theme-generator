@@ -1,0 +1,15 @@
+@import 'src/tokens';
+
+.TextSample {
+  font-size: $text-size-xs;
+  display: flex;
+  justify-content: space-between;
+  &__problem {
+    display: inline-block;
+    border-radius: 100rem;
+    background-color: red;
+    border: 1px solid white;
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "grey",
+    "hue": 230,
+    "shades": [
+      { "id": "000", "chroma": 0 },
+      { "id": "050", "chroma": 1 },
+      { "id": "100", "chroma": 2.82 },
+      { "id": "200", "chroma": 3.68 },
+      { "id": "300", "chroma": 3.8 },
+      { "id": "400", "chroma": 4.79 },
+      { "id": "500", "chroma": 4.06 },
+      { "id": "600", "chroma": 4.41 },
+      { "id": "700", "chroma": 3.84 },
+      { "id": "800", "chroma": 3.98 },
+      { "id": "900", "chroma": 3.1 }
+    ]
+  },
+  {
+    "id": "primary",
+    "hue": 307,
+    "shades": [
+      { "id": "000", "chroma": 0.0 },
+      { "id": "050", "chroma": 4.7 },
+      { "id": "100", "chroma": 12.8 },
+      { "id": "200", "chroma": 24 },
+      { "id": "300", "chroma": 42 },
+      { "id": "400", "chroma": 63 },
+      { "id": "500", "chroma": 83 },
+      { "id": "600", "chroma": 66 },
+      { "id": "700", "chroma": 50 },
+      { "id": "800", "chroma": 33 },
+      { "id": "900", "chroma": 21 }
+    ]
+  },
+  {
+    "id": "success",
+    "hue": 148,
+    "shades": [
+      { "id": "000", "chroma": 0.0 },
+      { "id": "050", "chroma": 18 },
+      { "id": "100", "chroma": 56 },
+      { "id": "200", "chroma": 88 },
+      { "id": "300", "chroma": 78 },
+      { "id": "400", "chroma": 68 },
+      { "id": "500", "chroma": 56 },
+      { "id": "600", "chroma": 48 },
+      { "id": "700", "chroma": 37 },
+      { "id": "800", "chroma": 27 },
+      { "id": "900", "chroma": 11 }
+    ]
+  },
+  {
+    "id": "warning",
+    "hue": 104,
+    "shades": [
+      { "id": "000", "chroma": 0.0 },
+      { "id": "050", "chroma": 3.88 },
+      { "id": "100", "chroma": 13.7 },
+      { "id": "200", "chroma": 28.2 },
+      { "id": "300", "chroma": 58 },
+      { "id": "400", "chroma": 81 },
+      { "id": "500", "chroma": 67 },
+      { "id": "600", "chroma": 57 },
+      { "id": "700", "chroma": 43 },
+      { "id": "800", "chroma": 26 },
+      { "id": "900", "chroma": 8.8 }
+    ]
+  },
+  {
+    "id": "danger",
+    "hue": 32,
+    "shades": [
+      { "id": "000", "chroma": 0.0 },
+      { "id": "050", "chroma": 3.97 },
+      { "id": "100", "chroma": 11.03 },
+      { "id": "200", "chroma": 21.99 },
+      { "id": "300", "chroma": 42.38 },
+      { "id": "400", "chroma": 70.45 },
+      { "id": "500", "chroma": 88.89 },
+      { "id": "600", "chroma": 75.33 },
+      { "id": "700", "chroma": 58.89 },
+      { "id": "800", "chroma": 42.33 },
+      { "id": "900", "chroma": 14.56 }
+    ]
+  }
+]
