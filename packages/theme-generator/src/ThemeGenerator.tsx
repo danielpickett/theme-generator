@@ -1,9 +1,10 @@
 import './ThemeGenerator.scss'
 import './theme.css'
-import { RecoilRoot } from 'recoil'
+import { RecoilRoot, useRecoilValue } from 'recoil'
 import { Footer, Header, Scale } from './components'
 import { DEFAULT_THEME_SCALE_NAMES } from './themes'
 import { ResizablePopover } from '@danielpickett/components'
+import { isFullscreenAtom } from './state'
 
 const initialPosition = {
   top: 50,
@@ -12,29 +13,37 @@ const initialPosition = {
   height: window.innerHeight - 100,
 }
 
-export const ThemeGenerator = () => {
+const ThemeGenerator = () => {
+  const isFullscreen = useRecoilValue(isFullscreenAtom)
   return (
-    <RecoilRoot>
-      <ResizablePopover initialPosition={initialPosition}>
-        {(dragHandleRef) => (
-          <div className="ThemeGenerator dark-blue-theme">
-            <div className="ThemeGenerator__header">
-              <Header dragHandleRef={dragHandleRef} />
-            </div>
-            <div className="ThemeGenerator__body">
-              <div className="ThemeGenerator__scales">
-                {DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
-                  <Scale key={scaleName} scaleName={scaleName} />
-                ))}
-              </div>
-            </div>
-
-            <div className="ThemeGenerator__footer">
-              <Footer />
+    <ResizablePopover
+      initialPosition={initialPosition}
+      isFullscreen={isFullscreen}
+    >
+      {(dragHandleRef) => (
+        <div className="ThemeGenerator dark-blue-theme">
+          <div className="ThemeGenerator__header">
+            <Header dragHandleRef={dragHandleRef} />
+          </div>
+          <div className="ThemeGenerator__body">
+            <div className="ThemeGenerator__scales">
+              {DEFAULT_THEME_SCALE_NAMES.map((scaleName) => (
+                <Scale key={scaleName} scaleName={scaleName} />
+              ))}
             </div>
           </div>
-        )}
-      </ResizablePopover>
-    </RecoilRoot>
+
+          <div className="ThemeGenerator__footer">
+            <Footer />
+          </div>
+        </div>
+      )}
+    </ResizablePopover>
   )
 }
+
+export default () => (
+  <RecoilRoot>
+    <ThemeGenerator />
+  </RecoilRoot>
+)

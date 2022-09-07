@@ -1,3 +1,4 @@
 declare module '*.png' {
-  export default '' as string
+  const _default: string
+  export default _default
 }

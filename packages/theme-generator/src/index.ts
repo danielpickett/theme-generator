@@ -1,1 +1,1 @@
-export { ThemeGenerator } from './ThemeGenerator'
+export { default as default } from './ThemeGenerator'

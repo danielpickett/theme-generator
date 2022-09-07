@@ -1,4 +1,4 @@
-import { ThemeGenerator } from '@danielpickett/theme-generator'
+import ThemeGenerator from '@danielpickett/theme-generator'
 import { Chip, Spacer } from '@danielpickett/components'
 import './App.scss'
 

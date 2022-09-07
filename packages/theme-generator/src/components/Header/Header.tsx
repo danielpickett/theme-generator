@@ -23,13 +23,6 @@ export const Header = ({
   const [isFullscreen, setIsFullscreen] = useRecoilState(isFullscreenAtom)
   return (
     <div className="Header" ref={dragHandleRef}>
-      {/* <input
-        id="show-canvases"
-        type="checkbox"
-        checked={showCanvases}
-        onChange={(e) => setShowCanvases(e.target.checked)}
-      />
-      <label htmlFor="show-canvases">show canvases</label> */}
       <div className="Header__buttons">
         <ToggleIconButton
           icon={<LCHGraph />}
