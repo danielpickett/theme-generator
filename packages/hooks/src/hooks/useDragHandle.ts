@@ -53,7 +53,7 @@ export const useDragHandle = (
       if (dragHandle)
         dragHandle.removeEventListener('mousedown', handleMouseDown)
     }
-  }, [options.exactTarget])
+  }, [options.exactTarget, options.enabled])
 
   useEffect(() => {
     if (options.enabled) setIsDragging(false)
