@@ -1,6 +1,7 @@
 {
+  "name": "live-theming-example",
   "scripts": {
-    "start": "parcel src/index.html"
+    "start": "parcel src/index.html --port 3001 --open"
   },
   "dependencies": {
     "@danielpickett/components": "0.0.0",
