@@ -12,5 +12,5 @@ export const showTextColorPlotsAtom = atom({
 
 export const isFullscreenAtom = atom({
   key: 'isFullscreen',
-  default: false,
+  default: true,
 })

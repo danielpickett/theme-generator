@@ -1,9 +1,9 @@
 import { SVGBase } from './svg-base'
 import { SVGPropsType } from 'src/types'
 
-export const Expand = ({ title }: SVGPropsType) => {
+export const Expand = (props: SVGPropsType) => {
   return (
-    <SVGBase title={title}>
+    <SVGBase {...props}>
       <path d="M5 5H12V7H7V12H5V5Z" fill="currentColor" />
       <path d="M5 25L5 18L7 18L7 23L12 23L12 25L5 25Z" fill="currentColor" />
       <path
@@ -15,9 +15,9 @@ export const Expand = ({ title }: SVGPropsType) => {
   )
 }
 
-export const Collapse = ({ title }: SVGPropsType) => {
+export const Collapse = (props: SVGPropsType) => {
   return (
-    <SVGBase title={title}>
+    <SVGBase {...props}>
       <path d="M12 12L5 12L5 10L10 10L10 5L12 5L12 12Z" fill="currentColor" />
       <path d="M12 18L12 25L10 25L10 20L5 20L5 18L12 18Z" fill="currentColor" />
       <path
@@ -29,9 +29,9 @@ export const Collapse = ({ title }: SVGPropsType) => {
   )
 }
 
-export const LCHGraph = ({ title }: SVGPropsType) => {
+export const LCHGraph = (props: SVGPropsType) => {
   return (
-    <SVGBase title={title}>
+    <SVGBase {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -42,12 +42,24 @@ export const LCHGraph = ({ title }: SVGPropsType) => {
   )
 }
 
-export const Text = ({ title }: SVGPropsType) => {
+export const Text = (props: SVGPropsType) => {
   return (
-    <SVGBase title={title}>
+    <SVGBase {...props}>
       <path
         d="M11.4115 25.0185V23.2862L13.6526 22.9012V7.0486H9.1154L8.71668 9.8259H6.68182V5H23.3181V9.8259H21.3108L20.8983 7.0486H16.3611V22.9012L18.6022 23.2862V25.0185H11.4115Z"
         fill="currentColor"
+      />
+    </SVGBase>
+  )
+}
+
+export const Checkmark = (props: SVGPropsType) => {
+  return (
+    <SVGBase {...props}>
+      <path
+        d="M5 13.8L12.619 21L25 9.00001"
+        stroke="currentColor"
+        strokeWidth="3"
       />
     </SVGBase>
   )

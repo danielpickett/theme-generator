@@ -4,7 +4,9 @@ import { SVGPropsType } from 'src/types'
 export const SVGBase = ({
   children,
   title,
+  size,
 }: SVGPropsType & { children: ReactNode }) => {
+  console.log('size', size)
   return (
     <svg
       width="30"
@@ -13,6 +15,7 @@ export const SVGBase = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       display="block"
+      style={{ height: size, width: size }}
     >
       {!!title && <title>{title}</title>}
       {children}

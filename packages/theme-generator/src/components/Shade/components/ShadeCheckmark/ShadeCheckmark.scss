@@ -1,0 +1,33 @@
+.ShadeCheckmark {
+  display: block;
+  position: relative;
+  height: 3.75rem;
+  width: 3.75rem;
+  top: -2.5rem;
+  right: -2.5rem;
+
+  // &__label
+
+  &__label {
+    appearance: none;
+    margin: 0;
+    display: block;
+    background-color: currentColor;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    transform: rotate(45deg);
+
+    // &:hover {
+    //   opacity: 1;
+    // }
+  }
+  &__checkmark {
+    pointer-events: none;
+    position: absolute;
+    top: 2.5rem;
+    right: 1.25rem;
+    transform: rotate(-45deg);
+    // opacity: 0;
+  }
+}

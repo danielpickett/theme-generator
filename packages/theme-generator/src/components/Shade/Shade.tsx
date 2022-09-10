@@ -16,6 +16,7 @@ import { DEFAULT_LUMINANCES } from 'src/constants'
 import { TextSample, TextColorPlots } from 'src/components'
 import { getColorData } from 'src/utils'
 import { DEFAULT_THEME_SCALE_NAMES } from 'src/themes'
+import { ShadeCheckmark } from './components/ShadeCheckmark'
 
 export const Shade = ({ shade }: { shade: ShadeType }) => {
   const [defaultShade, setDefaultShade] = useRecoilState(
@@ -31,6 +32,8 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     ? 'black'
     : shadeColorData.hex
 
+  const isDefaultShade = defaultShade === shade.shadeName
+
   return (
     <div
       className="Shade"
@@ -41,15 +44,22 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
     >
       <div className="Shade__header">
         <div className="Shade__token-name">
-          {shade.scaleName === 'grey' && shade.shadeName === '000'
-            ? 'White'
+          {shade.shadeName === '000'
+            ? 'white'
             : `${shade.scaleName}-${shade.shadeName}`}
         </div>
-        <input
-          type="checkbox"
-          onChange={() => setDefaultShade(shade.shadeName)}
-          checked={defaultShade === shade.shadeName}
-        />
+        {shade.shadeName !== '000' && (
+          <div
+            className="Shade__checkmark"
+            style={{ opacity: isDefaultShade ? 1 : undefined }}
+          >
+            <ShadeCheckmark
+              shade={shade}
+              checked={isDefaultShade}
+              onChange={() => setDefaultShade(shade.shadeName)}
+            />
+          </div>
+        )}
       </div>
       <TextSamplesRegular
         shade={{ shadeName: shade.shadeName, scaleName: shade.scaleName }}

@@ -2,7 +2,6 @@ import { ToggleIconButton } from '@danielpickett/components'
 import { Expand, Collapse, Text, LCHGraph } from '@danielpickett/icons'
 import { RefObject } from 'react'
 import { useRecoilState } from 'recoil'
-import { Spacer } from 'src/components'
 import {
   isFullscreenAtom,
   showCanvasesAtom,

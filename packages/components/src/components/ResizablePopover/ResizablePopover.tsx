@@ -25,14 +25,10 @@ export const ResizablePopover = ({
     { enabled: !isFullscreen, exactTarget: true },
   )
 
-  const [width, height] = useDragHandle(
-    resizeHandleRef,
-    {
-      x: initialPosition?.width || 500,
-      y: initialPosition?.height || 500,
-    },
-    { enabled: !isFullscreen, exactTarget: true },
-  )
+  const [width, height] = useDragHandle(resizeHandleRef, {
+    x: initialPosition?.width || 500,
+    y: initialPosition?.height || 500,
+  })
 
   const modifierClasses = {
     'ResizablePopover--is-fullscreen': isFullscreen,
@@ -51,7 +47,7 @@ export const ResizablePopover = ({
       {children(dragHandleRef)}
       {!isFullscreen && (
         <div className="ResizablePopover__resize-handle" ref={resizeHandleRef}>
-          <div className="ResizablePopover__grip-lines" />
+          <div className="ResizablePopover__grip-line" />
         </div>
       )}
     </div>,
