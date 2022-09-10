@@ -11,7 +11,8 @@
     "typescript": "4.7.4"
   },
   "scripts": {
-    "start": "nx run live-theming-example:start"
+    "start": "nx run live-theming-example:start",
+    "build": "nx run-many --target=build"
   },
   "workspaces": [
     "packages/*",

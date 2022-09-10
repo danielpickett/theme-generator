@@ -6,7 +6,7 @@ This is a work-in-progress site project aimed at helping to generate color palet
 
 Available live on GitHub Pages here: https://danielpickett.github.io/theme-generator/k
 
-## Repo structure
+## Running the project
 
 This is a monorepo using Nx and Parcel.
 
@@ -18,3 +18,5 @@ yarn start
 ```
 
 Nx will take care of building the workspace dependencies and will launch the primary demo app for the theme-generator package.
+
+Note: This doesn't currently build types. Until this is fixed, you will need to also run `yarn build` to prevent TypeScript errors from showing up in your IDE. And you'll need to repeat this any time you change types in a workspace dependency.
