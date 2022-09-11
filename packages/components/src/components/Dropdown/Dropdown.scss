@@ -1,0 +1,28 @@
+$outline-color: rgb(0, 153, 255);
+
+.Dropdown {
+  position: relative;
+  display: flex;
+
+  &__focus-lock {
+    display: flex;
+  }
+
+  &__trigger {
+    all: unset;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 0.25rem;
+
+    &:focus-visible {
+      outline: 0.25rem solid $outline-color;
+      outline-offset: 0;
+    }
+
+    &:focus:not(:hover):not(:focus-visible) {
+      background-color: transparent;
+    }
+  }
+}

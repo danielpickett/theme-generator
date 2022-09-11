@@ -1,0 +1,8 @@
+.MenuTrigger {
+  border-radius: 0.25rem;
+
+  &:hover,
+  &--is-open {
+    background-color: hsl(0deg 0% 90%);
+  }
+}

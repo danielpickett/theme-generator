@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import './SliderThumb2D.scss'
 import classNames from 'classnames'
+import { useKeyboardFocus } from '@danielpickett/hooks'
 import { Expand } from 'src/types'
-import { useKeyboardFocus } from 'src/hooks'
 
 type OnChangeType = (xy: [number, number]) => void
 type OnFocusChangeType = () => void

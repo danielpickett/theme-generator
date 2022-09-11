@@ -64,3 +64,15 @@ export const Checkmark = (props: SVGPropsType) => {
     </SVGBase>
   )
 }
+
+export const Menu = (props: SVGPropsType) => {
+  const common = { stroke: 'currentColor', strokeWidth: '2' }
+
+  return (
+    <SVGBase {...props}>
+      <line x1="5" y1="15" x2="25" y2="15" {...common} />
+      <line x1="5" y1="8" x2="25" y2="8" {...common} />
+      <line x1="5" y1="22" x2="25" y2="22" {...common} />
+    </SVGBase>
+  )
+}
