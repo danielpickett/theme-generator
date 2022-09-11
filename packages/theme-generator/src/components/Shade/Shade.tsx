@@ -62,7 +62,7 @@ export const Shade = ({ shade }: { shade: ShadeType }) => {
                 : `${shade.scaleName}-${shade.shadeName}`}
             </div>
           </div>
-          {shade.shadeName !== '000' && (
+          {shade.shadeName !== '000' && shade.scaleName !== 'grey' && (
             <Checkmark
               shade={shade}
               checked={isDefaultShade}

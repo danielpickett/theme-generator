@@ -1,5 +1,5 @@
 import React, { ReactNode, useLayoutEffect, useRef, useState } from 'react'
-import './DropdownPanel.scss'
+import './DropdownPanelCollisionAware.scss'
 // import mergeRefs from 'react-merge-refs'
 import { useWindowSize } from '@danielpickett/hooks'
 import { remToPixels } from '../Dropdown/utils'
@@ -9,7 +9,7 @@ import { remToPixels } from '../Dropdown/utils'
 // panel
 const padBottom = remToPixels(1.75)
 
-export const DropdownPanel = React.forwardRef<
+export const DropdownPanelCollisionAware = React.forwardRef<
   HTMLDivElement,
   { children?: ReactNode; overflow?: 'auto' | 'hidden' }
 >(
@@ -54,7 +54,7 @@ export const DropdownPanel = React.forwardRef<
     return (
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
       <div
-        className="DropdownPanel"
+        className="DropdownPanelCollisionAware"
         ref={mergeRefs([forwardedRef, localRef])}
         // stopPropogation is used here to prevent triggering the DropdownMenu's
         // "click outside" functionality, which closes the dropdown whenever a
@@ -66,26 +66,29 @@ export const DropdownPanel = React.forwardRef<
         // longer "contained inside" the DropdownMenu, which makes it think the
         // click was "outside" and then it closes the dropdown. Using
         // stopPropagation here means the clicks dispatched from inside the
-        // DropdownPanel will never bubble to the document level, where the
+        // DropdownPanelCollisionAware will never bubble to the document level, where the
         // listeners from the useOnEventOutside hook are registered.
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="DropdownPanel__arrow" />
-        <div className="DropdownPanel__padding">
+        <div className="CollisionAwareDropdownPanel__arrow" />
+        <div className="CollisionAwareDropdownPanel__padding">
           <div
-            className="DropdownPanel__content"
+            className="CollisionAwareDropdownPanel__content"
             style={{ right: `${nudge}px`, maxHeight, overflow }}
           >
             {children}
           </div>
         </div>
-        <div className="DropdownPanel__arrow" style={{ boxShadow: 'none' }} />
+        <div
+          className="CollisionAwareDropdownPanel__arrow"
+          style={{ boxShadow: 'none' }}
+        />
       </div>
     )
   },
 )
 
-DropdownPanel.displayName = 'DropdownPanel'
+DropdownPanelCollisionAware.displayName = 'DropdownPanelCollisionAware'
 
 function mergeRefs<T = any>(
   refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>,

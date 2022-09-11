@@ -2,7 +2,7 @@ import React, { ReactNode, useRef, useState } from 'react'
 import './Dropdown.scss'
 import classNames from 'classnames'
 import { useOnEventOutside } from '@danielpickett/hooks'
-import { DropdownPanel } from '../DropdownPanel'
+import { DropdownPanelFixed } from '../DropdownPanelFixed'
 
 export const Dropdown = ({
   renderTrigger,
@@ -64,7 +64,7 @@ export const Dropdown = ({
       </button>
 
       {isOpen ? (
-        <DropdownPanel ref={contentRef}>{children}</DropdownPanel>
+        <DropdownPanelFixed ref={contentRef}>{children}</DropdownPanelFixed>
       ) : null}
     </div>
   )
