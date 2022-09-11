@@ -1,9 +1,8 @@
 .Scale {
   display: flex;
-  padding-left: 1rem;
+
   &__shades {
     flex-grow: 1;
-    flex-shrink: 0; // remove this later
     display: grid;
     grid-template-columns: repeat(11, minmax(0, 1fr));
   }

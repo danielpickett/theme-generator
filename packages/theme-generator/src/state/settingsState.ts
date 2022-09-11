@@ -22,5 +22,5 @@ export const showShadeNamesAtom = atom({
 
 export const isFullscreenAtom = atom({
   key: 'isFullscreen',
-  default: true,
+  default: false,
 })

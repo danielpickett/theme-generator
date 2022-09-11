@@ -17,6 +17,11 @@
     flex-grow: 1;
   }
 
+  &__scales {
+    min-width: max-content;
+    isolation: isolate;
+  }
+
   *,
   *::before,
   *::after {

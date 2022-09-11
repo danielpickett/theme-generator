@@ -1,7 +1,12 @@
 @import 'src/tokens';
 
 .ScaleControls {
-  padding: 0.5rem 0;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+
   &__canvas {
     position: relative;
   }
