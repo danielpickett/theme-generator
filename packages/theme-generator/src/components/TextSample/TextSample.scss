@@ -4,6 +4,7 @@
   font-size: $text-size-xs;
   display: flex;
   justify-content: space-between;
+
   &__problem {
     display: inline-block;
     border-radius: 100rem;
@@ -11,5 +12,23 @@
     border: 1px solid white;
     height: 0.75rem;
     width: 0.75rem;
+  }
+
+  &__tooltip {
+    position: relative;
+  }
+  &__tooltip-content {
+    border-radius: 100rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+    color: rgb(58, 58, 58);
+    font-weight: 600;
+    padding: 0.25rem 1rem;
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translate(-50%);
+    background-color: white;
+    white-space: nowrap;
+    z-index: 1;
   }
 }

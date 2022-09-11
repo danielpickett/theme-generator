@@ -6,7 +6,6 @@ export const SVGBase = ({
   title,
   size,
 }: SVGPropsType & { children: ReactNode }) => {
-  console.log('size', size)
   return (
     <svg
       width="30"

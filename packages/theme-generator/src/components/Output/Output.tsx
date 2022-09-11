@@ -1,14 +1,14 @@
 import './Output.scss'
 import ReactDOM from 'react-dom'
-import { OutputThemeJSX, OutputThemeString } from 'src/components'
+import { OutputThemeString } from 'src/components'
 
 export const Output = () => {
   return (
     <div className="Output">
-      <div className="Output__column">
+      {/* <div className="Output__column">
         OutputThemeJSX
         <OutputThemeJSX />
-      </div>
+      </div> */}
       <div className="Output__column">
         OutputThemeString
         <OutputThemeString />
