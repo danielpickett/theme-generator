@@ -10,7 +10,6 @@ export const Output = () => {
         <OutputThemeJSX />
       </div> */}
       <div className="Output__column">
-        OutputThemeString
         <OutputThemeString />
       </div>
 

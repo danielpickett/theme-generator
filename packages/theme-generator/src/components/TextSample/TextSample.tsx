@@ -63,15 +63,7 @@ const Tooltip = ({
   const [isOpen, setIsOpen] = useState(false)
   const triggerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  useOnEventOutside(
-    [triggerRef, contentRef],
-    (event, originalRefs) => {
-      if (content === '--text-on-success-100')
-        console.log('closing', originalRefs, event)
-      setIsOpen(false)
-    },
-    ['click'],
-  )
+  useOnEventOutside([triggerRef, contentRef], () => setIsOpen(false), ['click'])
 
   return (
     <div

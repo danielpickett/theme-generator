@@ -1,6 +1,7 @@
 import ThemeGenerator from '@danielpickett/theme-generator'
-import { Chip, Spacer } from '@danielpickett/components'
+import { Chip, Spacer, Text } from '@danielpickett/components'
 import './App.scss'
+import { Background } from './components/Background'
 
 export const App = () => {
   return (
@@ -12,6 +13,13 @@ export const App = () => {
         <Spacer height="5rem" />
         <Chip variant="primary">Hello, primary!</Chip>
         <Spacer height="2rem" />
+
+        <Background color="danger">
+          <Text on="danger" kind="subdued--UNSAFE">
+            Hello
+          </Text>
+        </Background>
+
         <div style={{ display: 'grid', gap: '0.5rem' }}>
           <Chip variant="primary-050">Hello, primary!</Chip>
           <Chip variant="primary-100">Hello, primary!</Chip>
