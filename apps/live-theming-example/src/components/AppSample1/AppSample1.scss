@@ -1,0 +1,58 @@
+@import 'src/tokens';
+
+.AppSample1 {
+  background-color: $color-grey-100;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  min-height: 30rem;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    background-color: $color-primary;
+    color: $text-on-primary;
+    padding: 1rem;
+  }
+
+  &__body {
+    padding: 2rem;
+    flex-grow: 1;
+  }
+
+  &__greeting {
+    // color: $text-on-grey-100--primary;
+    color: $text-on-primary-100--vivid;
+    font-size: 2rem;
+  }
+  &__greeting-subtext {
+    color: $text-on-primary-100--vivid-subdued--UNSAFE;
+  }
+
+  &__success {
+    background-color: $color-success;
+    color: $text-on-success--vivid;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  &__toast {
+    background-color: $color-danger;
+    color: $text-on-danger--vivid;
+    border: 0.125rem solid $text-on-danger--vivid;
+    border-radius: 100rem;
+    box-shadow: 0 0 1rem var(--color-danger);
+    padding: 0.5rem 1rem;
+    padding-right: 0.5rem;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__toast-button {
+    color: $color-danger;
+    background-color: $text-on-danger--vivid;
+    padding: 0.5rem 1rem;
+    border-radius: 100rem;
+  }
+}

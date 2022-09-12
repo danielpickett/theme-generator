@@ -1,9 +1,12 @@
+@import 'src/tokens';
+
 .App {
+  background-color: $color-grey-050;
   height: 100vh;
   overflow: auto;
 
   &__content {
     padding: 1rem;
-    width: 20%;
+    width: 20rem;
   }
 }
